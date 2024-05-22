@@ -79,74 +79,52 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import DraggableFlatList, {
+    RenderItemParams,
     ScaleDecorator,
 } from "react-native-draggable-flatlist";
 
 const NUM_ITEMS = 10;
-function getColor(i) {
+function getColor(i: number) {
     const multiplier = 255 / (NUM_ITEMS - 1);
     const colorVal = i * multiplier;
     return `rgb(${colorVal}, ${Math.abs(128 - colorVal)}, ${255 - colorVal})`;
 }
 
-const initialData = [...Array(NUM_ITEMS)].map((d, index) => {
+type Item = {
+    key: string;
+    code: string;
+    label: string;
+    height: number;
+    width: number;
+    backgroundColor: string;
+    image?: string;
+};
+
+const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
     const backgroundColor = getColor(index);
     return {
-        key: `item-${index}`,
-        label: "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-        height: 200,
+        key: `${index + 1}`,
+        code: `${index + 1}`,
+        label: " FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
+        height: 100,
         width: 60 + Math.random() * 40,
         backgroundColor,
     };
 });
 
-// const initialData = [
-//     {
-//         index: "2024-001.4",
-//         description: "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//         imageUrl:
-//             "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//         status: "Completado",
-//         venta: 7100.0,
-//     },
-//     {
-//         index: "2024-001.4",
-//         description: "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//         imageUrl:
-//             "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//         status: "Completado",
-//         venta: 7100.0,
-//     },
-//     {
-//         index: "2024-001.4",
-//         description: "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//         imageUrl:
-//             "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//         status: "Completado",
-//         venta: 7100.0,
-//     },
-//     {
-//         index: "2024-001.4",
-//         description: "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//         imageUrl:
-//             "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//         status: "Completado",
-//         venta: 7100.0,
-//     },
-//     {
-//         index: "2024-001.4",
-//         description: "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//         imageUrl:
-//             "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//         status: "Completado",
-//         venta: 7100.0,
-//     },
-// ];
-
-export default function App() {
+export default function DrawerFlatList() {
     const [data, setData] = useState(initialData);
 
-    const renderItem = ({ item, drag, isActive }) => {
+    function handleListUpdate(listItems: Item[]) {
+        const settedList: Item[] = listItems.map((v, k) => {
+            return { ...v, code: `${k + 1}` };
+        });
+        console.log(settedList);
+
+        setData(settedList);
+    }
+
+    const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => {
         return (
             <ScaleDecorator>
                 <TouchableOpacity
@@ -155,14 +133,16 @@ export default function App() {
                     style={[
                         styles.rowItem,
                         {
-                            // flex: 1,
                             backgroundColor: isActive
                                 ? "red"
                                 : item.backgroundColor,
                         },
                     ]}
                 >
-                    <Text style={styles.text}>{item.label}</Text>
+                    <Text style={[styles.text, styles.code]}>{item.key}</Text>
+                    <Text style={[styles.text, styles.description]}>
+                        {item.label}
+                    </Text>
                 </TouchableOpacity>
             </ScaleDecorator>
         );
@@ -171,7 +151,9 @@ export default function App() {
     return (
         <DraggableFlatList
             data={data}
-            onDragEnd={({ data }) => setData(data)}
+            onDragEnd={({ data }) => {
+                handleListUpdate(data);
+            }}
             keyExtractor={(item) => item.key}
             renderItem={renderItem}
         />
@@ -181,15 +163,19 @@ export default function App() {
 const styles = StyleSheet.create({
     rowItem: {
         flex: 1,
-        // height: 100,
-        // width: 100,
-        alignItems: "center",
+        height: 100,
+        alignItems: "flex-start",
         justifyContent: "center",
+        paddingHorizontal: 15,
     },
     text: {
         color: "white",
-        fontSize: 15,
+    },
+    description: {
+        fontSize: 14,
         fontWeight: "bold",
-        textAlign: "center",
+    },
+    code: {
+        fontSize: 13,
     },
 });

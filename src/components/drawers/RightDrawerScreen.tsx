@@ -2,15 +2,24 @@ import { createContext, useMemo, useState } from "react";
 import { Drawer } from "react-native-drawer-layout";
 import LeftDrawerScreen from "./LeftDrawerScreen";
 
-export const RightDrawerContext = createContext();
+interface RightDrawerContextType {
+    // Example properties
+    isOpen: boolean;
+    toggleOpenRight: () => void;
+}
+
+export const RightDrawerContext = createContext<
+    RightDrawerContextType | undefined
+>(undefined);
 export default function RightDrawerScreen() {
     const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
+
     const value = useMemo(
         () => ({
-            openRightDrawer: () => setRightDrawerOpen(true),
-            closeRightDrawer: () => setRightDrawerOpen(false),
+            isOpen: rightDrawerOpen,
+            toggleOpenRight: () => setRightDrawerOpen(!rightDrawerOpen),
         }),
-        []
+        [rightDrawerOpen]
     );
 
     return (
