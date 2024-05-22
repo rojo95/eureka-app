@@ -2,5 +2,7 @@
     "menu-title-home": "Home",
     "menu-title-cmr-sales": "CMR and Sales",
     "menu-title-budgets": "Budgets",
-    "menu-title-config": "Configuration"
+    "menu-title-config": "Configuration",
+    "config-language-button": "Change Language",
+    "config-language-selection-label": "Select your preferred language"
 }

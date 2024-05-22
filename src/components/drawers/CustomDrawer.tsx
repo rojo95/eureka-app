@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { DefaultTheme, useTheme } from "react-native-paper";
 
 export default function CustomDrawer(props: any) {
+    const theme: DefaultTheme = useTheme();
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -27,7 +29,7 @@ export default function CustomDrawer(props: any) {
             <DrawerItem
                 label={t("menu-title-home")}
                 onPress={() => props.navigation.navigate("home")}
-                activeBackgroundColor="#636772" // Color de fondo cuando el item está activo
+                activeBackgroundColor={theme.colors.darkGrey} // Color de fondo cuando el item está activo
                 activeTintColor="#FFFFFF" // Color del texto cuando el item está activo
                 inactiveTintColor="#FFFFFF" // Color del texto cuando el item está inactivo
                 focused={isActiveRoute("home")}
@@ -35,18 +37,14 @@ export default function CustomDrawer(props: any) {
             />
             <TouchableOpacity
                 onPress={() => setIsExpanded(!isExpanded)}
-                style={{
-                    flex: 1,
-                    padding: 10,
-                    paddingLeft: 19,
-                    backgroundColor: isActiveRoute("budgets") ? "#636772" : "",
-                    marginVertical: 5,
-                    marginRight: 10,
-                    borderTopEndRadius: 4,
-                    borderBottomEndRadius: 4,
-                    flexDirection: "row",
-                    alignItems: "center",
-                }}
+                style={[
+                    styles.item,
+                    {
+                        backgroundColor: isActiveRoute("budgets")
+                            ? "#636772"
+                            : "",
+                    },
+                ]}
             >
                 <MaterialCommunityIcons
                     name="view-dashboard-outline"
@@ -66,13 +64,20 @@ export default function CustomDrawer(props: any) {
                 <View>
                     <TouchableOpacity
                         onPress={() => props.navigation.navigate("budgets")}
-                        style={{
-                            padding: 10,
-                            backgroundColor: isActiveRoute("budgets")
-                                ? "#636772"
-                                : "",
-                        }}
+                        style={[
+                            styles.itemSon,
+                            {
+                                backgroundColor: isActiveRoute("budgets")
+                                    ? "#636772"
+                                    : "",
+                            },
+                        ]}
                     >
+                        <MaterialCommunityIcons
+                            name="calculator-variant"
+                            size={24}
+                            color="white"
+                        />
                         <Text
                             style={{
                                 color: "#fff",
@@ -101,3 +106,23 @@ export default function CustomDrawer(props: any) {
         </DrawerContentScrollView>
     );
 }
+
+const styles = StyleSheet.create({
+    item: {
+        flex: 1,
+        padding: 10,
+        paddingLeft: 10,
+        marginVertical: 5,
+        marginHorizontal: 10,
+        borderRadius: 4,
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    itemSon: {
+        paddingVertical: 10,
+        paddingLeft: 40,
+        paddingRight: 5,
+        flexDirection: "row",
+        alignItems: "center",
+    },
+});
