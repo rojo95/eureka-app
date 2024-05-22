@@ -5,7 +5,11 @@ import {
     Text,
     TouchableOpacityProps,
 } from "react-native";
-import { Button as PaperButton } from "react-native-paper";
+import {
+    DefaultTheme,
+    Button as PaperButton,
+    useTheme,
+} from "react-native-paper";
 import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { StyleProps } from "react-native-reanimated";
 
@@ -40,9 +44,21 @@ export default function Button({
     buttonStyle,
     children,
 }: ButtonProps) {
+    const theme: DefaultTheme = useTheme();
+
     const styles = StyleSheet.create({
-        button: {},
-        text: {},
+        button: {
+            borderColor: theme.colors.primary,
+            borderWidth: 1,
+            backgroundColor: "#FFF",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 5,
+        },
+        text: {
+            color: theme.colors.primary,
+        },
     });
 
     return (
