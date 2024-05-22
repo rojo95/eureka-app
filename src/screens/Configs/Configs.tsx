@@ -31,17 +31,6 @@ export default function Config() {
             justifyContent: "center",
             alignItems: "center",
         },
-        button: {
-            borderColor: theme.colors.primary,
-            borderWidth: 1,
-            backgroundColor: "#FFF",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-        },
-        text: {
-            color: theme.colors.primary,
-        },
         modalStyle: {
             flex: 1,
             backgroundColor: "white",
@@ -60,7 +49,12 @@ export default function Config() {
         setShowModal(!showModal);
     }
 
+    /**
+     *
+     * @param lang {string}
+     */
     function changeLanguage(lang: string) {
+        // todo falta crear que la seleccion de lenguage persista.
         i18next.changeLanguage(lang);
         toggleModal();
     }
@@ -97,8 +91,6 @@ export default function Config() {
                 </Modal>
             </Portal>
             <Button
-                buttonStyle={styles.button}
-                textStyle={styles.text}
                 onPress={toggleModal}
                 icon={() => (
                     <Fontisto
