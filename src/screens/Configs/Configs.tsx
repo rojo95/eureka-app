@@ -15,9 +15,12 @@ import {
 } from "react-native-paper";
 import { Fontisto } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import i18next, { languageResources } from "../../../services/i18next";
 import languageList from "../../../services/languagesList.json";
 import Button from "../../components/Button/Button";
+import changeLanguage from "../../utils/Language";
 
 export default function Config() {
     const theme: DefaultTheme = useTheme();
@@ -53,10 +56,15 @@ export default function Config() {
      *
      * @param lang {string}
      */
-    function changeLanguage(lang: string) {
-        // todo falta crear que la seleccion de lenguage persista.
-        i18next.changeLanguage(lang);
-        toggleModal();
+    async function changeLang(lang: string) {
+        console.log(await AsyncStorage.getItem("lang"));
+        try {
+            await AsyncStorage.setItem("lang", lang);
+            changeLanguage(lang);
+            toggleModal();
+        } catch (e) {
+            console.error("Error", e);
+        }
     }
 
     return (
@@ -76,7 +84,7 @@ export default function Config() {
                             renderItem={({ item }) => (
                                 <TouchableOpacity
                                     style={styles.listButton}
-                                    onPress={() => changeLanguage(item)}
+                                    onPress={() => changeLang(item)}
                                 >
                                     <Text>
                                         {
