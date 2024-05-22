@@ -7,7 +7,7 @@ import {
     View,
 } from "react-native";
 import {
-    Button,
+    // Button,
     DefaultTheme,
     Modal,
     Portal,
@@ -17,6 +17,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import i18next, { languageResources } from "../../../services/i18next";
 import languageList from "../../../services/languagesList.json";
+import Button from "../../components/Button/Button";
 
 export default function Config() {
     const theme: DefaultTheme = useTheme();
@@ -96,7 +97,8 @@ export default function Config() {
                 </Modal>
             </Portal>
             <Button
-                style={styles.button}
+                buttonStyle={styles.button}
+                textStyle={styles.text}
                 onPress={toggleModal}
                 icon={() => (
                     <Fontisto
@@ -105,9 +107,8 @@ export default function Config() {
                         color={theme.colors.primary}
                     />
                 )}
-            >
-                <Text style={styles.text}>{t("config-language-button")}</Text>
-            </Button>
+                text={t("config-language-button")}
+            />
         </View>
     );
 }
