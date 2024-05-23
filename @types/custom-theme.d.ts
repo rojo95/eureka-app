@@ -3,6 +3,8 @@ import { DefaultTheme } from "react-native-paper";
 interface CustomColors {
     dark: string;
     darkGrey: string;
+    background: string;
+    backgroundCard: string;
 }
 
 declare module "react-native-paper" {
@@ -10,4 +12,3 @@ declare module "react-native-paper" {
         colors: CustomColors & DefaultTheme["colors"];
     }
 }
-

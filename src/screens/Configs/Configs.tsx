@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
     // Button,
     DefaultTheme,
@@ -17,26 +11,28 @@ import { Fontisto } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import i18next, { languageResources } from "../../../services/i18next";
+import { languageResources } from "../../../services/i18next";
 import languageList from "../../../services/languagesList.json";
 import Button from "../../components/Button/Button";
 import changeLanguage from "../../utils/Language";
+import { Text } from "../../components/Text/Text";
 
-export default function Config() {
+export default function Configs() {
     const theme: DefaultTheme = useTheme();
-    const [showModal, setShowModal] = useState(false);
-
     const { t } = useTranslation();
+    const [showModal, setShowModal] = useState(false);
 
     const styles = StyleSheet.create({
         container: {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
+            padding: 5,
         },
         modalStyle: {
             flex: 1,
             backgroundColor: "white",
+            justifyContent: "flex-start",
             padding: 20,
         },
         listButton: {
@@ -45,6 +41,8 @@ export default function Config() {
         },
         modalTytle: {
             color: theme.colors.dark,
+            fontWeight: "bold",
+            alignItems: "center",
         },
     });
 
@@ -57,7 +55,6 @@ export default function Config() {
      * @param lang {string}
      */
     async function changeLang(lang: string) {
-        console.log(await AsyncStorage.getItem("lang"));
         try {
             await AsyncStorage.setItem("lang", lang);
             changeLanguage(lang);
@@ -75,27 +72,22 @@ export default function Config() {
                     onDismiss={toggleModal}
                     contentContainerStyle={styles.modalStyle}
                 >
-                    <View>
-                        <Text style={styles.modalTytle}>
-                            {t("config-language-selection-label")}
-                        </Text>
-                        <FlatList
-                            data={Object.keys(languageResources).sort()}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity
-                                    style={styles.listButton}
-                                    onPress={() => changeLang(item)}
-                                >
-                                    <Text>
-                                        {
-                                            (languageList as any)[item]
-                                                ?.nativeName
-                                        }
-                                    </Text>
-                                </TouchableOpacity>
-                            )}
-                        />
-                    </View>
+                    <Text style={styles.modalTytle}>
+                        {t("config-language-selection-label")}
+                    </Text>
+                    <FlatList
+                        data={Object.keys(languageResources).sort()}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={styles.listButton}
+                                onPress={() => changeLang(item)}
+                            >
+                                <Text>
+                                    {(languageList as any)[item]?.nativeName}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                    />
                 </Modal>
             </Portal>
             <Button

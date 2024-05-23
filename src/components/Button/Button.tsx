@@ -4,6 +4,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacityProps,
+    View,
 } from "react-native";
 import {
     DefaultTheme,
@@ -64,8 +65,8 @@ export default function Button({
     return (
         <PaperButton
             style={[styles.button, buttonStyle]}
-            onPress={onPress}
             icon={icon}
+            onPress={onPress}
         >
             {text && <Text style={[styles.text, textStyle]}>{text}</Text>}
             {children}

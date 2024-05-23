@@ -5,6 +5,7 @@ import HomeScreen from "../../screens/Home/Home";
 import CustomDrawer from "./CustomDrawer";
 import CreateBudget from "../../screens/CMRSales/Budgets/CreateBudget/CreateBudget";
 import Configs from "../../screens/Configs/Configs";
+import { FontAwesome } from "@expo/vector-icons";
 
 const LeftDrawer = createDrawerNavigator();
 
@@ -21,6 +22,16 @@ export default function LeftDrawerScreen() {
             }}
         >
             <LeftDrawer.Screen
+                name="budgets"
+                component={Budgets}
+                options={{
+                    title: t("menu-title-budgets"),
+                    headerRight: () => (
+                        <FontAwesome name="filter" size={24} color="black" />
+                    ),
+                }}
+            />
+            <LeftDrawer.Screen
                 name="home"
                 component={HomeScreen}
                 options={{ title: t("menu-title-home") }}
@@ -31,11 +42,6 @@ export default function LeftDrawerScreen() {
                 options={{ title: t("menu-title-config") }}
             />
             <LeftDrawer.Screen name="createBudget" component={CreateBudget} />
-            <LeftDrawer.Screen
-                name="budgets"
-                component={Budgets}
-                options={{ title: t("menu-title-budgets") }}
-            />
         </LeftDrawer.Navigator>
     );
 }

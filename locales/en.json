@@ -4,5 +4,11 @@
     "menu-title-budgets": "Budgets",
     "menu-title-config": "Configuration",
     "config-language-button": "Change Language",
-    "config-language-selection-label": "Select your preferred language"
+    "config-language-selection-label": "Select your preferred language",
+    "pager-page": "Page",
+    "pager-of": "of",
+    "pager-next": "Next",
+    "pager-previous": "Previous",
+    "budgets-input-search-label": "Search for budget",
+    "budget-input-search-placeholder": "Type a code or description"
 }
