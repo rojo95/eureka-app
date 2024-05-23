@@ -4,5 +4,11 @@
     "menu-title-budgets": "Presupuestos",
     "menu-title-config": "Configuración",
     "config-language-button": "Cambiar Idioma",
-    "config-language-selection-label": "Seleccione su Idioma de Preferencia"
+    "config-language-selection-label": "Seleccione su Idioma de Preferencia",
+    "pager-page": "Página",
+    "pager-of": "de",
+    "pager-next": "Siguiente",
+    "pager-previous": "Anterior",
+    "budgets-input-search-label": "Buscar Presupuesto",
+    "budget-input-search-placeholder": "Escribe un código o descripción"
 }

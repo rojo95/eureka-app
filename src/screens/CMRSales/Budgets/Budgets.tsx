@@ -77,105 +77,99 @@
 // const styles = StyleSheet.create({});
 
 import React, { useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import DraggableFlatList, {
-    RenderItemParams,
-    ScaleDecorator,
-} from "react-native-draggable-flatlist";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { DefaultTheme, Text, useTheme } from "react-native-paper";
+import { TextInput } from "react-native-paper";
+import { FontAwesome } from "@expo/vector-icons";
+import BudgetsCard from "../../../components/BudgetsCard/BudgetsCard";
+import Paginator from "../../../components/Paginator/Paginator";
+import { useTranslation } from "react-i18next";
+import { Button } from "react-native-paper";
 
-const NUM_ITEMS = 10;
-function getColor(i: number) {
-    const multiplier = 255 / (NUM_ITEMS - 1);
-    const colorVal = i * multiplier;
-    return `rgb(${colorVal}, ${Math.abs(128 - colorVal)}, ${255 - colorVal})`;
-}
+export default function Budgets() {
+    const { t } = useTranslation();
+    const theme: DefaultTheme = useTheme();
+    const [text, setText] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
 
-type Item = {
-    key: string;
-    code: string;
-    label: string;
-    height: number;
-    width: number;
-    backgroundColor: string;
-    image?: string;
-};
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: theme.colors.background,
+        },
+        containerSearch: {
+            marginHorizontal: 10,
+        },
+        card: {
+            minHeight: 100,
+            backgroundColor: theme.colors.backgroundCard,
+            padding: 20,
+            elevation: 5,
+            marginEnd: 10,
+            justifyContent: "center",
+            borderTopEndRadius: 10,
+            borderBottomEndRadius: 10,
+        },
+        cardsContainer: { marginVertical: 20 },
+    });
 
-const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
-    const backgroundColor = getColor(index);
-    return {
-        key: `${index + 1}`,
-        code: `${index + 1}`,
-        label: " FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-        height: 100,
-        width: 60 + Math.random() * 40,
-        backgroundColor,
-    };
-});
+    function searchBudgets() {
+        if (loading) return;
+        setLoading(true);
 
-export default function DrawerFlatList() {
-    const [data, setData] = useState(initialData);
-
-    function handleListUpdate(listItems: Item[]) {
-        const settedList: Item[] = listItems.map((v, k) => {
-            return { ...v, code: `${k + 1}` };
-        });
-        console.log(settedList);
-
-        setData(settedList);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000);
     }
 
-    const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => {
-        return (
-            <ScaleDecorator>
-                <TouchableOpacity
-                    onLongPress={drag}
-                    disabled={isActive}
-                    style={[
-                        styles.rowItem,
-                        {
-                            backgroundColor: isActive
-                                ? "red"
-                                : item.backgroundColor,
-                        },
-                    ]}
-                >
-                    <Text style={[styles.text, styles.code]}>{item.key}</Text>
-                    <Text style={[styles.text, styles.description]}>
-                        {item.label}
-                    </Text>
-                </TouchableOpacity>
-            </ScaleDecorator>
-        );
+    const totalPages = 5;
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        // Fetch or update the data to be displayed based on the new page
+        console.log("Current Page:", page);
     };
 
+    function handleLimitPerPage() {}
+
     return (
-        <DraggableFlatList
-            data={data}
-            onDragEnd={({ data }) => {
-                handleListUpdate(data);
-            }}
-            keyExtractor={(item) => item.key}
-            renderItem={renderItem}
-        />
+        <View style={styles.container}>
+            <View style={styles.containerSearch}>
+                <TextInput
+                    mode="outlined"
+                    label={t("budgets-input-search-label")}
+                    placeholder={t("budget-input-search-placeholder")}
+                    value={text}
+                    onChangeText={setText}
+                    disabled={loading}
+                    right={
+                        <TextInput.Icon
+                            disabled={loading}
+                            icon="magnify"
+                            onPress={() => searchBudgets()}
+                            color={theme.colors.primary}
+                        />
+                    }
+                />
+            </View>
+
+            <ScrollView style={{ marginVertical: 10 }}>
+                <BudgetsCard
+                    index={"2024-001.4"}
+                    description={
+                        "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]"
+                    }
+                    status={"Contratado"}
+                    costo={"4.400,00"}
+                    venta={"7.100,00"}
+                />
+            </ScrollView>
+            <Paginator
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                onLimitChange={handleLimitPerPage}
+            />
+        </View>
     );
 }
-
-const styles = StyleSheet.create({
-    rowItem: {
-        flex: 1,
-        height: 100,
-        alignItems: "flex-start",
-        justifyContent: "center",
-        paddingHorizontal: 15,
-    },
-    text: {
-        color: "white",
-    },
-    description: {
-        fontSize: 14,
-        fontWeight: "bold",
-    },
-    code: {
-        fontSize: 13,
-    },
-});

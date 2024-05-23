@@ -42,7 +42,7 @@ export default function CustomDrawer(props: any) {
                     {
                         backgroundColor: isActiveRoute("budgets")
                             ? "#636772"
-                            : "",
+                            : theme.colors.darkGrey,
                     },
                 ]}
             >
@@ -69,7 +69,7 @@ export default function CustomDrawer(props: any) {
                             {
                                 backgroundColor: isActiveRoute("budgets")
                                     ? "#636772"
-                                    : "",
+                                    : theme.colors.darkGrey,
                             },
                         ]}
                     >
