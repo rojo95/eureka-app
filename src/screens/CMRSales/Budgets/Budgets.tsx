@@ -85,8 +85,9 @@ import BudgetsCard from "../../../components/BudgetsCard/BudgetsCard";
 import Paginator from "../../../components/Paginator/Paginator";
 import { useTranslation } from "react-i18next";
 import { Button } from "react-native-paper";
+import FAB from "../../../components/FAB/FAB";
 
-export default function Budgets() {
+export default function Budgets({ navigation }: { navigation: any }) {
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
     const [text, setText] = useState<string>("");
@@ -165,6 +166,29 @@ export default function Budgets() {
                     venta={"7.100,00"}
                 />
             </ScrollView>
+            <FAB
+                actions={[
+                    {
+                        icon: "plus",
+                        onPress: () => navigation.navigate("createBudget"),
+                    },
+                    {
+                        icon: "star",
+                        label: "Star",
+                        onPress: () => console.log("Pressed star"),
+                    },
+                    {
+                        icon: "email",
+                        label: "Email",
+                        onPress: () => console.log("Pressed email"),
+                    },
+                    {
+                        icon: "bell",
+                        label: "Remind",
+                        onPress: () => console.log("Pressed notifications"),
+                    },
+                ]}
+            ></FAB>
             <Paginator
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
