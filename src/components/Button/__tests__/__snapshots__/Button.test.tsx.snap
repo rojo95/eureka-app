@@ -14,7 +14,6 @@ exports[`Test to evaluate <Button /> component render button without change 1`] 
       },
       "shadowOpacity": 0,
       "shadowRadius": 0,
-      "width": "100%",
     }
   }
   testID="button-container-outer-layer"
@@ -166,7 +165,6 @@ exports[`Test to evaluate <Button /> component renders correctly 1`] = `
       },
       "shadowOpacity": 0,
       "shadowRadius": 0,
-      "width": "100%",
     }
   }
   testID="button-container-outer-layer"
@@ -318,7 +316,6 @@ exports[`Test to evaluate <Button /> component renders correctly with icon 1`] =
       },
       "shadowOpacity": 0,
       "shadowRadius": 0,
-      "width": "100%",
     }
   }
   testID="button-container-outer-layer"

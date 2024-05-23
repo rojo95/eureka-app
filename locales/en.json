@@ -3,6 +3,7 @@
     "menu-title-cmr-sales": "CMR and Sales",
     "menu-title-budgets": "Budgets",
     "menu-title-config": "Configuration",
+    "menu-title-create-budget": "Create a Budget",
     "config-language-button": "Change Language",
     "config-language-selection-label": "Select your preferred language",
     "pager-page": "Page",
@@ -10,5 +11,6 @@
     "pager-next": "Next",
     "pager-previous": "Previous",
     "budgets-input-search-label": "Search for budget",
-    "budget-input-search-placeholder": "Type a code or description"
+    "budget-input-search-placeholder": "Type a code or description",
+    "loading": "Loading"
 }

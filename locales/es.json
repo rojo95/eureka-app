@@ -2,6 +2,7 @@
     "menu-title-home": "Inicio",
     "menu-title-cmr-sales": "CMR y Ventas",
     "menu-title-budgets": "Presupuestos",
+    "menu-title-create-budget": "Creación de Presupuesto",
     "menu-title-config": "Configuración",
     "config-language-button": "Cambiar Idioma",
     "config-language-selection-label": "Seleccione su Idioma de Preferencia",
@@ -10,5 +11,6 @@
     "pager-next": "Siguiente",
     "pager-previous": "Anterior",
     "budgets-input-search-label": "Buscar Presupuesto",
-    "budget-input-search-placeholder": "Escribe un código o descripción"
+    "budget-input-search-placeholder": "Escribe un código o descripción",
+    "loading": "Cargando"
 }
