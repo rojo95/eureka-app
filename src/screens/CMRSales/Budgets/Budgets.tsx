@@ -77,7 +77,7 @@
 // const styles = StyleSheet.create({});
 
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import { DefaultTheme, Text, useTheme } from "react-native-paper";
 import { TextInput } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
@@ -86,12 +86,16 @@ import Paginator from "../../../components/Paginator/Paginator";
 import { useTranslation } from "react-i18next";
 import { Button } from "react-native-paper";
 import FAB from "../../../components/FAB/FAB";
+import Modal from "../../../components/Modal/Modal";
+import CreateBudget from "./CreateBudget/CreateBudget";
 
 export default function Budgets({ navigation }: { navigation: any }) {
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
+    const { OS } = Platform;
     const [text, setText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+    const [showModal, setShowModal] = useState<boolean>(false);
 
     const styles = StyleSheet.create({
         container: {
@@ -166,26 +170,32 @@ export default function Budgets({ navigation }: { navigation: any }) {
                     venta={"7.100,00"}
                 />
             </ScrollView>
+
+            <Modal
+                visible={showModal}
+                setShowModal={setShowModal}
+                style={{
+                    // flex: 1,
+                    // justifyContent: "center",
+                    ...(OS === "web" && {
+                        alignItems: "center",
+                    }),
+                    // padding: 5,
+                }}
+            >
+                <CreateBudget setShowModal={() => setShowModal(!showModal)} />
+            </Modal>
             <FAB
                 actions={[
                     {
                         icon: "plus",
-                        onPress: () => navigation.navigate("createBudget"),
+                        label: t("menu-title-create-budget"),
+                        onPress: () => setShowModal(!showModal),
                     },
                     {
-                        icon: "star",
-                        label: "Star",
+                        icon: "file-export",
+                        label: "Exportar",
                         onPress: () => console.log("Pressed star"),
-                    },
-                    {
-                        icon: "email",
-                        label: "Email",
-                        onPress: () => console.log("Pressed email"),
-                    },
-                    {
-                        icon: "bell",
-                        label: "Remind",
-                        onPress: () => console.log("Pressed notifications"),
                     },
                 ]}
             ></FAB>

@@ -1,7 +1,9 @@
-import { Platform, StyleSheet, View } from "react-native";
+import { Alert, Platform, StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import React, { useEffect, useState } from "react";
-import { Text } from "../Text/Text";
+import * as Location from "expo-location";
+import FAB from "../FAB/FAB";
+import { useTranslation } from "react-i18next";
 
 interface regionInterface {
     latitude: number;
@@ -15,12 +17,13 @@ interface MarkerInterface {
     longitude: number;
 }
 
-export default function Map({ OS, location }: { OS: string; location: any }) {
+export default function Map({ OS }: { OS: string }) {
+    const { t } = useTranslation();
     const [region, setRegion] = useState<regionInterface>({
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitude: 38.20486801970583,
+        latitudeDelta: 17.679489473469285,
+        longitude: -2.9028533957898617,
+        longitudeDelta: 12.98109669238329,
     });
     const [marker, setMarker] = useState<MarkerInterface | null>(null);
 
@@ -34,24 +37,30 @@ export default function Map({ OS, location }: { OS: string; location: any }) {
         setMarker(marker);
     }
 
-    useEffect(() => {
-        if (location) {
-            const newState = {
-                ...region,
-                latitude: location?.latitude || 0,
-                longitude: location?.longitude || 0,
-            };
-            onRegionChange(newState);
+    /**
+     * function to get the current user location
+     * @returns
+     */
+    async function getLocation() {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+            Alert.alert(t("location-denied"));
+            return;
         }
-        return onRegionChange({
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-        });
-    }, [location]);
 
-    // Condición para determinar si el componente debe mostrarse como mapa o texto
+        const location = (await Location.getCurrentPositionAsync({})).coords;
+
+        const newState = {
+            ...region,
+            latitude: location?.latitude || 0,
+            longitude: location?.longitude || 0,
+        };
+        onRegionChange(newState);
+    }
+
+    useEffect(() => {
+        getLocation;
+    }, []);
 
     return (
         <View>
@@ -66,7 +75,7 @@ export default function Map({ OS, location }: { OS: string; location: any }) {
                 {marker && (
                     <Marker
                         coordinate={marker}
-                        title={"Ubicación"}
+                        title={t("label-ubication")}
                         description={
                             "Ubicacion donde sera realizada la tarea del presupuesto"
                         }
@@ -74,6 +83,7 @@ export default function Map({ OS, location }: { OS: string; location: any }) {
                     />
                 )}
             </MapView>
+            <FAB actions={[]} />
         </View>
     );
 }
@@ -81,6 +91,6 @@ export default function Map({ OS, location }: { OS: string; location: any }) {
 const styles = StyleSheet.create({
     map: {
         width: "100%",
-        height: "100%",
+        height: 300,
     },
 });

@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import {
+    Pressable,
     StyleProp,
     StyleSheet,
     Text,
@@ -15,7 +16,8 @@ import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { StyleProps } from "react-native-reanimated";
 
 interface ButtonProps extends TouchableOpacityProps {
-    icon?: IconSource | undefined;
+    type?: "primary" | "secondary" | "link";
+    icon?: ReactNode | undefined;
     text?: string;
     textStyle?: StyleProps;
     buttonStyle?: StyleProps;
@@ -34,10 +36,8 @@ interface WithChildren extends ButtonProps {
     children: ReactNode;
 }
 
-// Combina ambas interfaces en un tipo de unión
-type RequiredOneOfTwoFields = WithText | WithChildren;
-
 export default function Button({
+    type = "primary",
     onPress,
     icon,
     text,
@@ -49,27 +49,46 @@ export default function Button({
 
     const styles = StyleSheet.create({
         button: {
-            borderColor: theme.colors.primary,
+            borderColor: type === "link" ? "transparent" : theme.colors.primary,
             borderWidth: 1,
-            backgroundColor: "#FFF",
-            flexDirection: "row",
+            backgroundColor:
+                type === "primary"
+                    ? theme.colors.primary
+                    : type === "link"
+                    ? "transparent"
+                    : theme.colors.secondaryButton,
+            ...(!buttonStyle?.flexDirection && {
+                flexDirection: "row-reverse",
+            }),
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 5,
         },
         text: {
-            color: theme.colors.primary,
+            color:
+                type === "primary"
+                    ? theme.colors.secondaryButton
+                    : theme.colors.primary,
         },
     });
 
+    if (type === "link") {
+        return (
+            <Pressable onPress={onPress} style={[styles.button, buttonStyle]}>
+                {icon && icon}
+                {text && <Text style={[styles.text, textStyle]}>{text}</Text>}
+                {children && children}
+            </Pressable>
+        );
+    }
     return (
         <PaperButton
             style={[styles.button, buttonStyle]}
-            icon={icon}
+            icon={() => icon}
             onPress={onPress}
         >
             {text && <Text style={[styles.text, textStyle]}>{text}</Text>}
-            {children}
+            {children && children}
         </PaperButton>
     );
 }

@@ -12,5 +12,14 @@
     "pager-previous": "Previous",
     "budgets-input-search-label": "Search for budget",
     "budget-input-search-placeholder": "Type a code or description",
-    "loading": "Loading"
+    "loading": "Loading",
+    "location-denied": "Permission to access location was denied",
+    "label-name": "Name",
+    "responsible-label": "Responsible",
+    "create-budget-button": "Create Budget",
+    "label-discount": "Discount %",
+    "label-date": "Date",
+    "label-ubication": "Location",
+    "label-create-cliente": "Create Client",
+    "row-per-page": "Rows per page"
 }

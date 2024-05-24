@@ -32,6 +32,7 @@ const Theme = {
         darkGrey: "#3C414F",
         background: "#FFF",
         backgroundCard: "#FFF",
+        secondaryButton: "#FFF",
     },
 };
 

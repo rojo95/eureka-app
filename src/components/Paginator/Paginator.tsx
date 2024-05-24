@@ -63,7 +63,7 @@ const Paginator: React.FC<PaginatorProps> = ({
     return (
         <View>
             <View style={styles.topContainer}>
-                <Text>Filas por página</Text>
+                <Text>{t("row-per-page")}</Text>
                 <Select
                     options={["10", "20", "50", "100"]}
                     selectedValue={limit}

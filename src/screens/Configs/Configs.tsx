@@ -51,7 +51,7 @@ export default function Configs() {
     }
 
     /**
-     *
+     * function to change the app language
      * @param lang {string}
      */
     async function changeLang(lang: string) {
@@ -92,13 +92,14 @@ export default function Configs() {
             </Portal>
             <Button
                 onPress={toggleModal}
-                icon={() => (
+                type="secondary"
+                icon={
                     <Fontisto
                         name="world-o"
                         size={24}
                         color={theme.colors.primary}
                     />
-                )}
+                }
                 text={t("config-language-button")}
             />
         </View>
