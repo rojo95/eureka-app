@@ -456,7 +456,9 @@ exports[`Test to evaluate <Button /> component renders correctly with icon 1`] =
             ]
           }
           testID="button-icon-container"
-        />
+        >
+          <Text />
+        </View>
         <Text
           numberOfLines={1}
           selectable={false}
