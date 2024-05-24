@@ -15,6 +15,7 @@ interface SelectionProps {
     onSelect: (value: string) => void;
     selectedValue: string;
     buttonStyle?: StyleProps;
+    placeholder?: string;
 }
 
 const Select: React.FC<SelectionProps> = ({
@@ -22,6 +23,7 @@ const Select: React.FC<SelectionProps> = ({
     onSelect,
     selectedValue,
     buttonStyle,
+    placeholder = "Seleccione un Item de la Lista",
 }) => {
     const theme: DefaultTheme = useTheme();
     const [visible, setVisible] = useState(false);
@@ -55,10 +57,22 @@ const Select: React.FC<SelectionProps> = ({
                         contentStyle={[styles.button, buttonStyle]}
                         icon={!visible ? "chevron-down" : "chevron-up"}
                     >
-                        <Text style={styles.text}>{selectedValue}</Text>
+                        <Text style={styles.text}>
+                            {(typeof options[0] === "string"
+                                ? selectedValue
+                                : (
+                                      options as {
+                                          id: string;
+                                          description: string;
+                                      }[]
+                                  )?.find((v) => v.id === selectedValue)
+                                      ?.description || selectedValue) ||
+                                placeholder}
+                        </Text>
                     </Button>
                 }
             >
+                <Menu.Item title={placeholder} />
                 {options.map((option, index) => (
                     <Menu.Item
                         key={index}

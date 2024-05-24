@@ -12,5 +12,14 @@
     "pager-previous": "Anterior",
     "budgets-input-search-label": "Buscar Presupuesto",
     "budget-input-search-placeholder": "Escribe un código o descripción",
-    "loading": "Cargando"
+    "loading": "Cargando",
+    "location-denied": "Permiso para acceder a la localización del dispositivo",
+    "label-name": "Nombre",
+    "responsible-label": "Responsable",
+    "create-budget-button": "Crear Presupuesto",
+    "label-discount": "Descuento %",
+    "label-date": "Fecha",
+    "label-ubication": "Ubicación",
+    "label-create-cliente": "Crear Cliente",
+    "row-per-page": "Filas por página"
 }

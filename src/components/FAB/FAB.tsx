@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { FAB as FABButton, Portal } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { FAB as FABButton, Portal, Provider } from "react-native-paper";
 
 const FAB = ({ actions }: { actions: any[] }) => {
     const [open, setOpen] = useState<boolean>(false);
-    const navigation = useNavigation();
 
     const onStateChange = (open: boolean) => setOpen(open);
-
-    useEffect(() => {
-        return;
-    }, [navigation]);
 
     const styles = StyleSheet.create({
         container: {
@@ -20,7 +14,7 @@ const FAB = ({ actions }: { actions: any[] }) => {
             bottom: 16,
         },
         fab: {
-            backgroundColor: "#007AFF", // Color de fondo del FAB
+            backgroundColor: "#fff", // Color de fondo del FAB
         },
     });
 
@@ -30,24 +24,26 @@ const FAB = ({ actions }: { actions: any[] }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <Portal>
-                <FABButton.Group
-                    open={open}
-                    visible
-                    icon={open ? "calendar-today" : "plus"}
-                    actions={actions}
-                    onStateChange={() => {
-                        onStateChange(!open);
-                    }}
-                    onPress={() => {
-                        if (open) {
-                            // hacer algo si el grupo está abierto
-                        }
-                    }}
-                />
-            </Portal>
-        </View>
+        <Provider>
+            <View style={styles.container}>
+                <Portal>
+                    <FABButton.Group
+                        open={open}
+                        visible
+                        icon={open ? "clipboard-check-outline" : "plus"}
+                        actions={actions}
+                        onStateChange={() => {
+                            onStateChange(!open);
+                        }}
+                        onPress={() => {
+                            if (open) {
+                                // hacer algo si el grupo está abierto
+                            }
+                        }}
+                    />
+                </Portal>
+            </View>
+        </Provider>
     );
 };
 
