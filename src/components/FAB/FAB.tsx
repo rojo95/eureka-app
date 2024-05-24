@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { FAB as FABButton, Portal, Provider } from "react-native-paper";
+import {
+    DefaultTheme,
+    FAB as FABButton,
+    Portal,
+    Provider,
+    useTheme,
+} from "react-native-paper";
 
+interface ActionsInterface {}
 const FAB = ({ actions }: { actions: any[] }) => {
+    const theme: DefaultTheme = useTheme();
     const [open, setOpen] = useState<boolean>(false);
 
     const onStateChange = (open: boolean) => setOpen(open);
@@ -14,7 +22,7 @@ const FAB = ({ actions }: { actions: any[] }) => {
             bottom: 16,
         },
         fab: {
-            backgroundColor: "#fff", // Color de fondo del FAB
+            color: "#fff", // Color de fondo del FAB
         },
     });
 
@@ -30,8 +38,11 @@ const FAB = ({ actions }: { actions: any[] }) => {
                     <FABButton.Group
                         open={open}
                         visible
+                        color={theme.colors.primaryContrast}
                         icon={open ? "clipboard-check-outline" : "plus"}
                         actions={actions}
+                        fabStyle={{ backgroundColor: theme.colors.primary }}
+                        backdropColor={"transparent"}
                         onStateChange={() => {
                             onStateChange(!open);
                         }}

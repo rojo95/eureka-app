@@ -1,6 +1,7 @@
-import { useContext } from "react";
-import { Button, View } from "react-native";
+import { useContext, useEffect } from "react";
+import { View } from "react-native";
 import { RightDrawerContext } from "../../components/drawers/RightDrawerScreen";
+import Button from "../../components/Button/Button";
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
     const contextValue = useContext(RightDrawerContext);
@@ -20,9 +21,12 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
         >
             <Button
                 onPress={() => navigation.openDrawer()}
-                title="Open left drawer"
+                text="Open left drawer"
             />
-            <Button onPress={() => toggleOpenRight()} title="Open right drawer" />
+            <Button
+                onPress={() => toggleOpenRight()}
+                text="Open right drawer"
+            />
         </View>
     );
 }

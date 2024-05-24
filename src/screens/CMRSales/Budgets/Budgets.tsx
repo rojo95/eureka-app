@@ -191,11 +191,21 @@ export default function Budgets({ navigation }: { navigation: any }) {
                         icon: "plus",
                         label: t("menu-title-create-budget"),
                         onPress: () => setShowModal(!showModal),
+                        color: theme.colors.primary,
+                        style: {
+                            backgroundColor: theme.colors.primaryContrast,
+                            borderRadius: 20,
+                        },
                     },
                     {
                         icon: "file-export",
                         label: "Exportar",
                         onPress: () => console.log("Pressed star"),
+                        color: theme.colors.primary,
+                        style: {
+                            backgroundColor: theme.colors.primaryContrast,
+                            borderRadius: 20,
+                        },
                     },
                 ]}
             ></FAB>
