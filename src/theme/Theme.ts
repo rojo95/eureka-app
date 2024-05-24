@@ -33,6 +33,7 @@ const Theme = {
         background: "#FFF",
         backgroundCard: "#FFF",
         secondaryButton: "#FFF",
+        primaryContrast: "#FFF",
     },
 };
 

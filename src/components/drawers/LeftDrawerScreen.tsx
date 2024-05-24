@@ -45,7 +45,7 @@ export default function LeftDrawerScreen() {
                 component={Configs}
                 options={{ title: t("menu-title-config") }}
             />
-            <LeftDrawer.Screen
+            {/* <LeftDrawer.Screen
                 name="createBudget"
                 options={{
                     title: t("menu-title-create-budget"),
@@ -59,7 +59,7 @@ export default function LeftDrawerScreen() {
                     ),
                 }}
                 component={CreateBudget}
-            />
+            /> */}
         </LeftDrawer.Navigator>
     );
 }
