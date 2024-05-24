@@ -14,7 +14,9 @@ describe("Test to evaluate <Button /> component", () => {
         const testText = "test";
         const tree: any = renderer.create(<Button text={testText} />).toJSON();
         const textElement =
-            tree.children[0].children[0].children[0].children[0].children[0];
+            tree.children[0]?.children[0]?.children[0]?.children[1]?.children[0];
+        console.log(textElement);
+
         expect(textElement.children).toContain(testText);
     });
 
@@ -26,7 +28,7 @@ describe("Test to evaluate <Button /> component", () => {
     it("renders correctly with icon", () => {
         const tree = renderer
             .create(
-                <Button icon={() => <Fontisto name="world-o" size={24} />} />
+                <Button icon={<Fontisto name="world-o" size={24} />} />
             )
             .toJSON();
         expect(tree).toMatchSnapshot();
