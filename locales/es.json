@@ -21,5 +21,10 @@
     "label-date": "Fecha",
     "label-ubication": "Ubicación",
     "label-create-cliente": "Crear Cliente",
-    "row-per-page": "Filas por página"
+    "row-per-page": "Filas por página",
+    "export": "Exportar",
+    "logout": "Cerrar Sesión",
+    "label-email": "Correo Electrónico",
+    "label-password": "Contraseña",
+    "button-login": "Iniciar Sesión"
 }

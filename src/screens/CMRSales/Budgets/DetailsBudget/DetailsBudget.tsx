@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 import DraggableFlatList, {
     RenderItemParams,
     ScaleDecorator,
@@ -49,7 +49,7 @@ export default function DrawerFlatList() {
     const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => {
         return (
             <ScaleDecorator>
-                <TouchableOpacity
+                <Pressable
                     onLongPress={drag}
                     disabled={isActive}
                     style={[
@@ -65,7 +65,7 @@ export default function DrawerFlatList() {
                     <Text style={[styles.text, styles.description]}>
                         {item.label}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             </ScaleDecorator>
         );
     };

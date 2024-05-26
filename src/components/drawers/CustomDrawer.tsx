@@ -29,7 +29,7 @@ export default function CustomDrawer(props: any) {
             <DrawerItem
                 label={t("menu-title-home")}
                 onPress={() => props.navigation.navigate("home")}
-                activeBackgroundColor={theme.colors.darkGrey} // Color de fondo cuando el item está activo
+                activeBackgroundColor={theme.colors.darkGrey} 
                 activeTintColor="#FFFFFF" // Color del texto cuando el item está activo
                 inactiveTintColor="#FFFFFF" // Color del texto cuando el item está inactivo
                 focused={isActiveRoute("home")}
@@ -92,12 +92,27 @@ export default function CustomDrawer(props: any) {
                 label={t("menu-title-config")}
                 onPress={() => props.navigation.navigate("configs")}
                 activeBackgroundColor="#636772" // Color de fondo cuando el item está activo
-                activeTintColor="#FFFFFF" // Color del texto cuando el item está activo
-                inactiveTintColor="#FFFFFF" // Color del texto cuando el item está inactivo
+                activeTintColor={theme.colors.primaryContrast} // Color del texto cuando el item está activo
+                inactiveTintColor={theme.colors.primaryContrast} // Color del texto cuando el item está inactivo
                 focused={isActiveRoute("configs")}
                 icon={() => (
                     <MaterialCommunityIcons
                         name="cog-outline"
+                        size={24}
+                        color="white"
+                    />
+                )}
+            />
+            <DrawerItem
+                label={t("logout")}
+                onPress={() => props.navigation.navigate("login")}
+                activeBackgroundColor="#636772" // Color de fondo cuando el item está activo
+                activeTintColor={theme.colors.primaryContrast} // Color del texto cuando el item está activo
+                inactiveTintColor={theme.colors.primaryContrast} // Color del texto cuando el item está inactivo
+                focused={isActiveRoute("login")}
+                icon={() => (
+                    <MaterialCommunityIcons
+                        name="logout"
                         size={24}
                         color="white"
                     />

@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import Budgets from "../../screens/CMRSales/Budgets/Budgets";
 import HomeScreen from "../../screens/Home/Home";
 import CustomDrawer from "./CustomDrawer";
-import CreateBudget from "../../screens/CMRSales/Budgets/CreateBudget/CreateBudget";
 import Configs from "../../screens/Configs/Configs";
 import { FontAwesome } from "@expo/vector-icons";
 import { DefaultTheme, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import LoginScreen from "../../screens/Login/Login";
 
 const LeftDrawer = createDrawerNavigator();
 
@@ -18,6 +18,7 @@ export default function LeftDrawerScreen() {
     return (
         <LeftDrawer.Navigator
             drawerContent={(props) => <CustomDrawer {...props} />}
+            initialRouteName="login"
             screenOptions={{
                 drawerPosition: "left",
                 drawerStyle: {
@@ -45,10 +46,10 @@ export default function LeftDrawerScreen() {
                 component={Configs}
                 options={{ title: t("menu-title-config") }}
             />
-            {/* <LeftDrawer.Screen
-                name="createBudget"
+            <LeftDrawer.Screen
+                name="login"
                 options={{
-                    title: t("menu-title-create-budget"),
+                    title: t("button-login"),
                     headerRight: () => (
                         <FontAwesome
                             onPress={() => navigation.navigate("budgets")}
@@ -57,9 +58,10 @@ export default function LeftDrawerScreen() {
                             color={theme.colors.dark}
                         />
                     ),
+                    headerShown: false,
                 }}
-                component={CreateBudget}
-            /> */}
+                component={LoginScreen}
+            />
         </LeftDrawer.Navigator>
     );
 }

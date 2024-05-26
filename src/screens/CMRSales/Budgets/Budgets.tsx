@@ -175,12 +175,9 @@ export default function Budgets({ navigation }: { navigation: any }) {
                 visible={showModal}
                 setShowModal={setShowModal}
                 style={{
-                    // flex: 1,
-                    // justifyContent: "center",
                     ...(OS === "web" && {
                         alignItems: "center",
                     }),
-                    // padding: 5,
                 }}
             >
                 <CreateBudget setShowModal={() => setShowModal(!showModal)} />
@@ -199,7 +196,7 @@ export default function Budgets({ navigation }: { navigation: any }) {
                     },
                     {
                         icon: "file-export",
-                        label: "Exportar",
+                        label: t("export"),
                         onPress: () => console.log("Pressed star"),
                         color: theme.colors.primary,
                         style: {
