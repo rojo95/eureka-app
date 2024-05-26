@@ -15,7 +15,7 @@ import { languageResources } from "../../../services/i18next";
 import languageList from "../../../services/languagesList.json";
 import Button from "../../components/Button/Button";
 import changeLanguage from "../../utils/Language";
-import { Text } from "../../components/Text/Text";
+import Text from "../../components/Text/Text";
 
 export default function Configs() {
     const theme: DefaultTheme = useTheme();
