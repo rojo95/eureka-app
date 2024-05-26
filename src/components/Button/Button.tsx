@@ -1,18 +1,15 @@
 import React, { ReactNode } from "react";
 import {
     Pressable,
-    StyleProp,
     StyleSheet,
     Text,
     TouchableOpacityProps,
-    View,
 } from "react-native";
 import {
     DefaultTheme,
     Button as PaperButton,
     useTheme,
 } from "react-native-paper";
-import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import { StyleProps } from "react-native-reanimated";
 
 interface ButtonProps extends TouchableOpacityProps {
@@ -57,8 +54,6 @@ export default function Button({
                     : type === "link"
                     ? "transparent"
                     : theme.colors.primaryContrast,
-            // justifyContent: "center",
-            // alignItems: "center",
             borderRadius: 5,
             width: "100%",
         },

@@ -3,6 +3,7 @@ import renderer from "react-test-renderer";
 
 import Button from "../Button";
 import { Fontisto } from "@expo/vector-icons";
+import { Button as ButtonRNP } from "react-native-paper";
 
 describe("Test to evaluate <Button /> component", () => {
     it("has 1 child", () => {
@@ -20,10 +21,25 @@ describe("Test to evaluate <Button /> component", () => {
     });
 
     it("renders correctly with icon", () => {
-        const tree = renderer
-            .create(<Button icon={<Fontisto name="world-o" size={24} />} />)
+        const textInsideButtonIcon = "Press Me";
+        const tree: any = renderer
+            .create(
+                <Button
+                    icon={
+                        <ButtonRNP icon="camera">
+                            {textInsideButtonIcon}
+                        </ButtonRNP>
+                    }
+                />
+            )
             .toJSON();
-        expect(tree).toMatchSnapshot();
+
+        const icon =
+            tree?.children[0]?.children[0]?.children[0]?.children[0]
+                ?.children[0]?.children[0]?.children[0]?.children[0]?.children;
+
+        expect(icon[0].props.testID).toBe("button-icon-container");
+        expect(icon[1]?.children[0]).toBe(textInsideButtonIcon);
     });
 
     it("render button without change", () => {
