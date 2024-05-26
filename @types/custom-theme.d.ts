@@ -5,7 +5,7 @@ interface CustomColors {
     darkGrey: string;
     background: string;
     backgroundCard: string;
-    secondaryButton: string;
+    primaryContrast: string;
 }
 
 declare module "react-native-paper" {

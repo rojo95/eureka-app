@@ -56,7 +56,7 @@ export default function Button({
                     ? theme.colors.primary
                     : type === "link"
                     ? "transparent"
-                    : theme.colors.secondaryButton,
+                    : theme.colors.primaryContrast,
             ...(!buttonStyle?.flexDirection && {
                 flexDirection: "row-reverse",
             }),
@@ -67,7 +67,7 @@ export default function Button({
         text: {
             color:
                 type === "primary"
-                    ? theme.colors.secondaryButton
+                    ? theme.colors.primaryContrast
                     : theme.colors.primary,
         },
     });

@@ -21,5 +21,10 @@
     "label-date": "Date",
     "label-ubication": "Location",
     "label-create-cliente": "Create Client",
-    "row-per-page": "Rows per page"
+    "row-per-page": "Rows per page",
+    "export": "Export",
+    "logout": "Logout",
+    "label-email": "Email",
+    "label-password": "Password",
+    "button-login": "Login"
 }
