@@ -25,7 +25,7 @@ const { OS } = Platform;
  * function to store data securely
  * @param param0
  */
-async function save({ key, value }: SecureStoreInterface) {
+async function saveSecure({ key, value }: SecureStoreInterface) {
     if (OS === "web") {
         // todo logica de almacenamiento de datos seguros web
     } else {
@@ -38,7 +38,7 @@ async function save({ key, value }: SecureStoreInterface) {
  * @param param0
  * @returns
  */
-export async function get({ key }: { key: string }) {
+export async function getSecure({ key }: { key: string }) {
     if (OS === "web") {
         // todo logica de consulta de datos seguros almacenados web
     } else {
@@ -71,13 +71,13 @@ async function login({ email, password }: LoginProps) {
             const { id, userId } = JSON.parse(request.response);
             if (id) {
                 console.log("Login successful!");
-                await save({ key: userKey, value: id });
+                await saveSecure({ key: userKey, value: id });
 
                 const { type, name, lastName } = await getUserData({
                     userId: parseInt(userId),
                 });
 
-                await save({ key: role, value: type });
+                await saveSecure({ key: role, value: type });
 
                 return type && true;
             } else {
@@ -93,7 +93,7 @@ async function login({ email, password }: LoginProps) {
  * @param param0
  */
 async function getUserData({ userId }: { userId: number }): Promise<any> {
-    const Authorization = await get({ key: userKey });
+    const Authorization = await getSecure({ key: userKey });
     const url = `${API_URL}personnels/${userId}/v2details`;
     return await axios({
         method: "get",

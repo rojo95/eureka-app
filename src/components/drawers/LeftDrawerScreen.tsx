@@ -8,6 +8,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import { DefaultTheme, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import LoginScreen from "../../screens/Login/Login";
+import { useEffect, useState } from "react";
+import { getSecure } from "../../utils/session";
+import sessionNames from "../../utils/sessionInfo";
 
 const LeftDrawer = createDrawerNavigator();
 
@@ -15,10 +18,22 @@ export default function LeftDrawerScreen() {
     const { t } = useTranslation();
     const navigation: any = useNavigation();
     const theme: DefaultTheme = useTheme();
+    const [user, setUser] = useState<boolean>(false);
+
+    const validateUser = async (): Promise<void> => {
+        const u = (await getSecure({ key: sessionNames.userKey }))
+            ? true
+            : false;
+        setUser(u);
+    };
+
+    useEffect(() => {
+        validateUser();
+    }, []);
     return (
         <LeftDrawer.Navigator
             drawerContent={(props) => <CustomDrawer {...props} />}
-            initialRouteName="login"
+            initialRouteName={user ? "home" : "login"}
             screenOptions={{
                 drawerPosition: "left",
                 drawerStyle: {

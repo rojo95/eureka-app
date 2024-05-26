@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, Pressable, Text, StyleSheet } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -29,13 +29,13 @@ export default function CustomDrawer(props: any) {
             <DrawerItem
                 label={t("menu-title-home")}
                 onPress={() => props.navigation.navigate("home")}
-                activeBackgroundColor={theme.colors.darkGrey} 
+                activeBackgroundColor={theme.colors.darkGrey}
                 activeTintColor="#FFFFFF" // Color del texto cuando el item está activo
                 inactiveTintColor="#FFFFFF" // Color del texto cuando el item está inactivo
                 focused={isActiveRoute("home")}
                 icon={() => <AntDesign name="home" size={24} color="white" />}
             />
-            <TouchableOpacity
+            <Pressable
                 onPress={() => setIsExpanded(!isExpanded)}
                 style={[
                     styles.item,
@@ -59,10 +59,10 @@ export default function CustomDrawer(props: any) {
                 >
                     {t("menu-title-cmr-sales")}
                 </Text>
-            </TouchableOpacity>
+            </Pressable>
             {isExpanded && (
                 <View>
-                    <TouchableOpacity
+                    <Pressable
                         onPress={() => props.navigation.navigate("budgets")}
                         style={[
                             styles.itemSon,
@@ -85,7 +85,7 @@ export default function CustomDrawer(props: any) {
                         >
                             {t("menu-title-budgets")}
                         </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             )}
             <DrawerItem

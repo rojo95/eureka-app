@@ -57,18 +57,17 @@ export default function Button({
                     : type === "link"
                     ? "transparent"
                     : theme.colors.primaryContrast,
-            ...(!buttonStyle?.flexDirection && {
-                flexDirection: "row-reverse",
-            }),
-            justifyContent: "center",
-            alignItems: "center",
+            // justifyContent: "center",
+            // alignItems: "center",
             borderRadius: 5,
+            width: "100%",
         },
         text: {
             color:
                 type === "primary"
                     ? theme.colors.primaryContrast
                     : theme.colors.primary,
+            width: "100%",
         },
     });
 
