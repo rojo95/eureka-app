@@ -27,5 +27,10 @@
     "label-email": "Correo Electrónico",
     "label-password": "Contraseña",
     "button-login": "Iniciar Sesión",
-    "select-list-item":"Seleccione un Item de la Lista"
+    "select-list-item": "Seleccione un Item de la Lista",
+    "placeholder-select-responsible": "Seleccione a un Responsable",
+    "activity-label": "Actividad",
+    "placeholder-select-activity": "Seleccione una Actividad",
+    "client-label": "Cliente",
+    "placeholder-select-client": "Seleccione un Cliente"
 }

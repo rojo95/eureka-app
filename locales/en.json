@@ -27,5 +27,10 @@
     "label-email": "Email",
     "label-password": "Password",
     "button-login": "Login",
-    "select-list-item": "Select an Item from the List"
+    "select-list-item": "Select an Item from the List",
+    "placeholder-select-responsible": "Select a Responsible",
+    "activity-label": "Activity",
+    "placeholder-select-activity": "Select an Activity",
+    "client-label": "Client",
+    "placeholder-select-client": "Select a Client"
 }
