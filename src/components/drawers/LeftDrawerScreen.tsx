@@ -1,6 +1,5 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useTranslation } from "react-i18next";
-import * as SecureStore from "expo-secure-store";
 import Budgets from "../../screens/CMRSales/Budgets/Budgets";
 import HomeScreen from "../../screens/Home/Home";
 import CustomDrawer from "./CustomDrawer";
@@ -9,8 +8,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { DefaultTheme, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import LoginScreen from "../../screens/Login/Login";
-import { useContext, useEffect, useState } from "react";
-import sessionNames from "../../utils/sessionInfo";
+import { useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 
 const LeftDrawer = createDrawerNavigator();
@@ -20,29 +18,15 @@ export default function LeftDrawerScreen() {
     const navigation: any = useNavigation();
     const theme: DefaultTheme = useTheme();
     const { user } = useContext(UserContext);
-    // const [user, setUser] = useState<boolean>(false);
-
-    // const validateUser = async (): Promise<void> => {
-    //     const u = (await getSecure({ key: sessionNames.userKey }))
-    //         ? true
-    //         : false;
-    //     setUser(u);
-    //     console.log(u);
-    // };
-
-    // useEffect(() => {
-    //     validateUser();
-    // }, []);
 
     return (
         <LeftDrawer.Navigator
             drawerContent={(props) => <CustomDrawer {...props} />}
-            // initialRouteName={user ? "home" : "login"}
             initialRouteName={"home"}
             screenOptions={{
                 drawerPosition: "left",
                 drawerStyle: {
-                    backgroundColor: "#3C414F", // Cambia este valor al color que desees
+                    backgroundColor: theme.colors.darkGrey,
                 },
             }}
         >

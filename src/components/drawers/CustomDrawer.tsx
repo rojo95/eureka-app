@@ -32,8 +32,8 @@ export default function CustomDrawer(props: any) {
                 label={t("menu-title-home")}
                 onPress={() => props.navigation.navigate("home")}
                 activeBackgroundColor={theme.colors.darkGrey}
-                activeTintColor="#FFFFFF" // Color del texto cuando el item está activo
-                inactiveTintColor="#FFFFFF" // Color del texto cuando el item está inactivo
+                activeTintColor={theme.colors.primaryContrast}
+                inactiveTintColor={theme.colors.primaryContrast}
                 focused={isActiveRoute("home")}
                 icon={() => <AntDesign name="home" size={24} color="white" />}
             />
@@ -55,7 +55,7 @@ export default function CustomDrawer(props: any) {
                 />
                 <Text
                     style={{
-                        color: "#FFFFFF",
+                        color: theme.colors.primaryContrast,
                         marginLeft: 5,
                     }}
                 >
@@ -82,7 +82,7 @@ export default function CustomDrawer(props: any) {
                         />
                         <Text
                             style={{
-                                color: "#fff",
+                                color: theme.colors.primaryContrast,
                             }}
                         >
                             {t("menu-title-budgets")}
