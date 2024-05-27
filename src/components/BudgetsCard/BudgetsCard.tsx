@@ -1,5 +1,5 @@
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Text } from "../Text/Text";
+import Text from "../Text/Text";
 import { Badge } from "react-native-paper";
 
 const BudgetsCard = ({
