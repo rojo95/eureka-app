@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from "react-native";
 import { Button, DefaultTheme, useTheme } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { Entypo } from "@expo/vector-icons";
-import Select from "../Select/Select"; // Adjust the import path as necessary
+import Select from "../Select/Select";
 import { MaterialIcons } from "@expo/vector-icons";
 
 interface PaginatorProps {
@@ -29,16 +29,13 @@ const Paginator: React.FC<PaginatorProps> = ({
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
-            // padding: 16,
         },
         bottomContainer: {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
-            // padding: 16,
         },
         pageText: {
-            // fontSize: 16,
             color: theme.colors.dark,
         },
         labelContainer: {
