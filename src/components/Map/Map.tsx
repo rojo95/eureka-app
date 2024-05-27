@@ -28,12 +28,10 @@ export default function Map({ OS }: { OS: string }) {
     const [marker, setMarker] = useState<MarkerInterface | null>(null);
 
     function onRegionChange(region: regionInterface) {
-        console.log(region);
         setRegion(region);
     }
 
     function addMarker(marker: MarkerInterface) {
-        console.log(marker);
         setMarker(marker);
     }
 

@@ -8,7 +8,7 @@ import {
     useTheme,
 } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
-import { Text } from "../Text/Text";
+import Text from "../Text/Text";
 
 interface SelectionProps {
     options: string[] | { id: string; description: string }[];

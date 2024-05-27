@@ -11,8 +11,8 @@ import { Fontisto } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { languageResources } from "../../../services/i18next";
-import languageList from "../../../services/languagesList.json";
+import { languageResources } from "../../services/languages/i18next";
+import languageList from "../../services/languages/languagesList.json";
 import Button from "../../components/Button/Button";
 import changeLanguage from "../../utils/Language";
 import Text from "../../components/Text/Text";
