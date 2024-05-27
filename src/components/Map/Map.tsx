@@ -2,7 +2,6 @@ import { Alert, Platform, StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
-import FAB from "../FAB/FAB";
 import { useTranslation } from "react-i18next";
 
 interface regionInterface {
@@ -17,7 +16,7 @@ interface MarkerInterface {
     longitude: number;
 }
 
-export default function Map({ OS }: { OS: string }) {
+export default function Map({ description }: { description?: string }) {
     const { t } = useTranslation();
     const [region, setRegion] = useState<regionInterface>({
         latitude: 38.20486801970583,
@@ -67,7 +66,6 @@ export default function Map({ OS }: { OS: string }) {
                 initialRegion={region}
                 onRegionChange={onRegionChange}
                 onPress={(e) => addMarker(e.nativeEvent.coordinate)}
-                onCalloutPress={() => console.log("objetivo")}
                 mapType={"standard"}
             >
                 {marker && (
@@ -75,13 +73,12 @@ export default function Map({ OS }: { OS: string }) {
                         coordinate={marker}
                         title={t("label-ubication")}
                         description={
-                            "Ubicacion donde sera realizada la tarea del presupuesto"
+                            description
                         }
                         draggable={true}
                     />
                 )}
             </MapView>
-            <FAB actions={[]} />
         </View>
     );
 }
