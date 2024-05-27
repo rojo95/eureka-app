@@ -11,6 +11,7 @@ interface SelectionProps {
     selectedValue: string;
     buttonStyle?: StyleProps;
     placeholder?: string;
+    label?: string;
 }
 
 const Select: React.FC<SelectionProps> = ({
@@ -19,6 +20,7 @@ const Select: React.FC<SelectionProps> = ({
     selectedValue,
     buttonStyle,
     placeholder,
+    label,
 }) => {
     const { t } = useTranslation();
     const placeHolder = placeholder || t("select-list-item");
@@ -29,7 +31,7 @@ const Select: React.FC<SelectionProps> = ({
         container: {
             width: "100%",
             borderWidth: 1,
-            borderRadius: 5,
+            borderRadius: 3,
         },
         button: {
             flexDirection: "row-reverse",
@@ -37,6 +39,14 @@ const Select: React.FC<SelectionProps> = ({
             width: "100%",
         },
         text: { color: theme.colors.dark },
+        fieldLabel: {
+            position: "absolute",
+            top: -9,
+            left: 8,
+            backgroundColor: theme.colors.primaryContrast,
+            paddingHorizontal:5,
+            fontSize: 12,
+        },
     });
 
     const openMenu = () => setVisible(true);
@@ -44,6 +54,7 @@ const Select: React.FC<SelectionProps> = ({
 
     return (
         <View style={[styles.container, buttonStyle]}>
+            <Text style={styles.fieldLabel}>{label}</Text>
             <Menu
                 visible={visible}
                 onDismiss={closeMenu}
