@@ -12,7 +12,7 @@ import {
 } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonPropsBase extends TouchableOpacityProps {
     type?: "primary" | "secondary" | "link";
     icon?: ReactNode | undefined;
     text?: string;
@@ -21,17 +21,28 @@ interface ButtonProps extends TouchableOpacityProps {
     children?: ReactNode;
 }
 
-// Extiende la interfaz base para requerir el campo 'text'
-interface WithText extends ButtonProps {
+// Extends the base interface to require the field 'text'.
+interface WithText extends ButtonPropsBase {
+    icon?: never;
     text: string;
-    children?: never; // Indica que 'children' no debe estar presente cuando 'text' está presente
+    children?: never;
 }
 
-// Extiende la interfaz base para requerir el campo 'children'
-interface WithChildren extends ButtonProps {
-    text?: never; // Indica que 'text' no debe estar presente cuando 'children' está presente
+// Extends the base interface to require the 'children' field
+interface WithChildren extends ButtonPropsBase {
+    icon?: never;
+    text?: never;
     children: ReactNode;
 }
+
+// Extends the base interface to require the 'icon' field
+interface WithIcon extends ButtonPropsBase {
+    icon: ReactNode;
+    text?: never;
+    children?: never;
+}
+
+type ButtonProps = WithText | WithChildren | WithIcon;
 
 export default function Button({
     type = "primary",
