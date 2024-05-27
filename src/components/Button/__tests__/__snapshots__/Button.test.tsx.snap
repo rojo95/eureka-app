@@ -161,7 +161,21 @@ exports[`Test to evaluate <Button /> component render button without change 1`] 
             ]
           }
           testID="button-text"
-        />
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": undefined,
+                  "width": "100%",
+                },
+                undefined,
+              ]
+            }
+          >
+            text
+          </Text>
+        </Text>
       </View>
     </View>
   </View>

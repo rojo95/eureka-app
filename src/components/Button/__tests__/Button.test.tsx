@@ -2,13 +2,24 @@ import React from "react";
 import renderer from "react-test-renderer";
 
 import Button from "../Button";
-import { Fontisto } from "@expo/vector-icons";
 import { Button as ButtonRNP } from "react-native-paper";
+import Text from "../../Text/Text";
 
 describe("Test to evaluate <Button /> component", () => {
     it("has 1 child", () => {
-        const tree: any = renderer.create(<Button />).toJSON();
+        const tree: any = renderer.create(<Button text="text" />).toJSON();
         expect(tree.children.length).toBe(1);
+    });
+
+    it("render correctly each kind of button", () => {
+        const link: any = renderer.create(<Button text="text" type="link"/>).toJSON();
+        expect(link.children.length).toBe(1);
+
+        const primary: any = renderer.create(<Button text="text" type="primary"/>).toJSON();
+        expect(primary.children.length).toBe(1);
+
+        const secondary: any = renderer.create(<Button text="text" type="secondary"/>).toJSON();
+        expect(secondary.children.length).toBe(1);
     });
 
     it("renders correctly with text", () => {
@@ -42,8 +53,23 @@ describe("Test to evaluate <Button /> component", () => {
         expect(icon[1]?.children[0]).toBe(textInsideButtonIcon);
     });
 
+    it("should render children correctly", () => {
+        const childrenInsideButton = "Text Button test";
+        const tree: any = renderer
+            .create(
+                <Button>
+                    <Text>{childrenInsideButton}</Text>
+                </Button>
+            )
+            .toJSON();
+        const text =
+            tree?.children[0]?.children[0]?.children[0]?.children[1]
+                ?.children[0];
+        expect(text.children).toContain(childrenInsideButton);
+    });
+
     it("render button without change", () => {
-        const tree = renderer.create(<Button />).toJSON();
+        const tree = renderer.create(<Button text="text" />).toJSON();
         expect(tree).toMatchSnapshot();
     });
 });
