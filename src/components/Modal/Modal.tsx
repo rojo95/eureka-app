@@ -16,7 +16,6 @@ const Modal = ({ visible, children, setShowModal, style }: ModalInterface) => {
 
     return (
         <View>
-            {/* <PaperProvider> */}
             <Portal>
                 <ModalRNP
                     style={style}
@@ -27,7 +26,6 @@ const Modal = ({ visible, children, setShowModal, style }: ModalInterface) => {
                     {children}
                 </ModalRNP>
             </Portal>
-            {/* </PaperProvider> */}
         </View>
     );
 };
