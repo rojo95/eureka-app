@@ -4,17 +4,17 @@ import { DefaultTheme, TextInput, useTheme } from "react-native-paper";
 import Button from "../../components/Button/Button";
 import { useTranslation } from "react-i18next";
 import { Image } from "expo-image";
-import { /* login, */ LoginProps } from "../../utils/login";
+import { LoginProps } from "../../utils/login";
 import { UserContext } from "../../contexts/UserContext";
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
-    const { login, user } = useContext(UserContext);
+    const { login } = useContext(UserContext);
     const theme: DefaultTheme = useTheme();
     const { t } = useTranslation();
     const { OS } = Platform;
     const [formData, setFormData] = useState<LoginProps>({
-        email: "r.johan95@gmail.com",
-        password: "/*cd7091857cd*/",
+        email: "",
+        password: "",
     });
     const [error, setError] = useState("");
     const [showPass, setShowPass] = useState<boolean>(false);
@@ -90,7 +90,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                             mode="outlined"
                             label={t("label-password")}
                             value={formData.password}
-                            secureTextEntry={showPass}
+                            secureTextEntry={!showPass}
                             onChangeText={(text) =>
                                 handleData({ name: "password", value: text })
                             }
