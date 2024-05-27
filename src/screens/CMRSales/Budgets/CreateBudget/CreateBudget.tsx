@@ -62,7 +62,7 @@ export default function CreateBudget({
         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
 
-    function getSelection({ value, name }: { value: string; name: string }) {
+    function handleSelection({ value, name }: { value: string; name: string }) {
         handleData({ name, value });
     }
 
@@ -133,41 +133,47 @@ export default function CreateBudget({
                         style={styles.input}
                     />
                     <Select
-                        // label={t("responsible-label")}
-                        placeholder={"Seleccione a un Responsable"}
+                        label={t("responsible-label")}
+                        placeholder={t("placeholder-select-responsible")}
                         options={[
                             { id: "1", description: "Opcion 1" },
                             { id: "2", description: "Opcion 2" },
                         ]}
                         selectedValue={formData.responsible}
                         onSelect={(text) =>
-                            getSelection({ value: text, name: "responsible" })
+                            handleSelection({
+                                value: text,
+                                name: "responsible",
+                            })
                         }
                         buttonStyle={styles.input}
                     />
                     <Select
-                        // label={t("responsible-label")}
-                        placeholder={"Seleccione una Actividad"}
+                        label={t("activity-label")}
+                        placeholder={t("placeholder-select-activity")}
                         options={[
                             { id: "1", description: "Opcion 1" },
                             { id: "2", description: "Opcion 2" },
                         ]}
                         selectedValue={formData.activity}
                         onSelect={(text) =>
-                            getSelection({ value: text, name: "activity" })
+                            handleSelection({ value: text, name: "activity" })
                         }
                         buttonStyle={styles.input}
                     />
                     <Select
-                        // label={t("responsible-label")}
-                        placeholder={"Seleccione a un Cliente"}
+                        label={t("client-label")}
+                        placeholder={t("placeholder-select-client")}
                         options={[
                             { id: "1", description: "Opcion 1" },
                             { id: "2", description: "Opcion 2" },
                         ]}
                         selectedValue={formData.responsible}
                         onSelect={(text) =>
-                            getSelection({ value: text, name: "responsible" })
+                            handleSelection({
+                                value: text,
+                                name: "responsible",
+                            })
                         }
                         buttonStyle={styles.input}
                     />
@@ -188,9 +194,6 @@ export default function CreateBudget({
                                 })
                             }
                             value={formData.Kmat}
-                            // value={text}
-                            // onChangeText={setText}
-                            // disabled={loading}
                             style={[styles.input, styles.kStyles]}
                         />
                         <TextInput
@@ -203,9 +206,6 @@ export default function CreateBudget({
                                 })
                             }
                             value={formData.Ksub}
-                            // value={text}
-                            // onChangeText={setText}
-                            // disabled={loading}
                             style={[styles.input, styles.kStyles]}
                         />
                         <TextInput
@@ -218,9 +218,6 @@ export default function CreateBudget({
                                 })
                             }
                             value={formData.Kmo}
-                            // value={text}
-                            // onChangeText={setText}
-                            // disabled={loading}
                             style={[styles.input, styles.kStyles]}
                         />
                     </View>
@@ -228,18 +225,12 @@ export default function CreateBudget({
                         <TextInput
                             mode="outlined"
                             label="IVA"
-                            // value={text}
-                            // onChangeText={setText}
-                            // disabled={loading}
                             style={[styles.input, styles.percents]}
                         />
                         <TextInput
                             mode="outlined"
                             label={t("label-discount")}
                             value={formData.discount}
-                            // value={text}
-                            // onChangeText={setText}
-                            // disabled={loading}
                             onChangeText={(text) =>
                                 handleData({
                                     name: "discount",
@@ -254,8 +245,6 @@ export default function CreateBudget({
                             mode="outlined"
                             label={t("label-date")}
                             value={formData.date}
-                            // onChangeText={setText}
-                            // disabled={loading}
                             style={[styles.input, styles.percents]}
                             onChangeText={(text) =>
                                 handleData({ name: "date", value: text })
@@ -267,8 +256,6 @@ export default function CreateBudget({
                             mode="outlined"
                             label={t("label-ubication")}
                             value={formData.location}
-                            // onChangeText={setText}
-                            // disabled={loading}
                             onChangeText={(text) =>
                                 handleData({ name: "location", value: text })
                             }
@@ -279,7 +266,7 @@ export default function CreateBudget({
                 {
                     <View style={[styles.input]}>
                         <Suspense fallback={<Text>{t("loading")}...</Text>}>
-                            <DynamicMap OS={OS} />
+                            <DynamicMap />
                         </Suspense>
                     </View>
                 }
