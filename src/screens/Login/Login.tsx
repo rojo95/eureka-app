@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Platform } from "react-native";
 import { DefaultTheme, TextInput, useTheme } from "react-native-paper";
 import Button from "../../components/Button/Button";
 import { useTranslation } from "react-i18next";
 import { Image } from "expo-image";
-import login, { LoginProps } from "../../utils/session";
+import { /* login, */ LoginProps } from "../../utils/login";
+import { UserContext } from "../../contexts/UserContext";
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
+    const { login, user } = useContext(UserContext);
     const theme: DefaultTheme = useTheme();
     const { t } = useTranslation();
     const { OS } = Platform;
@@ -15,6 +17,8 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         password: "/*cd7091857cd*/",
     });
     const [error, setError] = useState("");
+    const [showPass, setShowPass] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const styles = StyleSheet.create({
         container: {
@@ -34,9 +38,14 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
     }
 
     const handleLogin = async () => {
+        if (loading) return;
+
         const { email, password } = formData;
         if (email !== "" && password !== "") {
-            const loged = await login({ email, password });
+            setLoading(true);
+            const loged = await login({ email, password }).finally(() =>
+                setLoading(false)
+            );
             if (loged) {
                 navigation.navigate("home");
             }
@@ -65,6 +74,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                     </View>
                     <View style={styles.input}>
                         <TextInput
+                            disabled={loading}
                             mode="outlined"
                             label={t("label-email")}
                             value={formData.email}
@@ -76,15 +86,22 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                     </View>
                     <View style={styles.input}>
                         <TextInput
+                            disabled={loading}
                             mode="outlined"
                             label={t("label-password")}
                             value={formData.password}
-                            secureTextEntry={true}
+                            secureTextEntry={showPass}
                             onChangeText={(text) =>
                                 handleData({ name: "password", value: text })
                             }
                             style={styles.input}
-                            right={<TextInput.Icon icon="eye" />}
+                            right={
+                                <TextInput.Icon
+                                    disabled={loading}
+                                    icon={showPass ? "eye" : "eye-off-outline"}
+                                    onPress={() => setShowPass(!showPass)}
+                                />
+                            }
                         />
                     </View>
                     <View style={styles.input}>
@@ -92,6 +109,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                             <Text style={{ color: "red" }}>{error}</Text>
                         ) : null}
                         <Button
+                            disabled={loading}
                             text={t("button-login")}
                             onPress={handleLogin}
                         />

@@ -1,4 +1,4 @@
-import i18next from "../../services/i18next";
+import i18next from "../services/languages/i18next";
 
 export default async function changeLanguage(lang: string) {
     try {

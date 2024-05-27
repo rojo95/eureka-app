@@ -1,9 +1,10 @@
 import axios from "axios";
 import Constants from "expo-constants";
+import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 import sessionNames from "./sessionInfo";
-import { saveSecureData } from "../services/storeData/storeData";
 import { getUserData } from "../services/users/users";
+import { getSecureData, saveSecureData } from "../services/storeData/storeData";
 
 const constants = Constants.expoConfig?.extra;
 
@@ -16,14 +17,30 @@ export interface LoginProps {
 
 const API_URL = constants?.API_URL;
 
+interface SecureStoreInterface {
+    key: string;
+    value: string;
+}
 const { OS } = Platform;
+
+/**
+ * function to store data securely
+ * @param param0
+ */
+export async function saveSecure({ key, value }: SecureStoreInterface) {
+    if (OS === "web") {
+        // todo logica de almacenamiento de datos seguros web
+    } else {
+        await SecureStore.setItemAsync(key, value);
+    }
+}
 
 /**
  * function to log in to the system api
  * @param param0
  * @returns
  */
-async function login({ email, password }: LoginProps) {
+export async function login({ email, password }: LoginProps) {
     const usr = email.trim();
     const pass = password.trim();
     const request = await axios
@@ -44,6 +61,7 @@ async function login({ email, password }: LoginProps) {
             if (id) {
                 console.log("Login successful!");
                 await saveSecureData({ key: userKey, value: id });
+                console.log(await getSecureData(userKey));
 
                 const { type, name, lastName } = await getUserData({
                     userId: parseInt(userId),
@@ -51,7 +69,7 @@ async function login({ email, password }: LoginProps) {
 
                 await saveSecureData({ key: role, value: type });
 
-                return type && true;
+                return { id: userId, type, name, lastName };
             } else {
                 return request;
             }
@@ -60,5 +78,16 @@ async function login({ email, password }: LoginProps) {
     return request;
 }
 
+export async function logout() {
+    try {
+        Object.entries(sessionNames).map(async (v) => {
+            await SecureStore.deleteItemAsync(v[1]);
+        });
+        return { success: true };
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
 
 export default login;

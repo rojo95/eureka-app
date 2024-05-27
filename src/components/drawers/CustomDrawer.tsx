@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Pressable, Text, StyleSheet } from "react-native";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme, useTheme } from "react-native-paper";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function CustomDrawer(props: any) {
+    const { logout } = useContext(UserContext);
     const theme: DefaultTheme = useTheme();
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -103,21 +105,29 @@ export default function CustomDrawer(props: any) {
                     />
                 )}
             />
-            <DrawerItem
-                label={t("logout")}
-                onPress={() => props.navigation.navigate("login")}
-                activeBackgroundColor="#636772" // Color de fondo cuando el item está activo
-                activeTintColor={theme.colors.primaryContrast} // Color del texto cuando el item está activo
-                inactiveTintColor={theme.colors.primaryContrast} // Color del texto cuando el item está inactivo
-                focused={isActiveRoute("login")}
-                icon={() => (
+            <View>
+                <Pressable
+                    onPress={async () => {
+                        await logout();
+                        props.navigation.navigate("login");
+                    }}
+                    style={[styles.item]}
+                >
                     <MaterialCommunityIcons
                         name="logout"
                         size={24}
                         color="white"
                     />
-                )}
-            />
+                    <Text
+                        style={{
+                            color: theme.colors.primaryContrast,
+                            marginLeft: 5,
+                        }}
+                    >
+                        {t("logout")}
+                    </Text>
+                </Pressable>
+            </View>
         </DrawerContentScrollView>
     );
 }
