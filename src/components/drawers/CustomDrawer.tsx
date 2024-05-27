@@ -93,9 +93,9 @@ export default function CustomDrawer(props: any) {
             <DrawerItem
                 label={t("menu-title-config")}
                 onPress={() => props.navigation.navigate("configs")}
-                activeBackgroundColor="#636772" // Color de fondo cuando el item está activo
-                activeTintColor={theme.colors.primaryContrast} // Color del texto cuando el item está activo
-                inactiveTintColor={theme.colors.primaryContrast} // Color del texto cuando el item está inactivo
+                activeBackgroundColor="#636772" 
+                activeTintColor={theme.colors.primaryContrast} 
+                inactiveTintColor={theme.colors.primaryContrast} 
                 focused={isActiveRoute("configs")}
                 icon={() => (
                     <MaterialCommunityIcons
