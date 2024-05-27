@@ -1,18 +1,14 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import {
-    deleteSecureItem,
-    getSecureData,
-} from "../services/storeData/storeData";
+import { getSecureData } from "../services/storeData/storeData";
 import { login as loginFn, logout as logoutFn } from "../utils/login";
 import { getUserData } from "../services/users/users";
 import sessionNames from "../utils/sessionInfo";
-import { useNavigation } from "@react-navigation/native";
 
 const { userKey } = sessionNames;
 
 type User = {
     id: number;
-    type: string;
+    rol: string;
     name: string;
     lastName: string;
 };
@@ -43,10 +39,14 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const fetchUser = async () => {
         const userData = await getSecureData(userKey);
         if (userData) {
-            const { type, name, lastName } = await getUserData({
+            const {
+                type: rol,
+                name,
+                lastName,
+            } = await getUserData({
                 userId: parseInt(userData),
             });
-            setUser({ id: parseInt(userData), type, name, lastName });
+            setUser({ id: parseInt(userData), rol, name, lastName });
         }
     };
 
@@ -58,8 +58,8 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         try {
             const response = await loginFn(loginProps);
             if (response) {
-                const { id, type, name, lastName } = response;
-                setUser({ id: parseInt(id), type, name, lastName });
+                const { id, type: rol, name, lastName } = response;
+                setUser({ id: parseInt(id), rol, name, lastName });
                 return true;
             }
             return false;
