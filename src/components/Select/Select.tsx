@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import {
-    Menu,
-    Button,
-    Divider,
-    DefaultTheme,
-    useTheme,
-} from "react-native-paper";
+import { Menu, Button, DefaultTheme, useTheme } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
 import Text from "../Text/Text";
+import { useTranslation } from "react-i18next";
 
 interface SelectionProps {
     options: string[] | { id: string; description: string }[];
@@ -23,14 +18,15 @@ const Select: React.FC<SelectionProps> = ({
     onSelect,
     selectedValue,
     buttonStyle,
-    placeholder = "Seleccione un Item de la Lista",
+    placeholder,
 }) => {
+    const { t } = useTranslation();
+    const placeHolder = placeholder || t("select-list-item");
     const theme: DefaultTheme = useTheme();
     const [visible, setVisible] = useState(false);
 
     const styles = StyleSheet.create({
         container: {
-            // flex: 1,
             width: "100%",
             borderWidth: 1,
             borderRadius: 5,
@@ -67,12 +63,12 @@ const Select: React.FC<SelectionProps> = ({
                                       }[]
                                   )?.find((v) => v.id === selectedValue)
                                       ?.description || selectedValue) ||
-                                placeholder}
+                                placeHolder}
                         </Text>
                     </Button>
                 }
             >
-                <Menu.Item title={placeholder} />
+                <Menu.Item title={placeHolder} />
                 {options.map((option, index) => (
                     <Menu.Item
                         key={index}
