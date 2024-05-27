@@ -26,5 +26,6 @@
     "logout": "Logout",
     "label-email": "Email",
     "label-password": "Password",
-    "button-login": "Login"
+    "button-login": "Login",
+    "select-list-item": "Select an Item from the List"
 }

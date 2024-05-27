@@ -26,5 +26,6 @@
     "logout": "Cerrar Sesión",
     "label-email": "Correo Electrónico",
     "label-password": "Contraseña",
-    "button-login": "Iniciar Sesión"
+    "button-login": "Iniciar Sesión",
+    "select-list-item":"Seleccione un Item de la Lista"
 }
