@@ -1,102 +1,19 @@
-// import { Button, TouchableOpacity, StyleSheet, Text, View } from "react-native";
-// import React, { useEffect, useState } from "react";
-
-// export default function Budgets({ navigation }) {
-//     const [budgets, setBudgets] = useState([]);
-
-//     function getBudgets() {
-//         setBudgets([
-//             {
-//                 index: "2024-001.4",
-//                 description:
-//                     "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//                 imageUrl:
-//                     "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//                 status: "Completado",
-//                 venta: 7100.0,
-//             },
-//             {
-//                 index: "2024-001.4",
-//                 description:
-//                     "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//                 imageUrl:
-//                     "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//                 status: "Completado",
-//                 venta: 7100.0,
-//             },
-//             {
-//                 index: "2024-001.4",
-//                 description:
-//                     "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//                 imageUrl:
-//                     "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//                 status: "Completado",
-//                 venta: 7100.0,
-//             },
-//             {
-//                 index: "2024-001.4",
-//                 description:
-//                     "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//                 imageUrl:
-//                     "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//                 status: "Completado",
-//                 venta: 7100.0,
-//             },
-//             {
-//                 index: "2024-001.4",
-//                 description:
-//                     "FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-//                 imageUrl:
-//                     "https://imgv3.fotor.com/images/share/fotor-ai-generate-a-lifelike-dragon.jpg",
-//                 status: "Completado",
-//                 venta: 7100.0,
-//             },
-//         ]);
-//     }
-
-//     useEffect(() => {
-//         getBudgets();
-//     }, []);
-//     return (
-//         <View>
-//             {budgets.map((v, k) => (
-//                 <TouchableOpacity>
-//                     <Text>Ejecutese</Text>
-//                 </TouchableOpacity>
-//             ))}
-//             <Text>
-//                 <Button
-//                     onPress={() => navigation.navigate("createBudget")}
-//                     title="Crear Presupuesto"
-//                 ></Button>
-//             </Text>
-//         </View>
-//     );
-// }
-
-// const styles = StyleSheet.create({});
-
 import React, { useEffect, useState } from "react";
 import {
     FlatList,
     ListRenderItem,
     Platform,
-    ScrollView,
     StyleSheet,
     View,
 } from "react-native";
 import {
     ActivityIndicator,
     DefaultTheme,
-    Provider,
     useTheme,
 } from "react-native-paper";
 import { TextInput } from "react-native-paper";
-import { FontAwesome } from "@expo/vector-icons";
 import BudgetsCard from "../../../components/BudgetsCard/BudgetsCard";
-import Paginator from "../../../components/Paginator/Paginator";
 import { useTranslation } from "react-i18next";
-import { Button } from "react-native-paper";
 import FAB from "../../../components/FAB/FAB";
 import Modal from "../../../components/Modal/Modal";
 import CreateBudget from "./CreateBudget/CreateBudget";
@@ -110,7 +27,6 @@ export default function Budgets({ navigation }: { navigation: any }) {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
     const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-    const totalPages = 5;
     const [currentPage, setCurrentPage] = useState(1);
 
     const styles = StyleSheet.create({
