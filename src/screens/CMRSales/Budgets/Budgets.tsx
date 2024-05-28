@@ -6,17 +6,15 @@ import {
     StyleSheet,
     View,
 } from "react-native";
-import {
-    ActivityIndicator,
-    DefaultTheme,
-    useTheme,
-} from "react-native-paper";
+import { ActivityIndicator, DefaultTheme, useTheme } from "react-native-paper";
 import { TextInput } from "react-native-paper";
 import BudgetsCard from "../../../components/BudgetsCard/BudgetsCard";
 import { useTranslation } from "react-i18next";
 import FAB from "../../../components/FAB/FAB";
 import Modal from "../../../components/Modal/Modal";
 import CreateBudget from "./CreateBudget/CreateBudget";
+import axios from "axios";
+import { getBudgets } from "../../../services/budgets/Budgets";
 
 export default function Budgets({ navigation }: { navigation: any }) {
     const { t } = useTranslation();
@@ -54,24 +52,22 @@ export default function Budgets({ navigation }: { navigation: any }) {
      * Function to fetch data
      * @returns
      */
-    function searchBudgets() {
+    async function searchBudgets() {
         if (loading) return;
         setLoading(true);
-
-        setTimeout(() => {
-            const newData = [...Array(1)].map((d, index) => {
-                const id = index + 1 + (currentPage - 1) * 1;
-                return {
-                    code: `2024-001.4${id}`,
-                    description: `${text} FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424] ${id}`,
-                    status: "Contratado",
-                    costo: "4.400,00",
-                    venta: "7.100,00",
-                };
-            });
-            setData((prevData) => [...prevData, ...newData]);
-            setLoading(false);
-        }, 3000);
+        const budgets = await getBudgets({ page: currentPage, limit: 1 });
+        const newData = budgets.map((d: any, i: any) => {
+            return {
+                id: d.id,
+                code: d.number,
+                description: d.title,
+                status: d.state.name,
+                costo: d.totalCost,
+                venta: d.totalSale,
+            };
+        });
+        setData((prevData) => [...prevData, ...newData]);
+        setLoading(false);
     }
 
     /**
