@@ -4,7 +4,7 @@ import { login as loginFn, logout as logoutFn } from "../utils/login";
 import { getUserData } from "../services/users/users";
 import sessionNames from "../utils/sessionInfo";
 
-const { userKey } = sessionNames;
+const { userKey, userId } = sessionNames;
 
 type User = {
     id: number;
@@ -37,16 +37,17 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
 
     const fetchUser = async () => {
-        const userData = await getSecureData(userKey);
-        if (userData) {
+        const userKeyData = await getSecureData(userKey);
+        const id = await getSecureData(userId);
+        if (userKeyData && id) {
             const {
                 type: rol,
                 name,
                 lastName,
             } = await getUserData({
-                userId: parseInt(userData),
+                userId: parseInt(id),
             });
-            setUser({ id: parseInt(userData), rol, name, lastName });
+            setUser({ id: parseInt(id), rol, name, lastName });
         }
     };
 

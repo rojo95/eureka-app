@@ -8,7 +8,7 @@ import { getSecureData, saveSecureData } from "../services/storeData/storeData";
 
 const constants = Constants.expoConfig?.extra;
 
-const { role, userKey } = sessionNames;
+const { role, userKey, userId: idUser } = sessionNames;
 
 export interface LoginProps {
     email: string;
@@ -61,7 +61,7 @@ export async function login({ email, password }: LoginProps) {
             if (id) {
                 console.log("Login successful!");
                 await saveSecureData({ key: userKey, value: id });
-                console.log(await getSecureData(userKey));
+                await saveSecureData({ key: idUser, value: userId });
 
                 const { type, name, lastName } = await getUserData({
                     userId: parseInt(userId),
