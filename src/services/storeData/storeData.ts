@@ -15,11 +15,16 @@ const { OS } = Platform;
 export async function saveSecureData({
     key,
     value,
-}: SecureStoreInterface): Promise<void> {
-    if (OS === "web") {
-        // todo logica de almacenamiento de datos seguros web
-    } else {
-        await SecureStore.setItemAsync(key, value);
+}: SecureStoreInterface): Promise<boolean> {
+    try {
+        if (OS === "web") {
+            // todo logica de almacenamiento de datos seguros web
+        } else {
+            await SecureStore.setItemAsync(key, value);
+        }
+        return true;
+    } catch (error) {
+        throw error;
     }
 }
 
@@ -31,13 +36,26 @@ export async function saveSecureData({
 export async function getSecureData(
     key: string
 ): Promise<string | null | undefined> {
-    if (OS === "web") {
-        // todo logica de consulta de datos seguros almacenados web
-    } else {
-        return SecureStore.getItemAsync(key);
+    try {
+        if (OS === "web") {
+            // todo logica de consulta de datos seguros almacenados web
+        } else {
+            const value = await SecureStore.getItemAsync(key);
+            return value;
+        }
+    } catch (error) {
+        throw error;
     }
 }
 
-export async function deleteSecureItem(key: string): Promise<void> {
-    await SecureStore.deleteItemAsync(key);
+export async function deleteSecureData(key: string): Promise<void> {
+    try {
+        if (OS === "web") {
+            // todo logica de consulta de datos seguros almacenados web
+        } else {
+            await SecureStore.deleteItemAsync(key);
+        }
+    } catch (error) {
+        throw error;
+    }
 }

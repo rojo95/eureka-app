@@ -1,6 +1,22 @@
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    TouchableOpacityProps,
+    View,
+} from "react-native";
 import Text from "../Text/Text";
 import { Badge } from "react-native-paper";
+
+interface BudgetsCardInterface extends TouchableOpacityProps {
+    imageUrl?: any;
+    index?: any;
+    description?: any;
+    status?: any;
+    costo?: any;
+    venta?: any;
+    onPress?: () => void;
+}
 
 const BudgetsCard = ({
     imageUrl,
@@ -9,14 +25,8 @@ const BudgetsCard = ({
     status,
     costo,
     venta,
-}: {
-    imageUrl?: any;
-    index?: any;
-    description?: any;
-    status?: any;
-    costo?: any;
-    venta?: any;
-}) => {
+    onPress,
+}: BudgetsCardInterface) => {
     const styles = StyleSheet.create({
         container: {
             flexDirection: "row",
@@ -79,6 +89,7 @@ const BudgetsCard = ({
     return (
         <TouchableOpacity
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+            onPress={onPress}
         >
             <View>
                 <View style={styles.container}>

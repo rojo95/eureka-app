@@ -1,14 +1,13 @@
 import axios from "axios";
 import Constants from "expo-constants";
-import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 import sessionNames from "./sessionInfo";
 import { getUserData } from "../services/users/users";
-import { getSecureData, saveSecureData } from "../services/storeData/storeData";
+import { deleteSecureData, getSecureData, saveSecureData } from "../services/storeData/storeData";
 
 const constants = Constants.expoConfig?.extra;
 
-const { role, userKey, userId: idUser } = sessionNames;
+const { role, userKey, idUser } = sessionNames;
 
 export interface LoginProps {
     email: string;
@@ -22,18 +21,6 @@ interface SecureStoreInterface {
     value: string;
 }
 const { OS } = Platform;
-
-/**
- * function to store data securely
- * @param param0
- */
-export async function saveSecure({ key, value }: SecureStoreInterface) {
-    if (OS === "web") {
-        // todo logica de almacenamiento de datos seguros web
-    } else {
-        await SecureStore.setItemAsync(key, value);
-    }
-}
 
 /**
  * function to log in to the system api
@@ -59,9 +46,10 @@ export async function login({ email, password }: LoginProps) {
         .then(async ({ request }) => {
             const { id, userId } = JSON.parse(request.response);
             if (id) {
-                console.log("Login successful!");
                 await saveSecureData({ key: userKey, value: id });
-                await saveSecureData({ key: idUser, value: userId });
+                await saveSecureData({ key: idUser, value: userId.toString() });
+
+                const uk = await getSecureData(userKey);
 
                 const { type, name, lastName } = await getUserData({
                     userId: parseInt(userId),
@@ -81,11 +69,11 @@ export async function login({ email, password }: LoginProps) {
 export async function logout() {
     try {
         Object.entries(sessionNames).map(async (v) => {
-            await SecureStore.deleteItemAsync(v[1]);
+            await deleteSecureData(v[1]);
         });
         return { success: true };
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return error;
     }
 }

@@ -24,8 +24,9 @@ export default function Budgets({ navigation }: { navigation: any }) {
     const [loading, setLoading] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
-    const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [keepSearching, setKeepSearching] = useState<boolean>(true);
+    const [limit, setLimit] = useState<number>(10);
 
     const styles = StyleSheet.create({
         container: {
@@ -52,21 +53,46 @@ export default function Budgets({ navigation }: { navigation: any }) {
      * Function to fetch data
      * @returns
      */
-    async function searchBudgets() {
+    async function searchBudgets(page?: number) {
         if (loading) return;
         setLoading(true);
-        const budgets = await getBudgets({ page: currentPage, limit: 1 });
-        const newData = budgets.map((d: any, i: any) => {
-            return {
-                id: d.id,
-                code: d.number,
-                description: d.title,
-                status: d.state.name,
-                costo: d.totalCost,
-                venta: d.totalSale,
-            };
-        });
-        setData((prevData) => [...prevData, ...newData]);
+        try {
+            const budgets = await getBudgets({
+                page: page || currentPage,
+                limit: limit,
+                textFilter: text,
+            });
+            let newData: any[] = [];
+            if (budgets[0]?.id) {
+                const fields: any[] = budgets.map((d: any, i: any) => {
+                    return {
+                        id: d.id,
+                        code: d.number,
+                        description: d.title,
+                        status: d.state.name,
+                        costo: d.totalCost,
+                        venta: d.totalSale,
+                    };
+                });
+
+                for (let field of fields) {
+                    if (field.id) {
+                        if (!data.find((v) => v.id === field.id)) {
+                            newData.push(field);
+                        }
+                    }
+                }
+            } else {
+                newData = [];
+            }
+            newData.length < limit
+                ? setKeepSearching(false)
+                : setKeepSearching(true);
+            setData((prevData) => [...prevData, ...newData]);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+        }
         setLoading(false);
     }
 
@@ -74,15 +100,16 @@ export default function Budgets({ navigation }: { navigation: any }) {
      * Fetch data when the component mounts or the page changes
      */
     useEffect(() => {
-        searchBudgets();
-    }, [currentPage]);
+        searchBudgets(1);
+    }, []);
 
     /**
      * Handle loading more data when the end of the list is reached
      */
     const handleLoadMore = () => {
-        if (!loading) {
-            setCurrentPage((prevPage) => prevPage + 1);
+        if (!loading && data.length >= 1 && keepSearching) {
+            setCurrentPage(currentPage + 1);
+            searchBudgets();
         }
     };
 
@@ -90,17 +117,17 @@ export default function Budgets({ navigation }: { navigation: any }) {
      * Handle refreshing the list
      */
     const handleRefresh = () => {
-        setIsRefreshing(true);
-        setCurrentPage(1);
         setData([]);
+        setLoading(true);
+        setCurrentPage(1);
         searchBudgets();
-        setIsRefreshing(false);
+        setLoading(false);
     };
 
     /**
      * Render the loading indicator at the bottom of the list
-     * 
-     * @returns 
+     *
+     * @returns
      */
     const renderFooter = () => {
         return loading ? (
@@ -108,6 +135,11 @@ export default function Budgets({ navigation }: { navigation: any }) {
                 <ActivityIndicator size="large" />
             </View>
         ) : null;
+    };
+
+    // Define the handlePress function to handle the onPress event
+    const handlePress = (item: any) => {
+        navigation.navigate(`budget`, { itemId: "123" });
     };
 
     /**
@@ -118,6 +150,7 @@ export default function Budgets({ navigation }: { navigation: any }) {
      */
     const renderItem: ListRenderItem<any> = ({ item }) => (
         <BudgetsCard
+            onPress={() => handlePress(item)} //
             index={item.code}
             description={item.description}
             status={item.status}
@@ -140,7 +173,7 @@ export default function Budgets({ navigation }: { navigation: any }) {
                         <TextInput.Icon
                             disabled={loading}
                             icon="magnify"
-                            onPress={() => handleRefresh()}
+                            onPress={handleRefresh}
                             color={theme.colors.primary}
                         />
                     }
@@ -155,7 +188,7 @@ export default function Budgets({ navigation }: { navigation: any }) {
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.5}
                     ListFooterComponent={renderFooter}
-                    refreshing={isRefreshing}
+                    refreshing={loading}
                     onRefresh={handleRefresh}
                 />
             </View>

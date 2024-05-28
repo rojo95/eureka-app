@@ -15,10 +15,12 @@ export async function getBudgets({
     page,
     limit,
     fields,
+    textFilter,
 }: {
     page: number;
     limit: number;
     fields?: string[];
+    textFilter?: string;
 }): Promise<any> {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Budgets/list`;
@@ -43,6 +45,16 @@ export async function getBudgets({
             where: {
                 wcId: { inq: [3] },
                 isActivityByAdministration: false,
+                ...(textFilter && {
+                    and: [
+                        {
+                            or: [
+                                { title: { like: `%${textFilter}%` } },
+                                { number: { like: `%${textFilter}%` } },
+                            ],
+                        },
+                    ],
+                }),
             },
             fields: fields || fieldsDefault,
             limit: limit,
@@ -58,7 +70,7 @@ export async function getBudgets({
         },
     };
 
-    return await axios
+    const query = await axios
         .get(url, {
             params: { filter: JSON.stringify(params.filter) },
             headers: {
@@ -70,5 +82,9 @@ export async function getBudgets({
             const response = JSON.parse(request.response);
             return response;
         })
-        .catch((err) => console.log("err: ", err.response));
+        .catch((err) => {
+            console.error("err: ", err.response);
+            return err.response;
+        });
+    return query;
 }

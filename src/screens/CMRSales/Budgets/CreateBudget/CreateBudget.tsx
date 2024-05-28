@@ -58,7 +58,6 @@ export default function CreateBudget({
      * @param param0
      */
     function handleData({ name, value }: { name: string; value: any }) {
-        console.log(value);
         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
 

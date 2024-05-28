@@ -30,5 +30,8 @@ export async function getUserData({
             const response = JSON.parse(request.response);
             return response;
         })
-        .catch((err) => console.log("err: ", err));
+        .catch((err) => {
+            console.error("err: ", err);
+            throw err;
+        });
 }

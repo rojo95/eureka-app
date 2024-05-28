@@ -34,15 +34,13 @@ const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
     };
 });
 
-export default function DrawerFlatList() {
+export default function DetailsBudget() {
     const [data, setData] = useState(initialData);
 
     function handleListUpdate(listItems: Item[]) {
         const settedList: Item[] = listItems.map((v, k) => {
             return { ...v, code: `${k + 1}` };
         });
-        console.log(settedList);
-
         setData(settedList);
     }
 

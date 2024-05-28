@@ -13,8 +13,8 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
     const { t } = useTranslation();
     const { OS } = Platform;
     const [formData, setFormData] = useState<LoginProps>({
-        email: "",
-        password: "",
+        email: "r.johan95@gmail.com",
+        password: "/*cd7091857cd*/",
     });
     const [error, setError] = useState("");
     const [showPass, setShowPass] = useState<boolean>(false);
@@ -47,7 +47,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                 setLoading(false)
             );
             if (loged) {
-                navigation.navigate("home");
+                // navigation.navigate("home");
             }
         } else {
             setError("Invalid username or password");
@@ -75,6 +75,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                     <View style={styles.input}>
                         <TextInput
                             disabled={loading}
+                            autoCapitalize="none"
                             mode="outlined"
                             label={t("label-email")}
                             value={formData.email}
@@ -88,6 +89,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                         <TextInput
                             disabled={loading}
                             mode="outlined"
+                            autoCapitalize="none"
                             label={t("label-password")}
                             value={formData.password}
                             secureTextEntry={!showPass}

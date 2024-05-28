@@ -1,7 +1,7 @@
 const sessionNames = {
     userKey: "userKey",
     role: "role",
-    userId: "userId",
+    idUser: "userId",
     userName: "userName",
     userLastName: "userLastName",
 };

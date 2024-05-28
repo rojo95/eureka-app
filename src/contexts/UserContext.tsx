@@ -4,7 +4,7 @@ import { login as loginFn, logout as logoutFn } from "../utils/login";
 import { getUserData } from "../services/users/users";
 import sessionNames from "../utils/sessionInfo";
 
-const { userKey, userId } = sessionNames;
+const { userKey, idUser } = sessionNames;
 
 type User = {
     id: number;
@@ -38,7 +38,8 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     const fetchUser = async () => {
         const userKeyData = await getSecureData(userKey);
-        const id = await getSecureData(userId);
+        const id = await getSecureData(idUser);
+
         if (userKeyData && id) {
             const {
                 type: rol,

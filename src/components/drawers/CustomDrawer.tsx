@@ -22,7 +22,7 @@ export default function CustomDrawer(props: any) {
     };
 
     function isActiveRoute(name: string) {
-        const active = name === getCurrentRouteName();
+        const active = name.split(",").includes(getCurrentRouteName());
         return active;
     }
 
@@ -42,7 +42,7 @@ export default function CustomDrawer(props: any) {
                 style={[
                     styles.item,
                     {
-                        backgroundColor: isActiveRoute("budgets")
+                        backgroundColor: isActiveRoute("budgets,budget")
                             ? "#636772"
                             : theme.colors.darkGrey,
                     },
@@ -69,7 +69,7 @@ export default function CustomDrawer(props: any) {
                         style={[
                             styles.itemSon,
                             {
-                                backgroundColor: isActiveRoute("budgets")
+                                backgroundColor: isActiveRoute("budgets,budget")
                                     ? "#636772"
                                     : theme.colors.darkGrey,
                             },
@@ -93,9 +93,9 @@ export default function CustomDrawer(props: any) {
             <DrawerItem
                 label={t("menu-title-config")}
                 onPress={() => props.navigation.navigate("configs")}
-                activeBackgroundColor="#636772" 
-                activeTintColor={theme.colors.primaryContrast} 
-                inactiveTintColor={theme.colors.primaryContrast} 
+                activeBackgroundColor="#636772"
+                activeTintColor={theme.colors.primaryContrast}
+                inactiveTintColor={theme.colors.primaryContrast}
                 focused={isActiveRoute("configs")}
                 icon={() => (
                     <MaterialCommunityIcons
