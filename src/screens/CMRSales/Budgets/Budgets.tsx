@@ -101,10 +101,14 @@ export default function Budgets({ navigation }: { navigation: any }) {
         setIsRefreshing(false);
     };
 
-    // Render the loading indicator at the bottom of the list
+    /**
+     * Render the loading indicator at the bottom of the list
+     * 
+     * @returns 
+     */
     const renderFooter = () => {
         return loading ? (
-            <View /* style={styles.loader} */>
+            <View>
                 <ActivityIndicator size="large" />
             </View>
         ) : null;
