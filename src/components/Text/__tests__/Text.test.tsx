@@ -15,7 +15,7 @@ describe("Testing about <Text/> component ", () => {
         expect(tree.children[0]).toBe(testText);
     });
 
-    it("render button without change", () => {
+    it("render text without change", () => {
         const tree = renderer.create(<Text>{testText}</Text>).toJSON();
         expect(tree).toMatchSnapshot();
     });

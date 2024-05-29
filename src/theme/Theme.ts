@@ -11,7 +11,7 @@ const fontConfig: any = {
             ios: "System",
             default: "Manrope",
         }),
-        fontWeight: "400", // Change this line if needed based on the expected types
+        fontWeight: "400",
         letterSpacing: 0.5,
         lineHeight: 22,
         fontSize: 20,

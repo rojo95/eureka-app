@@ -3,7 +3,6 @@ import { Drawer } from "react-native-drawer-layout";
 import LeftDrawerScreen from "./LeftDrawerScreen";
 
 interface RightDrawerContextType {
-    // Example properties
     isOpen: boolean;
     toggleOpenRight: () => void;
 }
@@ -28,7 +27,13 @@ export default function RightDrawerScreen() {
             onOpen={() => setRightDrawerOpen(true)}
             onClose={() => setRightDrawerOpen(false)}
             drawerPosition="right"
-            renderDrawerContent={() => <>{/* Right drawer content */}</>}
+            renderDrawerContent={() => (
+                <>
+                    {/* 
+                        // todo Right drawer content 
+                    */}
+                </>
+            )}
         >
             <RightDrawerContext.Provider value={value}>
                 <LeftDrawerScreen />

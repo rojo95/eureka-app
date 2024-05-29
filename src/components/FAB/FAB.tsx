@@ -53,7 +53,6 @@ const FAB = ({ actions, onOpen, onClose }: FABInterface) => {
                         }}
                         onPress={() => {
                             if (open) {
-                                // hacer algo si el grupo está abierto
                                 closeFunction();
                             } else {
                                 openFunction();

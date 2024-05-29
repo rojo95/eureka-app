@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import { Modal as ModalRNP, Portal, PaperProvider } from "react-native-paper";
+import { Modal as ModalRNP, Portal } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
 
 interface ModalInterface {

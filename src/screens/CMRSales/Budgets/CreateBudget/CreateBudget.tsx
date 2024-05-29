@@ -24,6 +24,7 @@ interface formData {
     Ksub: string;
     Kmo: string;
     activity: string;
+    iva: string;
 }
 
 export default function CreateBudget({
@@ -50,6 +51,7 @@ export default function CreateBudget({
             Ksub: "",
             Kmo: "",
             activity: "",
+            iva: "",
         }
     );
 
@@ -71,7 +73,7 @@ export default function CreateBudget({
     const DynamicMap = React.lazy(() =>
         Platform.OS !== "web"
             ? import("../../../../components/Map/Map")
-            : Promise.resolve({ default: () => <Text>Mapa de navegador</Text> })
+            : Promise.resolve({ default: () => <Text>Website Map</Text> })
     );
 
     const styles = StyleSheet.create({
@@ -171,7 +173,7 @@ export default function CreateBudget({
                         onSelect={(text) =>
                             handleSelection({
                                 value: text,
-                                name: "responsible",
+                                name: "client",
                             })
                         }
                         buttonStyle={styles.input}
@@ -225,6 +227,13 @@ export default function CreateBudget({
                             mode="outlined"
                             label="IVA"
                             style={[styles.input, styles.percents]}
+                            onChangeText={(text) =>
+                                handleData({
+                                    name: "IVA",
+                                    value: parseFloat(text),
+                                })
+                            }
+                            value={formData.iva}
                         />
                         <TextInput
                             mode="outlined"

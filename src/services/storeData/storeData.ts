@@ -22,7 +22,7 @@ export async function saveSecureData({
 }: SecureStoreInterface): Promise<boolean> {
     try {
         if (OS === "web") {
-            // todo logica de almacenamiento de datos seguros web
+            // todo save secure data on web site
         } else {
             await SecureStore.setItemAsync(key, value);
         }
@@ -43,7 +43,7 @@ export async function getSecureData(
 ): Promise<string | null | undefined> {
     try {
         if (OS === "web") {
-            // todo logica de consulta de datos seguros almacenados web
+            // todo get secure data stored on web site
         } else {
             const value = await SecureStore.getItemAsync(key);
             return value;
@@ -61,7 +61,7 @@ export async function getSecureData(
 export async function deleteSecureData(key: string): Promise<void> {
     try {
         if (OS === "web") {
-            // todo logica de consulta de datos seguros almacenados web
+            // todo delete secure data stored on web site
         } else {
             await SecureStore.deleteItemAsync(key);
         }

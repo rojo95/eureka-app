@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { FlatList, StyleSheet, TouchableOpacity, View } from "react-native";
-import {
-    // Button,
-    DefaultTheme,
-    Modal,
-    Portal,
-    useTheme,
-} from "react-native-paper";
+import { DefaultTheme, Modal, Portal, useTheme } from "react-native-paper";
 import { Fontisto } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
