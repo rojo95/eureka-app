@@ -42,7 +42,6 @@ async function login({ email, password }: LoginProps) {
         .then(async ({ request }) => {
             const { id, userId } = JSON.parse(request.response);
             if (id) {
-                console.log("Login successful!");
                 await saveSecureData({ key: userKey, value: id });
 
                 const { type, name, lastName } = await getUserData({

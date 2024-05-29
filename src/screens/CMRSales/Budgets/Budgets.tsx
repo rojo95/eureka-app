@@ -25,7 +25,6 @@ export default function Budgets({ navigation }: { navigation: any }) {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [keepSearching, setKeepSearching] = useState<boolean>(true);
     const [limit, setLimit] = useState<number>(10);
 
     const styles = StyleSheet.create({
@@ -63,31 +62,31 @@ export default function Budgets({ navigation }: { navigation: any }) {
                 textFilter: text,
             });
             let newData: any[] = [];
+            const fields: any[] = await budgets.map((d: any, i: any) => {
+                return {
+                    id: d.id,
+                    code: d.number,
+                    description: d.title,
+                    status: { id: d.state.id, name: d.state.name },
+                    costo: d.totalCost,
+                    venta: d.totalSale,
+                };
+            });
             if (budgets[0]?.id) {
-                const fields: any[] = budgets.map((d: any, i: any) => {
-                    return {
-                        id: d.id,
-                        code: d.number,
-                        description: d.title,
-                        status: d.state.name,
-                        costo: d.totalCost,
-                        venta: d.totalSale,
-                    };
-                });
-
-                for (let field of fields) {
-                    if (field.id) {
-                        if (!data.find((v) => v.id === field.id)) {
-                            newData.push(field);
+                if (page === 1) {
+                    newData = fields;
+                } else {
+                    for (let field of fields) {
+                        if (field.id) {
+                            if (!data.find((v) => v.id === field.id)) {
+                                newData.push(field);
+                            }
                         }
                     }
                 }
             } else {
-                newData = [];
+                newData = fields;
             }
-            newData.length < limit
-                ? setKeepSearching(false)
-                : setKeepSearching(true);
             setData((prevData) => [...prevData, ...newData]);
         } catch (error) {
             console.error(error);
@@ -107,7 +106,7 @@ export default function Budgets({ navigation }: { navigation: any }) {
      * Handle loading more data when the end of the list is reached
      */
     const handleLoadMore = () => {
-        if (!loading && data.length >= 1 && keepSearching) {
+        if (!loading && data.length >= 1) {
             setCurrentPage(currentPage + 1);
             searchBudgets();
         }
@@ -120,7 +119,7 @@ export default function Budgets({ navigation }: { navigation: any }) {
         setData([]);
         setLoading(true);
         setCurrentPage(1);
-        searchBudgets();
+        searchBudgets(1);
         setLoading(false);
     };
 
@@ -150,7 +149,7 @@ export default function Budgets({ navigation }: { navigation: any }) {
      */
     const renderItem: ListRenderItem<any> = ({ item }) => (
         <BudgetsCard
-            onPress={() => handlePress(item)} //
+            onPress={() => handlePress(item)}
             index={item.code}
             description={item.description}
             status={item.status}
@@ -168,10 +167,8 @@ export default function Budgets({ navigation }: { navigation: any }) {
                     placeholder={t("budget-input-search-placeholder")}
                     value={text}
                     onChangeText={setText}
-                    disabled={loading}
                     right={
                         <TextInput.Icon
-                            disabled={loading}
                             icon="magnify"
                             onPress={handleRefresh}
                             color={theme.colors.primary}

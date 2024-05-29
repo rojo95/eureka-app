@@ -76,6 +76,7 @@ export default function LeftDrawerScreen() {
                 <LeftDrawer.Screen
                     name="login"
                     options={{
+                        swipeEnabled: false,
                         title: t("button-login"),
                         headerRight: () => (
                             <FontAwesome

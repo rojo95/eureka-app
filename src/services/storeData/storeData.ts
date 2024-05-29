@@ -10,7 +10,11 @@ const { OS } = Platform;
 
 /**
  * function to store data securely
- * @param param0
+ *
+ * @param {SecureStoreInterface} param
+ * @param {string} param.key
+ * @param {string} param.value
+ * @returns {Promise<boolean>}
  */
 export async function saveSecureData({
     key,
@@ -30,8 +34,9 @@ export async function saveSecureData({
 
 /**
  * function to obtain secure storage data
- * @param param0
- * @returns
+ *
+ * @param {string} key {string}
+ * @returns {Promise<string | null | undefined>}
  */
 export async function getSecureData(
     key: string
@@ -48,6 +53,11 @@ export async function getSecureData(
     }
 }
 
+/**
+ * functio to delete the secure storage data
+ *
+ * @param {string} key
+ */
 export async function deleteSecureData(key: string): Promise<void> {
     try {
         if (OS === "web") {

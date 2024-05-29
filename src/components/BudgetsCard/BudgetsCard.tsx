@@ -6,20 +6,18 @@ import {
     View,
 } from "react-native";
 import Text from "../Text/Text";
-import { Badge } from "react-native-paper";
+import { Badge, DefaultTheme, useTheme } from "react-native-paper";
 
 interface BudgetsCardInterface extends TouchableOpacityProps {
-    imageUrl?: any;
     index?: any;
-    description?: any;
-    status?: any;
-    costo?: any;
-    venta?: any;
+    description: any;
+    status: { id: number; name: string };
+    costo: any;
+    venta: any;
     onPress?: () => void;
 }
 
 const BudgetsCard = ({
-    imageUrl,
     index,
     description,
     status,
@@ -27,6 +25,7 @@ const BudgetsCard = ({
     venta,
     onPress,
 }: BudgetsCardInterface) => {
+    const theme: DefaultTheme = useTheme();
     const styles = StyleSheet.create({
         container: {
             flexDirection: "row",
@@ -34,20 +33,12 @@ const BudgetsCard = ({
             borderBottomStartRadius: 0,
             borderRadius: 10,
             overflow: "hidden",
-            backgroundColor: "#f0f2f5",
+            backgroundColor: theme.colors.primaryContrast,
             shadowColor: "#000",
             elevation: 5,
             marginVertical: 10,
             marginEnd: 10,
             alignSelf: "center",
-        },
-        imageContainer: {
-            width: "40%",
-            overflow: "hidden",
-        },
-        image: {
-            flex: 1,
-            aspectRatio: 4 / 3,
         },
         content: {
             flex: 1,
@@ -57,14 +48,15 @@ const BudgetsCard = ({
             fontSize: 18,
             fontWeight: "bold",
             marginBottom: 8,
+            color: theme.colors.dark,
         },
         number: {
             fontSize: 14,
             textAlign: "right",
-            color: "#666",
         },
         code: {
             fontSize: 14,
+            color: theme.colors.codeColor,
         },
         badgeContainer: {
             flexDirection: "row",
@@ -73,18 +65,39 @@ const BudgetsCard = ({
         },
         badge: {
             marginRight: 8,
+            color: theme.colors.dark,
         },
-        button: {
-            backgroundColor: "#F39200",
-            paddingHorizontal: 12,
-            paddingVertical: 6,
-            borderRadius: 15,
-            alignSelf: "flex-start",
+        costo: {
+            color: theme.colors.danger,
+            fontWeight: "bold",
         },
-        buttonText: {
-            color: "#fff",
+        venta: {
+            color: theme.colors.success,
+            fontWeight: "bold",
         },
     });
+
+    const CustomBadge: React.FC<{ id: number; name: string }> = ({
+        id,
+        name,
+    }) => {
+        const info = {
+            ...(id === 1
+                ? { color: theme.colors.primaryLight }
+                : id === 2
+                ? { color: theme.colors.deepBlueLight }
+                : id === 4
+                ? { color: theme.colors.dangerLight }
+                : { color: theme.colors.successLight }),
+        };
+        return (
+            <View style={styles.badgeContainer}>
+                <Badge style={[styles.badge, { backgroundColor: info.color }]}>
+                    {name}
+                </Badge>
+            </View>
+        );
+    };
 
     return (
         <TouchableOpacity
@@ -98,21 +111,12 @@ const BudgetsCard = ({
                             <Text style={styles.code}>{index}</Text>
                         </View>
                         <Text style={styles.description}>{description}</Text>
-                        <View style={styles.badgeContainer}>
-                            <Badge style={styles.badge}>{status}</Badge>
-                        </View>
+                        <CustomBadge id={status?.id} name={status?.name} />
                         <Text style={styles.number}>
-                            {costo}€ - {venta}€
+                            <Text style={styles.costo}>{costo}€</Text> -{" "}
+                            <Text style={styles.venta}>{venta}€</Text>
                         </Text>
                     </View>
-                    {imageUrl && (
-                        <View style={styles.imageContainer}>
-                            <Image
-                                source={{ uri: imageUrl }}
-                                style={styles.image}
-                            />
-                        </View>
-                    )}
                 </View>
             </View>
         </TouchableOpacity>

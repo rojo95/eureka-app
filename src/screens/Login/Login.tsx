@@ -13,8 +13,8 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
     const { t } = useTranslation();
     const { OS } = Platform;
     const [formData, setFormData] = useState<LoginProps>({
-        email: "r.johan95@gmail.com",
-        password: "/*cd7091857cd*/",
+        email: "",
+        password: "",
     });
     const [error, setError] = useState("");
     const [showPass, setShowPass] = useState<boolean>(false);
@@ -47,7 +47,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                 setLoading(false)
             );
             if (loged) {
-                // navigation.navigate("home");
+                navigation.navigate("home");
             }
         } else {
             setError("Invalid username or password");

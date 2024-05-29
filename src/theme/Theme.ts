@@ -33,6 +33,13 @@ const Theme = {
         background: "#FFF",
         backgroundCard: "#FFF",
         primaryContrast: "#FFF",
+        primaryLight: "#FFE0B2",
+        successLight: "#DCEDC8",
+        dangerLight: "#EF9A9A",
+        deepBlueLight: "#A8B6FF",
+        codeColor: "#4F7396",
+        danger: "#AC3500",
+        success: "#59ACA3",
     },
 };
 
