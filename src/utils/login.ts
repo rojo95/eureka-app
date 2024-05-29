@@ -24,18 +24,6 @@ interface SecureStoreInterface {
 const { OS } = Platform;
 
 /**
- * function to store data securely
- * @param param0
- */
-export async function saveSecure({ key, value }: SecureStoreInterface) {
-    if (OS === "web") {
-        // todo logica de almacenamiento de datos seguros web
-    } else {
-        await SecureStore.setItemAsync(key, value);
-    }
-}
-
-/**
  * function to log in to the system api
  * @param param0
  * @returns

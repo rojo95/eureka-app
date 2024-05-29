@@ -6,11 +6,7 @@ import {
     StyleSheet,
     View,
 } from "react-native";
-import {
-    ActivityIndicator,
-    DefaultTheme,
-    useTheme,
-} from "react-native-paper";
+import { ActivityIndicator, DefaultTheme, useTheme } from "react-native-paper";
 import { TextInput } from "react-native-paper";
 import BudgetsCard from "../../../components/BudgetsCard/BudgetsCard";
 import { useTranslation } from "react-i18next";
@@ -103,8 +99,8 @@ export default function Budgets({ navigation }: { navigation: any }) {
 
     /**
      * Render the loading indicator at the bottom of the list
-     * 
-     * @returns 
+     *
+     * @returns
      */
     const renderFooter = () => {
         return loading ? (

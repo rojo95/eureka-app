@@ -10,13 +10,13 @@ export function findComponentByType({
     object: any;
     value: string;
 }): any {
-    // Función recursiva para buscar el componente TextInput
+    // Recursive function to search for the component
     function recursiveFind(component: any): any {
         if (component.type === value) {
             return component;
         }
 
-        // Recursivamente busca en cada hijo del componente actual
+        // Recursively searches each child of the current component
         for (const child of component.children || []) {
             const found = recursiveFind(child);
             if (found) {
@@ -27,6 +27,5 @@ export function findComponentByType({
         return null;
     }
 
-    // Comienza la búsqueda desde el árbol raíz
     return recursiveFind(object);
 }
