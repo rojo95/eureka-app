@@ -4,6 +4,8 @@ import DraggableFlatList, {
     RenderItemParams,
     ScaleDecorator,
 } from "react-native-draggable-flatlist";
+import AppHeader from "../../../../components/AppHeader/AppHeader";
+import { useTranslation } from "react-i18next";
 
 const NUM_ITEMS = 10;
 function getColor(i: number) {
@@ -34,7 +36,8 @@ const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
     };
 });
 
-export default function DetailsBudget() {
+export default function DetailsBudget({ navigation }: { navigation: any }) {
+    const { t } = useTranslation();
     const [data, setData] = useState(initialData);
 
     function handleListUpdate(listItems: Item[]) {
@@ -69,14 +72,20 @@ export default function DetailsBudget() {
     };
 
     return (
-        <DraggableFlatList
-            data={data}
-            onDragEnd={({ data }) => {
-                handleListUpdate(data);
-            }}
-            keyExtractor={(item) => item.key}
-            renderItem={renderItem}
-        />
+        <View>
+            <AppHeader
+                title={t("menu-title-budgets")}
+                actions={[{ icon: "dots-vertical" }]}
+            />
+            <DraggableFlatList
+                data={data}
+                onDragEnd={({ data }) => {
+                    handleListUpdate(data);
+                }}
+                keyExtractor={(item) => item.key}
+                renderItem={renderItem}
+            />
+        </View>
     );
 }
 
