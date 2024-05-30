@@ -1,6 +1,5 @@
 import axios from "axios";
 import Constants from "expo-constants";
-import { Platform } from "react-native";
 import sessionNames from "./sessionInfo";
 import { getUserData } from "../services/users/users";
 import {
@@ -19,12 +18,6 @@ export interface LoginProps {
 }
 
 const API_URL = constants?.API_URL;
-
-interface SecureStoreInterface {
-    key: string;
-    value: string;
-}
-const { OS } = Platform;
 
 /**
  * function to log in to the system api
