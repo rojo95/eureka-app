@@ -3,7 +3,11 @@ import Constants from "expo-constants";
 import { Platform } from "react-native";
 import sessionNames from "./sessionInfo";
 import { getUserData } from "../services/users/users";
-import { deleteSecureData, getSecureData, saveSecureData } from "../services/storeData/storeData";
+import {
+    deleteSecureData,
+    getSecureData,
+    saveSecureData,
+} from "../services/storeData/storeData";
 
 const constants = Constants.expoConfig?.extra;
 
@@ -59,10 +63,14 @@ export async function login({ email, password }: LoginProps) {
 
                 return { id: userId, type, name, lastName };
             } else {
-                return request;
+                console.error(request);
+                throw request;
             }
         })
-        .catch((err) => err);
+        .catch((err) => {
+            console.error(`Error trying to request login: `, err.request);
+            throw err;
+        });
     return request;
 }
 

@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import LoginScreen from "../../screens/Login/Login";
 import { UserContext } from "../../contexts/UserContext";
 import DetailsBudget from "../../screens/CMRSales/Budgets/DetailsBudget/DetailsBudget";
+import RightDrawerScreen from "./RightDrawerScreen";
 const LeftDrawer = createDrawerNavigator();
 
 export default function LeftDrawerScreen() {
@@ -18,6 +19,12 @@ export default function LeftDrawerScreen() {
     const navigation: any = useNavigation();
     const theme: DefaultTheme = useTheme();
     const { user } = useContext(UserContext);
+
+    const BudgetsScreen: React.FC = () => (
+        <RightDrawerScreen>
+            <Budgets />
+        </RightDrawerScreen>
+    );
 
     return (
         <LeftDrawer.Navigator
@@ -28,6 +35,7 @@ export default function LeftDrawerScreen() {
                 drawerStyle: {
                     backgroundColor: theme.colors.darkGrey,
                 },
+                headerShown: false,
             }}
         >
             {user ? (
@@ -39,7 +47,7 @@ export default function LeftDrawerScreen() {
                     />
                     <LeftDrawer.Screen
                         name="budgets"
-                        component={Budgets}
+                        component={BudgetsScreen}
                         options={{
                             title: t("menu-title-budgets"),
                             headerRight: () => (
@@ -86,7 +94,6 @@ export default function LeftDrawerScreen() {
                                 color={theme.colors.dark}
                             />
                         ),
-                        headerShown: false,
                     }}
                     component={LoginScreen}
                 />

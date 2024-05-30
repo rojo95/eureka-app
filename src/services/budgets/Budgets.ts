@@ -16,11 +16,23 @@ export async function getBudgets({
     limit,
     fields,
     textFilter,
+    client,
+    states,
+    responsibles,
+    activities,
+    createdFrom,
+    createdTo,
 }: {
     page: number;
     limit: number;
     fields?: string[];
     textFilter?: string;
+    client?: number;
+    states?: number[];
+    responsibles?: number[];
+    activities?: number[];
+    createdFrom?: string;
+    createdTo?: string;
 }): Promise<any> {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Budgets/list`;
@@ -45,6 +57,7 @@ export async function getBudgets({
             where: {
                 wcId: { inq: [3] },
                 isActivityByAdministration: false,
+                ...(client && { clients: client }),
                 ...(textFilter && {
                     and: [
                         {
@@ -55,6 +68,11 @@ export async function getBudgets({
                         },
                     ],
                 }),
+                ...(states && { states: states }),
+                ...(responsibles && { responsibles: responsibles }),
+                ...(activities && { activities: activities }),
+                ...(createdFrom && { createdFrom: createdFrom }),
+                ...(createdTo && { createdTo: createdTo }),
             },
             fields: fields || fieldsDefault,
             limit: limit,

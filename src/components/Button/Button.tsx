@@ -23,23 +23,23 @@ interface ButtonPropsBase extends TouchableOpacityProps {
 
 // Extends the base interface to require the field 'text'.
 interface WithText extends ButtonPropsBase {
-    icon?: never;
+    icon?: ReactNode;
     text: string;
-    children?: never;
+    children?: ReactNode;
 }
 
 // Extends the base interface to require the 'children' field
 interface WithChildren extends ButtonPropsBase {
-    icon?: never;
-    text?: never;
+    icon?: ReactNode;
+    text?: string;
     children: ReactNode;
 }
 
 // Extends the base interface to require the 'icon' field
 interface WithIcon extends ButtonPropsBase {
     icon: ReactNode;
-    text?: never;
-    children?: never;
+    text?: string;
+    children?: ReactNode;
 }
 
 type ButtonProps = WithText | WithChildren | WithIcon;

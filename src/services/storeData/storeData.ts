@@ -58,12 +58,20 @@ export async function getSecureData(
  *
  * @param {string} key
  */
-export async function deleteSecureData(key: string): Promise<void> {
+export async function deleteSecureData(key: string): Promise<boolean> {
     try {
         if (OS === "web") {
             // todo delete secure data stored on web site
+            return true;
         } else {
-            await SecureStore.deleteItemAsync(key);
+            return await SecureStore.deleteItemAsync(key)
+                .then(() => {
+                    return true;
+                })
+                .catch((err) => {
+                    console.error(`Error deleting ${key}`);
+                    throw err;
+                });
         }
     } catch (error) {
         throw error;

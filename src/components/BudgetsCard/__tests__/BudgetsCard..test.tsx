@@ -18,7 +18,6 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
         const componentBase =
             tree?.children[0]?.children[0]?.children[0]?.children[3]
                 ?.children[0].children;
-        console.log(componentBase);
         expect(componentBase).toEqual([`${testCosto}`, "€"]);
     });
 
@@ -41,7 +40,6 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
         const tree: any = renderer
             .create(
                 <BudgetsCard
-                    // onPress={() => {}}
                     status={{ id: 1, name: testStatusText }}
                 />
             )

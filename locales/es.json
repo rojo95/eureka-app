@@ -32,5 +32,10 @@
     "activity-label": "Actividad",
     "placeholder-select-activity": "Seleccione una Actividad",
     "client-label": "Cliente",
-    "placeholder-select-client": "Seleccione un Cliente"
+    "placeholder-select-client": "Seleccione un Cliente",
+    "clean-filters": "Limpiar Filtros",
+    "manage-columns": "Gestionar Columnas",
+    "date-from": "Fecha desde",
+    "date-to": "Fecha hasta",
+    "placeholder-select-state": "Seleccione un Estado"
 }

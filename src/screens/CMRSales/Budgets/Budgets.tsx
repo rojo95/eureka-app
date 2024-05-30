@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     FlatList,
     ListRenderItem,
@@ -13,19 +13,38 @@ import { useTranslation } from "react-i18next";
 import FAB from "../../../components/FAB/FAB";
 import Modal from "../../../components/Modal/Modal";
 import CreateBudget from "./CreateBudget/CreateBudget";
-import axios from "axios";
 import { getBudgets } from "../../../services/budgets/Budgets";
+import AppbarHeader from "../../../components/AppHeader/AppHeader";
+import { useNavigation } from "@react-navigation/native";
+import { RightDrawerContext } from "../../../components/drawers/RightDrawerScreen";
+import Text from "../../../components/Text/Text";
+import Button from "../../../components/Button/Button";
+import Select from "../../../components/Select/Select";
+import { DatePickerInput } from "react-native-paper-dates";
+import { FontAwesome } from "@expo/vector-icons";
+import ChangeLanguageModal from "../../../components/ChangeLanguageModal/ChangeLanguageModal";
 
-export default function Budgets({ navigation }: { navigation: any }) {
+export default function Budgets() {
+    const navigation: any = useNavigation();
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
     const { OS } = Platform;
     const [text, setText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [showModalLang, setShowModalLang] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
+    const [filterForm, setFilterForm] = useState<{
+        client: { id: number; name: string } | null;
+        startDate: any;
+        endDate: any;
+    }>({
+        client: null,
+        startDate: "",
+        endDate: "",
+    });
 
     const styles = StyleSheet.create({
         container: {
@@ -46,7 +65,124 @@ export default function Budgets({ navigation }: { navigation: any }) {
             borderBottomEndRadius: 10,
         },
         cardsContainer: { marginVertical: 20 },
+        drawerContainer: {
+            flex: 1,
+            marginVertical: 40,
+            marginHorizontal: 10,
+            justifyContent: "space-between",
+        },
+        input: {
+            marginVertical: 5,
+        },
+        inputDate: { marginVertical: 32 },
     });
+
+    // start get context right drawer
+    const contextValue = useContext(RightDrawerContext);
+
+    // Check if the context has been successfully retrieved
+    if (!contextValue) {
+        console.error("RightDrawerContext is not available");
+        return null;
+    }
+
+    // Now TypeScript knows that contextValue is of type RightDrawerContextType
+    const { toggleOpenRight, setRightDrawerContent } = contextValue;
+
+    // create the content to be rendered in the drawer
+    const rightDrawerContent = (
+        <View style={styles.drawerContainer}>
+            <View>
+                <Button
+                    buttonStyle={styles.input}
+                    type="secondary"
+                    text={t("placeholder-select-client")}
+                />
+                <Button
+                    buttonStyle={styles.input}
+                    type="secondary"
+                    text={t("placeholder-select-state")}
+                />
+                <Button
+                    buttonStyle={styles.input}
+                    type="secondary"
+                    text={t("placeholder-select-responsible")}
+                />
+                <Button
+                    buttonStyle={styles.input}
+                    type="secondary"
+                    text={t("placeholder-select-activity")}
+                />
+                <View style={styles.inputDate}>
+                    <DatePickerInput
+                        style={[{ backgroundColor: "#fff" }]}
+                        mode="outlined"
+                        locale="en"
+                        label={t("date-from")}
+                        value={filterForm.startDate}
+                        onChange={(d) =>
+                            setFilterForm((preData) => ({
+                                ...preData,
+                                startDate: d,
+                            }))
+                        }
+                        inputMode="start"
+                    />
+                </View>
+                <View style={styles.inputDate}>
+                    <DatePickerInput
+                        style={[{ backgroundColor: "#fff" }]}
+                        mode="outlined"
+                        locale="en"
+                        label={t("date-to")}
+                        value={filterForm.endDate}
+                        onChange={(d) =>
+                            setFilterForm((preData) => ({
+                                ...preData,
+                                endDate: d,
+                            }))
+                        }
+                        inputMode="start"
+                    />
+                </View>
+            </View>
+            <View>
+                <View style={styles.input}>
+                    <Button
+                        icon={
+                            <FontAwesome
+                                name="trash-o"
+                                size={24}
+                                color="white"
+                            />
+                        }
+                        text={t("clean-filters")}
+                        onPress={() => {
+                            toggleOpenRight();
+                        }}
+                    />
+                </View>
+                {OS === "web" && (
+                    <View style={styles.input}>
+                        <Button
+                            icon={
+                                <FontAwesome
+                                    name="cog"
+                                    size={24}
+                                    color="white"
+                                />
+                            }
+                            text={t("manage-columns")}
+                            onPress={() => {}}
+                        />
+                    </View>
+                )}
+            </View>
+        </View>
+    );
+    // set the drawer Content
+    setRightDrawerContent(rightDrawerContent);
+    // end of the right drawer context configuration
 
     /**
      * Function to fetch data
@@ -123,22 +259,9 @@ export default function Budgets({ navigation }: { navigation: any }) {
         setLoading(false);
     };
 
-    /**
-     * Render the loading indicator at the bottom of the list
-     *
-     * @returns
-     */
-    const renderFooter = () => {
-        return loading ? (
-            <View>
-                <ActivityIndicator size="large" />
-            </View>
-        ) : null;
-    };
-
     // Define the handlePress function to handle the onPress event
     const handlePress = (item: any) => {
-        navigation.navigate(`budget`, { itemId: "123" });
+        navigation.navigate(`budget`, { itemId: item });
     };
 
     /**
@@ -149,7 +272,7 @@ export default function Budgets({ navigation }: { navigation: any }) {
      */
     const renderItem: ListRenderItem<any> = ({ item }) => (
         <BudgetsCard
-            onPress={() => handlePress(item)}
+            onPress={() => handlePress(item.id)}
             index={item.code}
             description={item.description}
             status={item.status}
@@ -160,6 +283,20 @@ export default function Budgets({ navigation }: { navigation: any }) {
 
     return (
         <View style={styles.container}>
+            <AppbarHeader
+                title={t("menu-title-budgets")}
+                actions={[
+                    {
+                        icon: "earth",
+                        onPress: () => setShowModalLang(!showModalLang),
+                    },
+                    { icon: "filter", onPress: toggleOpenRight },
+                ]}
+            />
+            <ChangeLanguageModal
+                showModal={showModalLang}
+                toggleModal={() => setShowModalLang(!showModalLang)}
+            />
             <View style={styles.containerSearch}>
                 <TextInput
                     mode="outlined"
@@ -184,7 +321,6 @@ export default function Budgets({ navigation }: { navigation: any }) {
                     renderItem={renderItem}
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.5}
-                    ListFooterComponent={renderFooter}
                     refreshing={loading}
                     onRefresh={handleRefresh}
                 />
