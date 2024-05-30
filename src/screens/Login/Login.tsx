@@ -48,6 +48,8 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
             );
             if (loged) {
                 navigation.navigate("home");
+            } else {
+                setError("An error has occurred login");
             }
         } else {
             setError("Invalid username or password");
@@ -56,68 +58,68 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={styles.container}>
-            <ScrollView style={{}}>
-                <View style={styles.formContent}>
-                    <View
+            {/* <ScrollView style={{}}> */}
+            <View style={styles.formContent}>
+                <View
+                    style={{
+                        alignItems: "center",
+                    }}
+                >
+                    <Image
                         style={{
-                            alignItems: "center",
+                            width: "100%",
+                            height: OS === "web" ? 100 : 200,
                         }}
-                    >
-                        <Image
-                            style={{
-                                width: "100%",
-                                height: OS === "web" ? 100 : 200,
-                            }}
-                            source={require("../../../assets/logo_eureka.png")}
-                            contentFit="contain"
-                        />
-                    </View>
-                    <View style={styles.input}>
-                        <TextInput
-                            disabled={loading}
-                            autoCapitalize="none"
-                            mode="outlined"
-                            label={t("label-email")}
-                            value={formData.email}
-                            onChangeText={(text) =>
-                                handleData({ name: "email", value: text })
-                            }
-                            style={styles.input}
-                        />
-                    </View>
-                    <View style={styles.input}>
-                        <TextInput
-                            disabled={loading}
-                            mode="outlined"
-                            autoCapitalize="none"
-                            label={t("label-password")}
-                            value={formData.password}
-                            secureTextEntry={!showPass}
-                            onChangeText={(text) =>
-                                handleData({ name: "password", value: text })
-                            }
-                            style={styles.input}
-                            right={
-                                <TextInput.Icon
-                                    disabled={loading}
-                                    icon={showPass ? "eye" : "eye-off-outline"}
-                                    onPress={() => setShowPass(!showPass)}
-                                />
-                            }
-                        />
-                    </View>
-                    <View style={styles.input}>
-                        {error ? (
-                            <Text style={{ color: "red" }}>{error}</Text>
-                        ) : null}
-                        <Button
-                            disabled={loading}
-                            text={t("button-login")}
-                            onPress={handleLogin}
-                        />
-                    </View>
+                        source={require("../../../assets/logo_eureka.png")}
+                        contentFit="contain"
+                    />
                 </View>
-            </ScrollView>
+                <View style={styles.input}>
+                    <TextInput
+                        disabled={loading}
+                        autoCapitalize="none"
+                        mode="outlined"
+                        label={t("label-email")}
+                        value={formData.email}
+                        onChangeText={(text) =>
+                            handleData({ name: "email", value: text })
+                        }
+                        style={styles.input}
+                    />
+                </View>
+                <View style={styles.input}>
+                    <TextInput
+                        disabled={loading}
+                        mode="outlined"
+                        autoCapitalize="none"
+                        label={t("label-password")}
+                        value={formData.password}
+                        secureTextEntry={!showPass}
+                        onChangeText={(text) =>
+                            handleData({ name: "password", value: text })
+                        }
+                        style={styles.input}
+                        right={
+                            <TextInput.Icon
+                                disabled={loading}
+                                icon={showPass ? "eye" : "eye-off-outline"}
+                                onPress={() => setShowPass(!showPass)}
+                            />
+                        }
+                    />
+                </View>
+                <View style={styles.input}>
+                    {error ? (
+                        <Text style={{ color: "red" }}>{error}</Text>
+                    ) : null}
+                    <Button
+                        disabled={loading}
+                        text={t("button-login")}
+                        onPress={handleLogin}
+                    />
+                </View>
+            </View>
+            {/* </ScrollView> */}
         </View>
     );
 };
