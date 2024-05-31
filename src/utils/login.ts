@@ -4,13 +4,12 @@ import sessionNames from "./sessionInfo";
 import { getUserData } from "../services/users/users";
 import {
     deleteSecureData,
-    getSecureData,
     saveSecureData,
 } from "../services/storeData/storeData";
 
 const constants = Constants.expoConfig?.extra;
 
-const { role, userKey, idUser } = sessionNames;
+const { role, userKey, idUser, wcId: idWc } = sessionNames;
 
 export interface LoginProps {
     email: string;
@@ -46,13 +45,12 @@ export async function login({ email, password }: LoginProps) {
                 await saveSecureData({ key: userKey, value: id });
                 await saveSecureData({ key: idUser, value: userId.toString() });
 
-                const uk = await getSecureData(userKey);
-
-                const { type, name, lastName } = await getUserData({
+                const { type, name, lastName, wcId } = await getUserData({
                     userId: parseInt(userId),
                 });
 
                 await saveSecureData({ key: role, value: type });
+                await saveSecureData({ key: idWc, value: wcId.toString() });
 
                 return { id: userId, type, name, lastName };
             } else {

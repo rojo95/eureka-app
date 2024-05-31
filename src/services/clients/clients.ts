@@ -13,40 +13,28 @@ const { userKey, wcId: idWc } = sessionNames;
  * @param {number} param.userId
  * @returns
  */
-export async function getUserData({
-    userId,
-}: {
-    userId: number;
-}): Promise<any> {
+export async function getClientsApi(): Promise<any> {
     const Authorization = await getSecureData(userKey);
-    const url = `${API_URL}Personnels/${userId}/v2details`;
-    return await axios({
-        method: "get",
-        url,
-        headers: {
-            "Content-Type": "application/json",
-            Authorization,
-        },
-    })
-        .then(async ({ request }) => {
-            const response = JSON.parse(request.response);
-            return response;
-        })
-        .catch((err) => {
-            console.error("err: ", err);
-            throw err;
-        });
-}
-
-export async function getResponsiblesApi() {
-    const url = `${API_URL}Personnels/findActive`;
-    const Authorization = await getSecureData(userKey);
+    const url = `${API_URL}Clients`;
     const wcId = ((await getSecureData(idWc)) || "").split(",");
 
     const params = {
-        where: { wcId: { inq: wcId } },
-        type: { neq: "OPERARIO" },
-        order: "name asc",
+        fields: [
+            "id",
+            "name",
+            "businessName",
+            "wcId",
+            "personType",
+            "defaultVatId",
+            "salesLedgerAccountNumber",
+        ],
+        where: {
+            wcId: { inq: wcId },
+            or: [{ name: { neq: null } }, { businessName: { neq: null } }],
+            personType: { inq: ["lead", "client"] },
+        },
+        order: "name Asc",
+        limit: 100,
     };
 
     return await axios

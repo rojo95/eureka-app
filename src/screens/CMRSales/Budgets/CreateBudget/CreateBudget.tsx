@@ -1,6 +1,5 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useState } from "react";
 import {
-    Alert,
     Platform,
     PlatformOSType,
     ScrollView,
@@ -96,6 +95,7 @@ export default function CreateBudget({
         percents: { width: "49%" },
         title: { fontWeight: "bold", color: theme.colors.dark, fontSize: 20 },
         titleContainer: {
+            flex: 1,
             flexDirection: "row",
             justifyContent: "space-between",
         },
@@ -108,20 +108,19 @@ export default function CreateBudget({
                     <Text style={styles.title}>
                         {t("menu-title-create-budget")}
                     </Text>
-                    <Button
-                        type="link"
-                        buttonStyle={{
-                            flexDirection: "row-reverse",
-                        }}
-                        onPress={setShowModal}
-                        icon={
-                            <Fontisto
-                                name="close"
-                                size={24}
-                                color={theme.colors.dark}
-                            />
-                        }
-                    ></Button>
+                    <View>
+                        <Button
+                            type="link"
+                            onPress={setShowModal}
+                            icon={
+                                <Fontisto
+                                    name="close"
+                                    size={24}
+                                    color={theme.colors.dark}
+                                />
+                            }
+                        />
+                    </View>
                 </View>
                 <View style={styles.formText}>
                     <TextInput

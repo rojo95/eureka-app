@@ -4,5 +4,6 @@ const sessionNames = {
     idUser: "userId",
     userName: "userName",
     userLastName: "userLastName",
+    wcId: "wcId",
 };
 export default sessionNames;

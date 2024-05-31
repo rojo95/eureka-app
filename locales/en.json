@@ -16,6 +16,7 @@
     "location-denied": "Permission to access location was denied",
     "label-name": "Name",
     "responsible-label": "Responsible",
+    "placeholder-select-responsible-multiple": "Select one or more Responsibles",
     "create-budget-button": "Create Budget",
     "label-discount": "Discount %",
     "label-date": "Date",
@@ -31,11 +32,17 @@
     "placeholder-select-responsible": "Select a Responsible",
     "activity-label": "Activity",
     "placeholder-select-activity": "Select an Activity",
+    "placeholder-select-activity-multiple": "Select one or more Activities",
     "client-label": "Client",
     "placeholder-select-client": "Select a Client",
+    "placeholder-select-multiple-client": "Select one or more Clients",
     "clean-filters": "Clean Filters",
     "manage-columns": "Manage Columns",
     "date-from": "Date From",
     "date-to": "Date to",
-    "placeholder-select-state": "Seleccione a State"
+    "placeholder-select-state": "Select a State",
+    "placeholder-select-multiple-state": "Select one or more States",
+    "finish-selection": "Finish Selection",
+    "check-all": "Check All",
+    "uncheck-all": "Uncheck All"
 }

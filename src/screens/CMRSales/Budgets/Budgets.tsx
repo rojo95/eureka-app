@@ -6,7 +6,7 @@ import {
     StyleSheet,
     View,
 } from "react-native";
-import { ActivityIndicator, DefaultTheme, useTheme } from "react-native-paper";
+import { DefaultTheme, useTheme } from "react-native-paper";
 import { TextInput } from "react-native-paper";
 import BudgetsCard from "../../../components/BudgetsCard/BudgetsCard";
 import { useTranslation } from "react-i18next";
@@ -17,12 +17,21 @@ import { getBudgets } from "../../../services/budgets/Budgets";
 import AppbarHeader from "../../../components/AppHeader/AppHeader";
 import { useNavigation } from "@react-navigation/native";
 import { RightDrawerContext } from "../../../components/drawers/RightDrawerScreen";
-import Text from "../../../components/Text/Text";
 import Button from "../../../components/Button/Button";
-import Select from "../../../components/Select/Select";
 import { DatePickerInput } from "react-native-paper-dates";
 import { FontAwesome } from "@expo/vector-icons";
-import ChangeLanguageModal from "../../../components/ChangeLanguageModal/ChangeLanguageModal";
+import Tag from "../../../components/Tag/Tag";
+import { ScrollView } from "react-native-gesture-handler";
+import SelectActivitiesForm from "../../../components/SelectActivitiesForm/SelectActivitiesForm";
+import SelectStatesModal from "../../../components/SelectStatesModal/SelectStatesModal";
+import SelectResponsiblesModal from "../../../components/SelectResponsiblesModal/SelectResponsiblesModal";
+import SelectClientsModal from "../../../components/SelectClientsModal/SelectClientsModal";
+
+interface filtersInterface {
+    id: number;
+    name: string;
+    lastName?: string;
+}
 
 export default function Budgets() {
     const navigation: any = useNavigation();
@@ -32,19 +41,18 @@ export default function Budgets() {
     const [text, setText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
-    const [showModalLang, setShowModalLang] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalBudgets, setTotalBudgets] = useState<number | null>(null);
     const [limit, setLimit] = useState<number>(10);
-    const [filterForm, setFilterForm] = useState<{
-        client: { id: number; name: string } | null;
-        startDate: any;
-        endDate: any;
-    }>({
-        client: null,
-        startDate: "",
-        endDate: "",
-    });
+    const [clients, setClients] = useState<filtersInterface[]>([]);
+    const [states, setStates] = useState<filtersInterface[]>([]);
+    const [responsibles, setResponsibles] = useState<filtersInterface[]>([]);
+    const [activity, setActivity] = useState<filtersInterface[]>([]);
+    const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+    const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+    const [timer, setTimer] = useState<any>(null);
+    const [typeModal, setTypeModal] = useState<number>(1);
 
     const styles = StyleSheet.create({
         container: {
@@ -97,21 +105,25 @@ export default function Budgets() {
                     buttonStyle={styles.input}
                     type="secondary"
                     text={t("placeholder-select-client")}
+                    onPress={getClients}
                 />
                 <Button
                     buttonStyle={styles.input}
                     type="secondary"
                     text={t("placeholder-select-state")}
+                    onPress={getStates}
                 />
                 <Button
                     buttonStyle={styles.input}
                     type="secondary"
                     text={t("placeholder-select-responsible")}
+                    onPress={getResponsibles}
                 />
                 <Button
                     buttonStyle={styles.input}
                     type="secondary"
                     text={t("placeholder-select-activity")}
+                    onPress={getActivities}
                 />
                 <View style={styles.inputDate}>
                     <DatePickerInput
@@ -119,13 +131,8 @@ export default function Budgets() {
                         mode="outlined"
                         locale="en"
                         label={t("date-from")}
-                        value={filterForm.startDate}
-                        onChange={(d) =>
-                            setFilterForm((preData) => ({
-                                ...preData,
-                                startDate: d,
-                            }))
-                        }
+                        value={startDate}
+                        onChange={(d) => setStartDate(d)}
                         inputMode="start"
                     />
                 </View>
@@ -135,13 +142,8 @@ export default function Budgets() {
                         mode="outlined"
                         locale="en"
                         label={t("date-to")}
-                        value={filterForm.endDate}
-                        onChange={(d) =>
-                            setFilterForm((preData) => ({
-                                ...preData,
-                                endDate: d,
-                            }))
-                        }
+                        value={endDate}
+                        onChange={(d) => setEndDate(d)}
                         inputMode="start"
                     />
                 </View>
@@ -158,6 +160,7 @@ export default function Budgets() {
                         }
                         text={t("clean-filters")}
                         onPress={() => {
+                            cleanFilters();
                             toggleOpenRight();
                         }}
                     />
@@ -184,21 +187,39 @@ export default function Budgets() {
     setRightDrawerContent(rightDrawerContent);
     // end of the right drawer context configuration
 
+    function cleanFilters() {
+        setActivity([]);
+        setEndDate(undefined);
+        setStartDate(undefined);
+        setText("");
+        setClients([]);
+        setStates([]);
+        setResponsibles([]);
+    }
+
     /**
      * Function to fetch data
      * @returns
      */
     async function searchBudgets(page?: number) {
         if (loading) return;
+        if (totalBudgets && data.length >= totalBudgets) return;
+
         setLoading(true);
         try {
-            const budgets = await getBudgets({
+            const filters = {
                 page: page || currentPage,
                 limit: limit,
                 textFilter: text,
-            });
+                activities: activity.map((v) => v.id),
+                createdTo: endDate,
+                createdFrom: startDate,
+                states: states.map((v) => v.id),
+                responsibles: responsibles.map((v) => v.id),
+            };
+            const { budgets, total } = await getBudgets(filters);
             let newData: any[] = [];
-            const fields: any[] = await budgets.map((d: any, i: any) => {
+            const fields: any[] = await budgets?.map((d: any, i: any) => {
                 return {
                     id: d.id,
                     code: d.number,
@@ -214,7 +235,7 @@ export default function Budgets() {
                 } else {
                     for (let field of fields) {
                         if (field.id) {
-                            if (!data.find((v) => v.id === field.id)) {
+                            if (!data?.find((v) => v.id === field.id)) {
                                 newData.push(field);
                             }
                         }
@@ -259,8 +280,11 @@ export default function Budgets() {
         setLoading(false);
     };
 
-    // Define the handlePress function to handle the onPress event
-    const handlePress = (item: any) => {
+    /**
+     * Function to change view to the budget detail
+     * @param {number} item
+     */
+    const handlePress = (item: number) => {
         navigation.navigate(`budget`, { itemId: item });
     };
 
@@ -281,37 +305,272 @@ export default function Budgets() {
         />
     );
 
+    /**
+     * Function to get data with filters 1.5 seconds
+     * after the last change in them
+     * @param {() => void} param.functionality
+     */
+    useEffect(() => {
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+        setTimer(
+            setTimeout(() => {
+                handleRefresh();
+            }, 1500)
+        );
+    }, [endDate, startDate, text, clients, activity, states, responsibles]);
+
+    /**
+     * function to get the availables activities
+     */
+    function getActivities() {
+        setShowModal(true);
+        setTypeModal(2);
+    }
+
+    /**
+     * function to get the availables states
+     */
+    function getStates() {
+        setShowModal(true);
+        setTypeModal(3);
+    }
+
+    /**
+     * function to get the availables responsibles
+     */
+    function getResponsibles() {
+        setShowModal(true);
+        setTypeModal(4);
+    }
+
+    /**
+     * function to get the availables clients
+     */
+    function getClients() {
+        setShowModal(true);
+        setTypeModal(5);
+    }
+
+    /**
+     * functio to change the renderized component in the modal
+     * @param param
+     * @returns
+     */
+    function rendererListType(param: number) {
+        switch (param) {
+            case 1:
+                return (
+                    <CreateBudget
+                        setShowModal={() => setShowModal(!showModal)}
+                    />
+                );
+
+            case 2:
+                return (
+                    <View>
+                        <SelectActivitiesForm
+                            selectedValues={activity}
+                            setSelectedValues={setActivity}
+                            setShowModal={() => setShowModal(!showModal)}
+                            title={t("placeholder-select-activity-multiple")}
+                        />
+                    </View>
+                );
+
+            case 3:
+                return (
+                    <SelectStatesModal
+                        selectedValues={states}
+                        setSelectedValues={setStates}
+                        setShowModal={() => setShowModal(!showModal)}
+                    />
+                );
+            case 4:
+                return (
+                    <SelectResponsiblesModal
+                        selectedValues={responsibles}
+                        setSelectedValues={setResponsibles}
+                        setShowModal={() => setShowModal(!showModal)}
+                    />
+                );
+            case 5:
+                return (
+                    <SelectClientsModal
+                        selectedValues={clients}
+                        setSelectedValues={setClients}
+                        setShowModal={() => setShowModal(!showModal)}
+                    />
+                );
+
+            default:
+                return (
+                    <CreateBudget
+                        setShowModal={() => setShowModal(!showModal)}
+                    />
+                );
+        }
+    }
+
+    /**
+     * function to remove a selected activity
+     * @param id
+     */
+    function removeActivity(id: number) {
+        setActivity((prevSelected) => {
+            return prevSelected.filter((v) => v.id !== id);
+        });
+    }
+
+    /**
+     * function to remove a selected state
+     * @param id
+     */
+    function removeStates(id: number) {
+        setStates((prevSelected) => {
+            return prevSelected.filter((v) => v.id !== id);
+        });
+    }
+
+    /**
+     * function to remove a selected responsible
+     * @param id
+     */
+    function removeResponsible(id: number) {
+        setResponsibles((prevSelected) => {
+            return prevSelected.filter((v) => v.id !== id);
+        });
+    }
+
+    /**
+     * function to remove a selected client
+     * @param id
+     */
+    function removeClients(id: number) {
+        setClients((prevSelected) => {
+            return prevSelected.filter((v) => v.id !== id);
+        });
+    }
+
     return (
         <View style={styles.container}>
-            <AppbarHeader
-                title={t("menu-title-budgets")}
-                actions={[
-                    {
-                        icon: "earth",
-                        onPress: () => setShowModalLang(!showModalLang),
-                    },
-                    { icon: "filter", onPress: toggleOpenRight },
-                ]}
-            />
-            <ChangeLanguageModal
-                showModal={showModalLang}
-                toggleModal={() => setShowModalLang(!showModalLang)}
-            />
+            <View>
+                <AppbarHeader
+                    title={t("menu-title-budgets")}
+                    actions={[{ icon: "filter", onPress: toggleOpenRight }]}
+                />
+            </View>
             <View style={styles.containerSearch}>
                 <TextInput
                     mode="outlined"
                     label={t("budgets-input-search-label")}
                     placeholder={t("budget-input-search-placeholder")}
                     value={text}
-                    onChangeText={setText}
+                    onChangeText={(tx) => setText(tx)}
                     right={
                         <TextInput.Icon
                             icon="magnify"
-                            onPress={handleRefresh}
                             color={theme.colors.primary}
                         />
                     }
                 />
+            </View>
+            <View>
+                <ScrollView
+                    horizontal={true}
+                    style={{
+                        margin: 10,
+                    }}
+                >
+                    {clients &&
+                        clients.map((v) => (
+                            <Tag
+                                key={v.id}
+                                text={v.name}
+                                icon={
+                                    <FontAwesome
+                                        name="close"
+                                        size={15}
+                                        color="white"
+                                    />
+                                }
+                                onPress={() => removeClients(v.id)}
+                            />
+                        ))}
+                    {states &&
+                        states.map((v) => (
+                            <Tag
+                                key={v.id}
+                                text={v.name}
+                                icon={
+                                    <FontAwesome
+                                        name="close"
+                                        size={15}
+                                        color="white"
+                                    />
+                                }
+                                onPress={() => removeStates(v.id)}
+                            />
+                        ))}
+                    {responsibles &&
+                        responsibles.map((v) => (
+                            <Tag
+                                key={v.id}
+                                text={`${v.name} ${v.lastName}`}
+                                icon={
+                                    <FontAwesome
+                                        name="close"
+                                        size={15}
+                                        color="white"
+                                    />
+                                }
+                                onPress={() => removeResponsible(v.id)}
+                            />
+                        ))}
+                    {activity &&
+                        activity.map((v) => (
+                            <Tag
+                                key={v.id}
+                                text={v.name}
+                                icon={
+                                    <FontAwesome
+                                        name="close"
+                                        size={15}
+                                        color="white"
+                                    />
+                                }
+                                onPress={() => removeActivity(v.id)}
+                            />
+                        ))}
+                    {startDate && (
+                        <Tag
+                            text={startDate.toString()}
+                            icon={
+                                <FontAwesome
+                                    name="close"
+                                    size={15}
+                                    color="white"
+                                />
+                            }
+                            onPress={() => setStartDate(undefined)}
+                        />
+                    )}
+                    {endDate && (
+                        <Tag
+                            text={endDate.toString()}
+                            icon={
+                                <FontAwesome
+                                    name="close"
+                                    size={15}
+                                    color="white"
+                                />
+                            }
+                            onPress={() => setEndDate(undefined)}
+                        />
+                    )}
+                </ScrollView>
             </View>
 
             <View style={{ marginVertical: 10, flex: 1 }}>
@@ -335,7 +594,7 @@ export default function Budgets() {
                     }),
                 }}
             >
-                <CreateBudget setShowModal={() => setShowModal(!showModal)} />
+                {rendererListType(typeModal)}
             </Modal>
             <View style={{ flex: 1, marginTop: "-150%" }}>
                 <FAB
@@ -343,7 +602,10 @@ export default function Budgets() {
                         {
                             icon: "plus",
                             label: t("menu-title-create-budget"),
-                            onPress: () => setShowModal(!showModal),
+                            onPress: () => {
+                                setShowModal(!showModal);
+                                setTypeModal(1);
+                            },
                             color: theme.colors.primary,
                             style: {
                                 backgroundColor: theme.colors.primaryContrast,

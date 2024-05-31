@@ -77,6 +77,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                 <View style={styles.input}>
                     <TextInput
                         disabled={loading}
+                        keyboardType="email-address"
                         autoCapitalize="none"
                         mode="outlined"
                         label={t("label-email")}
@@ -95,6 +96,9 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                         label={t("label-password")}
                         value={formData.password}
                         secureTextEntry={!showPass}
+                        {...(showPass && {
+                            keyboardType: "visible-password",
+                        })}
                         onChangeText={(text) =>
                             handleData({ name: "password", value: text })
                         }
