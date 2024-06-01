@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
+    Avatar,
     Checkbox,
     DefaultTheme,
     useTheme,
@@ -17,13 +18,14 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Fontisto } from "@expo/vector-icons";
 import Button from "../Button/Button";
 import { useTranslation } from "react-i18next";
-import { getStatesApi } from "../../services/states/states";
 import { getResponsiblesApi } from "../../services/users/users";
+import { Image } from "expo-image";
 
 interface ItemInterface {
     id: number;
     name: string;
     lastName?: string;
+    profileImage?: string;
 }
 
 export default function SelectResponsiblesModal({
@@ -75,9 +77,17 @@ export default function SelectResponsiblesModal({
         data = data.map((v: ItemInterface) => ({
             id: v.id,
             name: v.name.toUpperCase(),
-            lastName: v.lastName?.toUpperCase(),
+            lastName: v.lastName?.toUpperCase() || "",
+            profileImage: v.profileImage,
         }));
-        setListItems(data);
+        setListItems([
+            {
+                id: -1,
+                name: t("without-responsible-label").toUpperCase(),
+                lastName: "",
+            },
+            ...data,
+        ]);
     }
 
     useEffect(() => {
@@ -115,19 +125,48 @@ export default function SelectResponsiblesModal({
                         borderBottomWidth: 1,
                         flexDirection: "row",
                         alignItems: "center",
+                        justifyContent: "space-between",
                     }}
                     onPress={() =>
-                        handleSelectedActivity({ id: item.id, name: item.name })
+                        handleSelectedActivity({
+                            id: item.id,
+                            name: item.name,
+                            lastName: item.lastName,
+                        })
                     }
                 >
-                    <Checkbox
-                        status={
-                            selected.find((v) => v.id === item.id)
-                                ? "checked"
-                                : "unchecked"
-                        }
-                    />
-                    <Text>{`${item.name} ${item.lastName}`}</Text>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Avatar.Image
+                            size={24}
+                            source={
+                                item.profileImage
+                                    ? () => (
+                                          <Image
+                                              style={{ width: 30, height: 30 }}
+                                              source={{
+                                                  uri: item.profileImage,
+                                              }}
+                                          />
+                                      )
+                                    : require("../../../assets/avatar-pending.jpg")
+                            }
+                        />
+                        <Text>{`  ${item.name} ${item.lastName}`}</Text>
+                    </View>
+                    <View>
+                        <Checkbox
+                            status={
+                                selected.find((v) => v.id === item.id)
+                                    ? "checked"
+                                    : "unchecked"
+                            }
+                        />
+                    </View>
                 </TouchableOpacity>
             </GestureHandlerRootView>
         );

@@ -44,5 +44,8 @@
     "placeholder-select-multiple-state": "Select one or more States",
     "finish-selection": "Finish Selection",
     "check-all": "Check All",
-    "uncheck-all": "Uncheck All"
+    "uncheck-all": "Uncheck All",
+    "state-label": "State",
+    "without-responsible-label": "Without Responsible",
+    "selected-plural": "Selected"
 }

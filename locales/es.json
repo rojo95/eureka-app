@@ -44,5 +44,8 @@
     "placeholder-select-multiple-state": "Seleccione uno o más Estados",
     "finish-selection": "Finalizar Selección",
     "check-all": "Marcar Todos",
-    "uncheck-all": "Desmarcar Todos"
+    "uncheck-all": "Desmarcar Todos",
+    "state-label": "Estado",
+    "without-responsible-label": "Sin Responsable",
+    "selected-plural": "Seleccionado(s)"
 }

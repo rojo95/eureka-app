@@ -104,25 +104,49 @@ export default function Budgets() {
                 <Button
                     buttonStyle={styles.input}
                     type="secondary"
-                    text={t("placeholder-select-client")}
+                    text={
+                        clients.length > 0
+                            ? `${clients.length} ${t("client-label")}(s) ${t(
+                                  "selected-plural"
+                              )}`
+                            : t("placeholder-select-client")
+                    }
                     onPress={getClients}
                 />
                 <Button
                     buttonStyle={styles.input}
                     type="secondary"
-                    text={t("placeholder-select-state")}
+                    text={
+                        states.length > 0
+                            ? `${states.length} ${t("state-label")}(s) ${t(
+                                  "selected-plural"
+                              )}`
+                            : t("placeholder-select-state")
+                    }
                     onPress={getStates}
                 />
                 <Button
                     buttonStyle={styles.input}
                     type="secondary"
-                    text={t("placeholder-select-responsible")}
+                    text={
+                        responsibles.length > 0
+                            ? `${responsibles.length} ${t(
+                                  "responsible-label"
+                              )}(s) ${t("selected-plural")}`
+                            : t("placeholder-select-responsible")
+                    }
                     onPress={getResponsibles}
                 />
                 <Button
                     buttonStyle={styles.input}
                     type="secondary"
-                    text={t("placeholder-select-activity")}
+                    text={
+                        activity.length > 0
+                            ? `${activity.length} ${t(
+                                  "activity-label"
+                              )}(ies) ${t("selected-plural")}`
+                            : t("placeholder-select-activity")
+                    }
                     onPress={getActivities}
                 />
                 <View style={styles.inputDate}>
@@ -187,6 +211,22 @@ export default function Budgets() {
     setRightDrawerContent(rightDrawerContent);
     // end of the right drawer context configuration
 
+    /**
+     * function to give format to date fields
+     * @param param0
+     */
+    function setDateFormat(value: any): string {
+        const text = new Date(value);
+        const day = text.getDate().toString().padStart(2, "0");
+        const month = (text.getMonth() + 1).toString().padStart(2, "0");
+        const year = text.getFullYear();
+        const finalDate = `${day}-${month}-${year}`;
+        return finalDate;
+    }
+
+    /**
+     * Function to reset all the search parameters
+     */
     function cleanFilters() {
         setActivity([]);
         setEndDate(undefined);
@@ -203,7 +243,6 @@ export default function Budgets() {
      */
     async function searchBudgets(page?: number) {
         if (loading) return;
-        if (totalBudgets && data.length >= totalBudgets) return;
 
         setLoading(true);
         try {
@@ -218,6 +257,7 @@ export default function Budgets() {
                 responsibles: responsibles.map((v) => v.id),
             };
             const { budgets, total } = await getBudgets(filters);
+            setTotalBudgets(total);
             let newData: any[] = [];
             const fields: any[] = await budgets?.map((d: any, i: any) => {
                 return {
@@ -488,7 +528,9 @@ export default function Budgets() {
                         clients.map((v) => (
                             <Tag
                                 key={v.id}
-                                text={v.name}
+                                text={`${t("client-label").toLowerCase()}: ${
+                                    v.name
+                                }`}
                                 icon={
                                     <FontAwesome
                                         name="close"
@@ -503,7 +545,9 @@ export default function Budgets() {
                         states.map((v) => (
                             <Tag
                                 key={v.id}
-                                text={v.name}
+                                text={`${t("state-label").toLowerCase()}: ${
+                                    v.name
+                                }`}
                                 icon={
                                     <FontAwesome
                                         name="close"
@@ -518,7 +562,11 @@ export default function Budgets() {
                         responsibles.map((v) => (
                             <Tag
                                 key={v.id}
-                                text={`${v.name} ${v.lastName}`}
+                                text={`${t(
+                                    "responsible-label"
+                                ).toLowerCase()}: ${v.name}${
+                                    v.lastName ? " " + v.lastName : ""
+                                }`}
                                 icon={
                                     <FontAwesome
                                         name="close"
@@ -533,7 +581,9 @@ export default function Budgets() {
                         activity.map((v) => (
                             <Tag
                                 key={v.id}
-                                text={v.name}
+                                text={`${t("activity-label").toLowerCase()}: ${
+                                    v.name
+                                }`}
                                 icon={
                                     <FontAwesome
                                         name="close"
@@ -546,7 +596,9 @@ export default function Budgets() {
                         ))}
                     {startDate && (
                         <Tag
-                            text={startDate.toString()}
+                            text={`${t(
+                                "date-from"
+                            ).toLowerCase()}: ${setDateFormat(startDate)}`}
                             icon={
                                 <FontAwesome
                                     name="close"
@@ -559,7 +611,9 @@ export default function Budgets() {
                     )}
                     {endDate && (
                         <Tag
-                            text={endDate.toString()}
+                            text={`${t(
+                                "date-from"
+                            ).toLowerCase()}: ${setDateFormat(endDate)}`}
                             icon={
                                 <FontAwesome
                                     name="close"

@@ -142,53 +142,55 @@ export default function SelectStatesModal({
 
     return (
         <View style={styles.formStyle}>
-            <View style={styles.titleContainer}>
-                <Text style={styles.formTytle}>
-                    {t("placeholder-select-multiple-state")}
-                </Text>
+            {listItems?.length > 0 ? (
                 <View>
-                    <Button
-                        type="link"
-                        onPress={setShowModal}
-                        icon={
-                            <Fontisto
-                                name="close"
-                                size={24}
-                                color={theme.colors.dark}
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.formTytle}>
+                            {t("placeholder-select-multiple-state")}
+                        </Text>
+                        <View>
+                            <Button
+                                type="link"
+                                onPress={setShowModal}
+                                icon={
+                                    <Fontisto
+                                        name="close"
+                                        size={24}
+                                        color={theme.colors.dark}
+                                    />
+                                }
                             />
-                        }
-                    />
-                </View>
-            </View>
-            <View style={styles.topButtonsContainer}>
-                <Button
-                    type="secondary"
-                    text={
-                        selected.length >= listItems.length
-                            ? t("uncheck-all")
-                            : t("check-all")
-                    }
-                    onPress={checkUncheckAll}
-                />
-            </View>
-            <View style={{ maxHeight: "75%" }}>
-                {listItems?.length > 0 ? (
-                    <View>
-                        <FlatList
-                            data={listItems}
-                            renderItem={FilterListItems}
+                        </View>
+                    </View>
+                    <View style={styles.topButtonsContainer}>
+                        <Button
+                            type="secondary"
+                            text={
+                                selected.length >= listItems.length
+                                    ? t("uncheck-all")
+                                    : t("check-all")
+                            }
+                            onPress={checkUncheckAll}
                         />
                     </View>
-                ) : (
-                    <View>
-                        <ActivityIndicator animating={true} size={"large"} />
+                    <View style={{ maxHeight: "75%" }}>
+                        <View>
+                            <FlatList
+                                data={listItems}
+                                renderItem={FilterListItems}
+                            />
+                        </View>
                     </View>
-                )}
-            </View>
-            <Button
-                onPress={() => finishSelection()}
-                text={t("finish-selection")}
-            ></Button>
+                    <Button
+                        onPress={() => finishSelection()}
+                        text={t("finish-selection")}
+                    ></Button>
+                </View>
+            ) : (
+                <View>
+                    <ActivityIndicator animating={true} size={"large"} />
+                </View>
+            )}
         </View>
     );
 }

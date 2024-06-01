@@ -123,29 +123,5 @@ export async function getBudgets({
             throw err.response || err;
         });
 
-    console.log(total);
-
-    return { budgets: query, total };
+    return { budgets: query, total: total.count };
 }
-
-// await fetch(
-//     "https://pre.api.eurekacloud.es/api/Budgets/listCount?where=%7B%22wcId%22:%7B%22inq%22:%5B3%5D%7D,%22isActivityByAdministration%22:false%7D",
-//     {
-//         credentials: "include",
-//         headers: {
-//             "User-Agent":
-//                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0",
-//             Accept: "application/json, text/plain, */*",
-//             "Accept-Language": "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3",
-//             authorization:
-//                 "mhPXDBKcQdIzIU5BbyLnFknWFyuF4eIiQ4B80VO9foMqvxx7j13txAi3SIzjXCE3",
-//             "Sec-Fetch-Dest": "empty",
-//             "Sec-Fetch-Mode": "cors",
-//             "Sec-Fetch-Site": "same-site",
-//             "If-None-Match": 'W/"d-xNCYsomkysM7H6BY3huMz0i6D+U"',
-//         },
-//         referrer: "https://pre.eurekacloud.es/",
-//         method: "GET",
-//         mode: "cors",
-//     }
-// );
