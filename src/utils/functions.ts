@@ -29,3 +29,22 @@ export function findComponentByType({
 
     return recursiveFind(object);
 }
+
+export function createUrl({
+    urlBase,
+    params,
+}: {
+    urlBase: URL;
+    params: object;
+}) {
+    // create a new URLSearchParams object
+    const searchParams = new URLSearchParams();
+
+    // Add parameters to the URLSearchParams object
+    for (const [key, value] of Object.entries(params)) {
+        searchParams.append(key, value!);
+    }
+
+    // merge and return the URLSearchParams object to the URL
+    return `${urlBase}?${searchParams.toString()}`;
+}
