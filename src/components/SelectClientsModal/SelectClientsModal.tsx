@@ -26,12 +26,12 @@ interface ItemInterface {
 
 export default function SelectClientsModal({
     setShowModal,
-    selectedValues = [],
+    selectedValues,
     setSelectedValues,
 }: {
     setShowModal: () => void;
-    selectedValues?: ItemInterface[];
-    setSelectedValues: (values: ItemInterface[]) => void;
+    selectedValues?: ItemInterface | null;
+    setSelectedValues: (values: ItemInterface) => void;
 }) {
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
@@ -63,7 +63,9 @@ export default function SelectClientsModal({
     });
 
     const [listItems, setListItems] = useState<any[]>([]);
-    const [selected, setSelected] = useState<ItemInterface[]>(selectedValues);
+    const [selected, setSelected] = useState<ItemInterface | null>(
+        selectedValues || null
+    );
 
     /**
      * function to get the availables activities
@@ -82,21 +84,6 @@ export default function SelectClientsModal({
 
         return () => {};
     }, []);
-
-    /**
-     * Function to select multiple activities
-     * @param {ItemInterface} item
-     */
-    function handleSelectedActivity(item: ItemInterface) {
-        setSelected((prevSelected) => {
-            const objectIndex = prevSelected.findIndex((v) => v.id === item.id);
-            if (objectIndex === -1) {
-                return [...prevSelected, item];
-            } else {
-                return prevSelected.filter((v) => v.id !== item.id);
-            }
-        });
-    }
 
     /**
      * Component to render the list
@@ -119,7 +106,7 @@ export default function SelectClientsModal({
                 >
                     <Checkbox
                         status={
-                            selected.find((v) => v.id === item.id)
+                            selected && selected.id === item.id
                                 ? "checked"
                                 : "unchecked"
                         }
@@ -131,16 +118,23 @@ export default function SelectClientsModal({
     };
 
     function finishSelection() {
-        setSelectedValues(selected);
+        if (selected) setSelectedValues(selected);
         setShowModal();
     }
 
-    function checkUncheckAll() {
-        if (selected.length >= listItems.length) {
-            setSelected([]);
-        } else {
-            setSelected(listItems);
-        }
+    /**
+     * Function to select multiple activities
+     * @param {ItemInterface} item
+     */
+    function handleSelectedActivity(item: ItemInterface) {
+        setSelected((prevSelected) => {
+            const objectIndex = prevSelected && prevSelected.id === item.id;
+            if (objectIndex) {
+                return null;
+            } else {
+                return item;
+            }
+        });
     }
 
     return (
@@ -165,18 +159,7 @@ export default function SelectClientsModal({
                             />
                         </View>
                     </View>
-                    <View style={styles.topButtonsContainer}>
-                        <Button
-                            type="secondary"
-                            text={
-                                selected.length >= listItems.length
-                                    ? t("uncheck-all")
-                                    : t("check-all")
-                            }
-                            onPress={checkUncheckAll}
-                        />
-                    </View>
-                    <View style={{ maxHeight: "75%" }}>
+                    <View style={{ maxHeight: "80%" }}>
                         <View>
                             <FlatList
                                 data={listItems}

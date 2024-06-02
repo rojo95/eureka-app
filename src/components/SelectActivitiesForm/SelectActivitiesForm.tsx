@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 interface ItemInterface {
     id: number;
     name: string;
+    activityType?: { id: number; name: string };
 }
 
 export default function SelectActivitiesForm({
@@ -67,7 +68,13 @@ export default function SelectActivitiesForm({
      */
     async function getActivities() {
         let data = await getActivitiesApi();
-        data = data.map((v) => ({ id: v.id, name: v.name.toUpperCase() }));
+        data = data.map((v) => ({
+            id: v.id,
+            name: `${v.name.toUpperCase()} (${v.activityType.name.substring(
+                0,
+                3
+            )}.)`,
+        }));
         setListItems(data);
     }
 
