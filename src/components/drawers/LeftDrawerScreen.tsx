@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useTranslation } from "react-i18next";
 import Budgets from "../../screens/CMRSales/Budgets/Budgets";
@@ -10,7 +10,7 @@ import { DefaultTheme, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import LoginScreen from "../../screens/Login/Login";
 import { UserContext } from "../../contexts/UserContext";
-import DetailsBudget from "../../screens/CMRSales/Budgets/DetailsBudget/DetailsBudget";
+import Chapters from "../../screens/CMRSales/Budgets/Chapters/Chapters";
 import RightDrawerScreen from "./RightDrawerScreen";
 const LeftDrawer = createDrawerNavigator();
 
@@ -20,9 +20,15 @@ export default function LeftDrawerScreen() {
     const theme: DefaultTheme = useTheme();
     const { user } = useContext(UserContext);
 
-    const BudgetsScreen: React.FC = () => (
+    const BudgetsScreen: FC = () => (
         <RightDrawerScreen>
             <Budgets />
+        </RightDrawerScreen>
+    );
+
+    const ChaptersScreen: FC = () => (
+        <RightDrawerScreen>
+            <Chapters />
         </RightDrawerScreen>
     );
 
@@ -61,7 +67,7 @@ export default function LeftDrawerScreen() {
                     />
                     <LeftDrawer.Screen
                         name="budget"
-                        component={DetailsBudget}
+                        component={ChaptersScreen}
                         options={{
                             title: t("menu-title-budgets"),
                             headerRight: () => (
