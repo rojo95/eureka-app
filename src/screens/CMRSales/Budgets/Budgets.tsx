@@ -26,6 +26,9 @@ import SelectActivitiesForm from "../../../components/SelectActivitiesForm/Selec
 import SelectStatesModal from "../../../components/SelectStatesModal/SelectStatesModal";
 import SelectResponsiblesModal from "../../../components/SelectResponsiblesModal/SelectResponsiblesModal";
 import SelectClientsModal from "../../../components/SelectClientsModal/SelectClientsModal";
+import Alert from "../../../components/Alert/Alert";
+import { setDateFormat } from "../../../utils/numbers";
+import { exportBudget } from "../../../services/exportDocuments/exportDocuments";
 
 interface filtersInterface {
     id: number;
@@ -45,7 +48,7 @@ export default function Budgets() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalBudgets, setTotalBudgets] = useState<number | null>(null);
     const [limit, setLimit] = useState<number>(10);
-    const [clients, setClients] = useState<filtersInterface[]>([]);
+    const [clients, setClients] = useState<filtersInterface | null>(null);
     const [states, setStates] = useState<filtersInterface[]>([]);
     const [responsibles, setResponsibles] = useState<filtersInterface[]>([]);
     const [activity, setActivity] = useState<filtersInterface[]>([]);
@@ -53,6 +56,7 @@ export default function Budgets() {
     const [endDate, setEndDate] = useState<Date | undefined>(undefined);
     const [timer, setTimer] = useState<any>(null);
     const [typeModal, setTypeModal] = useState<number>(1);
+    const [alert, setAlert] = useState<boolean>(false);
 
     const styles = StyleSheet.create({
         container: {
@@ -105,10 +109,8 @@ export default function Budgets() {
                     buttonStyle={styles.input}
                     type="secondary"
                     text={
-                        clients.length > 0
-                            ? `${clients.length} ${t("client-label")}(s) ${t(
-                                  "selected-plural"
-                              )}`
+                        clients
+                            ? `${clients.name} ${t("selected-singular")}`
                             : t("placeholder-select-client")
                     }
                     onPress={getClients}
@@ -212,19 +214,6 @@ export default function Budgets() {
     // end of the right drawer context configuration
 
     /**
-     * function to give format to date fields
-     * @param param0
-     */
-    function setDateFormat(value: any): string {
-        const text = new Date(value);
-        const day = text.getDate().toString().padStart(2, "0");
-        const month = (text.getMonth() + 1).toString().padStart(2, "0");
-        const year = text.getFullYear();
-        const finalDate = `${day}-${month}-${year}`;
-        return finalDate;
-    }
-
-    /**
      * Function to reset all the search parameters
      */
     function cleanFilters() {
@@ -232,7 +221,7 @@ export default function Budgets() {
         setEndDate(undefined);
         setStartDate(undefined);
         setText("");
-        setClients([]);
+        setClients(null);
         setStates([]);
         setResponsibles([]);
     }
@@ -249,12 +238,17 @@ export default function Budgets() {
             const filters = {
                 page: page || currentPage,
                 limit: limit,
+                ...(clients && { client: clients.id }),
                 textFilter: text,
-                activities: activity.map((v) => v.id),
+                ...(activity.length > 0 && {
+                    activities: activity.map((v) => v.id),
+                }),
                 createdTo: endDate,
                 createdFrom: startDate,
-                states: states.map((v) => v.id),
-                responsibles: responsibles.map((v) => v.id),
+                ...(states.length > 0 && { states: states.map((v) => v.id) }),
+                ...(responsibles.length > 0 && {
+                    responsibles: responsibles.map((v) => v.id),
+                }),
             };
             const { budgets, total } = await getBudgets(filters);
             setTotalBudgets(total);
@@ -403,9 +397,7 @@ export default function Budgets() {
         switch (param) {
             case 1:
                 return (
-                    <CreateBudget
-                        setShowModal={() => setShowModal(!showModal)}
-                    />
+                    <CreateBudget setShowModal={() => setShowModal(false)} />
                 );
 
             case 2:
@@ -414,7 +406,7 @@ export default function Budgets() {
                         <SelectActivitiesForm
                             selectedValues={activity}
                             setSelectedValues={setActivity}
-                            setShowModal={() => setShowModal(!showModal)}
+                            setShowModal={() => setShowModal(false)}
                             title={t("placeholder-select-activity-multiple")}
                         />
                     </View>
@@ -425,7 +417,7 @@ export default function Budgets() {
                     <SelectStatesModal
                         selectedValues={states}
                         setSelectedValues={setStates}
-                        setShowModal={() => setShowModal(!showModal)}
+                        setShowModal={() => setShowModal(false)}
                     />
                 );
             case 4:
@@ -433,7 +425,7 @@ export default function Budgets() {
                     <SelectResponsiblesModal
                         selectedValues={responsibles}
                         setSelectedValues={setResponsibles}
-                        setShowModal={() => setShowModal(!showModal)}
+                        setShowModal={() => setShowModal(false)}
                     />
                 );
             case 5:
@@ -441,15 +433,12 @@ export default function Budgets() {
                     <SelectClientsModal
                         selectedValues={clients}
                         setSelectedValues={setClients}
-                        setShowModal={() => setShowModal(!showModal)}
+                        setShowModal={() => setShowModal(false)}
                     />
                 );
-
             default:
                 return (
-                    <CreateBudget
-                        setShowModal={() => setShowModal(!showModal)}
-                    />
+                    <CreateBudget setShowModal={() => setShowModal(false)} />
                 );
         }
     }
@@ -488,10 +477,27 @@ export default function Budgets() {
      * function to remove a selected client
      * @param id
      */
-    function removeClients(id: number) {
-        setClients((prevSelected) => {
-            return prevSelected.filter((v) => v.id !== id);
-        });
+    function removeClients() {
+        setClients(null);
+    }
+
+    async function exportListToExcel() {
+        const filters = {
+            ...(clients && { client: clients }),
+            textFilter: text,
+            ...(activity.length > 0 && {
+                activities: activity,
+            }),
+            createdTo: endDate,
+            createdFrom: startDate,
+            ...(states.length > 0 && { states: states }),
+            ...(responsibles.length > 0 && {
+                responsibles: responsibles,
+            }),
+            translation: t,
+        };
+
+        await exportBudget(filters);
     }
 
     return (
@@ -524,23 +530,21 @@ export default function Budgets() {
                         margin: 10,
                     }}
                 >
-                    {clients &&
-                        clients.map((v) => (
-                            <Tag
-                                key={v.id}
-                                text={`${t("client-label").toLowerCase()}: ${
-                                    v.name
-                                }`}
-                                icon={
-                                    <FontAwesome
-                                        name="close"
-                                        size={15}
-                                        color="white"
-                                    />
-                                }
-                                onPress={() => removeClients(v.id)}
-                            />
-                        ))}
+                    {clients && (
+                        <Tag
+                            text={`${t("client-label").toLowerCase()}: ${
+                                clients.name
+                            }`}
+                            icon={
+                                <FontAwesome
+                                    name="close"
+                                    size={15}
+                                    color="white"
+                                />
+                            }
+                            onPress={() => removeClients()}
+                        />
+                    )}
                     {states &&
                         states.map((v) => (
                             <Tag
@@ -669,7 +673,9 @@ export default function Budgets() {
                         {
                             icon: "file-export",
                             label: t("export"),
-                            onPress: () => console.log("Pressed star"),
+                            onPress: () => {
+                                setAlert(true);
+                            },
                             color: theme.colors.primary,
                             style: {
                                 backgroundColor: theme.colors.primaryContrast,
@@ -679,6 +685,13 @@ export default function Budgets() {
                     ]}
                 ></FAB>
             </View>
+            <Alert
+                showModal={alert}
+                title={t("export-list-to-excel-title")}
+                closeModal={() => setAlert(false)}
+                description={t("export-list-to-excel-ask-description")}
+                accept={exportListToExcel}
+            />
         </View>
     );
 }
