@@ -47,5 +47,10 @@
     "uncheck-all": "Uncheck All",
     "state-label": "State",
     "without-responsible-label": "Without Responsible",
-    "selected-plural": "Selected"
+    "selected-plural": "Selected",
+    "selected-singular": "Selected",
+    "export-list-to-excel-title": "Export List to Excel",
+    "export-list-to-excel-ask-description": "Do you want to export the list to Excel with the selected filters and columns?",
+    "created-from": "Creado Desde",
+    "created-to": "Creado Hasta"
 }

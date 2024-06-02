@@ -47,5 +47,10 @@
     "uncheck-all": "Desmarcar Todos",
     "state-label": "Estado",
     "without-responsible-label": "Sin Responsable",
-    "selected-plural": "Seleccionado(s)"
+    "selected-plural": "Seleccionado(s)",
+    "selected-singular": "Seleccionado",
+    "export-list-to-excel-title": "Exportar Listado a Excel",
+    "export-list-to-excel-ask-description": "¿Quieres exportar el listado a excel con los filtros y columnas seleccionados?",
+    "created-from": "Creado Desde",
+    "created-to": "Creado Hasta"
 }
