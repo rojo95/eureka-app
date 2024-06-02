@@ -52,46 +52,42 @@ export async function getBudgets({
         "discount",
         "isActivityByAdministration",
     ];
-    const wcId = ((await getSecureData(idWc)) || "").split(",");
+    const wcId = ((await getSecureData(idWc)) || "")
+        .split(",")
+        .map((v) => parseInt(v));
+
     const params = {
-        filter: {
-            where: {
-                wcId: { inq: wcId },
-                isActivityByAdministration: false,
-                ...(client && { clients: client }),
-                ...(textFilter && {
-                    and: [
-                        {
-                            or: [
-                                { title: { like: `%${textFilter}%` } },
-                                { number: { like: `%${textFilter}%` } },
-                            ],
-                        },
-                    ],
-                }),
-                ...(states && { states: states }),
-                ...(responsibles && { responsibles: responsibles }),
-                ...(activities && { activities: activities }),
-                ...(createdFrom && { createdFrom: createdFrom }),
-                ...(createdTo && { createdTo: createdTo }),
-            },
-            fields: fields || fieldsDefault,
-            limit: limit,
-            offset: (page - 1) * limit,
-            include: [
-                "client",
-                "state",
-                "workCenter",
-                "responsible",
-                "activity",
-            ],
-            order: "title ASC",
+        where: {
+            wcId: { inq: wcId },
+            isActivityByAdministration: false,
+            ...(responsibles && { responsibles: responsibles }),
+            ...(activities && { activities: activities }),
+            ...(client && { clients: client }),
+            ...(states && { states: states }),
+            ...(createdFrom && { createdFrom: createdFrom }),
+            ...(createdTo && { createdTo: createdTo }),
+            ...(textFilter && {
+                and: [
+                    {
+                        or: [
+                            { title: { like: `%${textFilter}%` } },
+                            { number: { like: `%${textFilter}%` } },
+                        ],
+                    },
+                ],
+            }),
         },
+        // todo should make dynamic the fields
+        fields: fields || fieldsDefault,
+        limit: limit,
+        offset: (page - 1) * limit,
+        include: ["client", "state", "workCenter", "responsible", "activity"],
+        order: "title ASC",
     };
 
     const query = await axios
         .get(url, {
-            params: { filter: JSON.stringify(params.filter) },
+            params: { filter: JSON.stringify(params) },
             headers: {
                 "Content-Type": "application/json",
                 Authorization,
@@ -102,13 +98,16 @@ export async function getBudgets({
             return response;
         })
         .catch((err) => {
-            console.error("err getting the budget information: ", err.response);
-            throw err.response;
+            console.error(
+                "err getting the budget information: ",
+                err.response || err
+            );
+            throw err.response || err;
         });
 
     const total = await axios
         .get(`${API_URL}Budgets/listCount`, {
-            params: { where: JSON.stringify(params.filter.where) },
+            params: { where: JSON.stringify(params.where) },
             headers: {
                 "Content-Type": "application/json",
                 Authorization,
@@ -119,8 +118,11 @@ export async function getBudgets({
             return response;
         })
         .catch((err) => {
-            console.error("err counting the budgets rows: ", err.response);
-            throw err.response || err;
+            console.error(
+                "err counting the budgets rows: ",
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
         });
 
     return { budgets: query, total: total.count };
