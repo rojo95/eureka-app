@@ -59,8 +59,11 @@ export async function login({ email, password }: LoginProps) {
             }
         })
         .catch((err) => {
-            console.error(`Error trying to request login: `, err.request);
-            throw err;
+            console.error(
+                `Error trying to request login: `,
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
         });
     return request;
 }
