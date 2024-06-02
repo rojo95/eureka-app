@@ -1,3 +1,5 @@
+import * as FileSystem from "expo-file-system";
+
 export async function downLoadDocument({
     documentName,
     url,
@@ -5,7 +7,10 @@ export async function downLoadDocument({
     documentName: string;
     url: URL;
 }) {
-    console.log(url);
+    console.log({
+        documentName,
+        url,
+    });
 
     // todo should make the functionality to donwload the document at the phone or the pc
 }
