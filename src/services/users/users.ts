@@ -33,8 +33,11 @@ export async function getUserData({
             return response;
         })
         .catch((err) => {
-            console.error("err: ", err);
-            throw err;
+            console.error(
+                "Error getting the users data: ",
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
         });
 }
 
@@ -62,7 +65,10 @@ export async function getResponsiblesApi() {
             return response;
         })
         .catch((err) => {
-            console.error("err: ", err);
-            throw err;
+            console.error(
+                "Error getting the responsibles: ",
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
         });
 }
