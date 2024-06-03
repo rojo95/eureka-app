@@ -7,10 +7,10 @@ import i18n from "./src/services/languages/i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import changeLanguage from "./src/utils/Language";
 import CustomTheme from "./src/theme/Theme";
-
 import { UserProvider } from "./src/contexts/UserContext";
 import LeftDrawerScreen from "./src/components/drawers/LeftDrawerScreen";
 import { SharedParamsProvider } from "./src/contexts/SharedParamsProvider";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 const theme = CustomTheme;
 
@@ -28,7 +28,9 @@ export default function App() {
                 <I18nextProvider i18n={i18n}>
                     <UserProvider>
                         <NavigationContainer>
-                            <LeftDrawerScreen />
+                            <RootSiblingParent>
+                                <LeftDrawerScreen />
+                            </RootSiblingParent>
                         </NavigationContainer>
                     </UserProvider>
                 </I18nextProvider>
