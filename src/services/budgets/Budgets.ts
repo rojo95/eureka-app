@@ -77,7 +77,7 @@ export async function getBudgets({
                 ],
             }),
         },
-        // todo should make dynamic the fields
+        // TODO: should make dynamic the fields
         fields: fields || fieldsDefault,
         limit: limit,
         offset: (page - 1) * limit,

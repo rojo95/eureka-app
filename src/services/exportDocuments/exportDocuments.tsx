@@ -1,5 +1,5 @@
 import { createUrl } from "../../utils/functions";
-import { downLoadDocument } from "../files/files";
+import { downLoadRemoteDocument } from "../files/files";
 import Constants from "expo-constants";
 import sessionNames from "../../utils/sessionInfo";
 import { getSecureData } from "../storeData/storeData";
@@ -79,7 +79,7 @@ export async function exportBudget({
                     },
                 ],
             ].filter(Boolean),
-            // todo should make dynamic the columns
+            // TODO: should make dynamic the columns
             columns: [
                 {
                     key: "number",
@@ -229,7 +229,7 @@ export async function exportBudget({
         params: paramsDocument,
     });
 
-    await downLoadDocument({
+    await downLoadRemoteDocument({
         documentName: finalUrl,
         url: url_document,
     });
