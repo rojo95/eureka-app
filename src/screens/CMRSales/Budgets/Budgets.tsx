@@ -49,7 +49,7 @@ export default function Budgets() {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [totalBudgets, setTotalBudgets] = useState<number | null>(null);
+    const [totalBudgets, setTotalBudgets] = useState<number>(0);
     const [limit, setLimit] = useState<number>(10);
     const [clients, setClients] = useState<filtersInterface | null>(null);
     const [states, setStates] = useState<filtersInterface[]>([]);
@@ -236,10 +236,12 @@ export default function Budgets() {
     async function searchBudgets(page?: number) {
         if (loading) return;
 
+        const p = page || currentPage + 1;
+
         setLoading(true);
         try {
             const filters = {
-                page: page || currentPage,
+                page: p,
                 limit: limit,
                 ...(clients && { client: clients.id }),
                 textFilter: text,
@@ -286,6 +288,7 @@ export default function Budgets() {
             console.error(error);
             setLoading(false);
         }
+        setCurrentPage(p);
         setLoading(false);
     }
 
@@ -300,8 +303,7 @@ export default function Budgets() {
      * Handle loading more data when the end of the list is reached
      */
     const handleLoadMore = () => {
-        if (!loading && data.length >= 1) {
-            setCurrentPage(currentPage + 1);
+        if (data.length < totalBudgets) {
             searchBudgets();
         }
     };
@@ -356,7 +358,7 @@ export default function Budgets() {
         setTimer(
             setTimeout(() => {
                 handleRefresh();
-            }, 1500)
+            }, 800)
         );
     }, [endDate, startDate, text, clients, activity, states, responsibles]);
 
