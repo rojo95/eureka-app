@@ -4,19 +4,57 @@ import { StorageAccessFramework } from "expo-file-system";
 
 const AppDocsDir = FileSystem.cacheDirectory + "Eureka/";
 
+/**
+ * function to generate the local file uri
+ *
+ * @param {string} fileName
+ * @returns
+ */
 const generateFileUri = (fileName: string) => AppDocsDir + `${fileName}`;
 
-// Checks if directory exists. If not, creates it
+/**
+ * Function to generate the correct mime type by file
+ * @param fileName
+ * @returns
+ */
+const getMimeType = (fileName: string) => {
+    const extension = fileName.split(".").pop();
+    switch (extension) {
+        case "pdf":
+            return "application/pdf";
+        case "doc":
+            return "application/msword";
+        case "docx":
+            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        case "jpg":
+        case "jpeg":
+            return "image/jpeg";
+        case "png":
+            return "image/png";
+        default:
+            return "application/octet-stream";
+    }
+};
+
+/**
+ * Checks if directory exists. If not, creates it
+ */
 async function ensureDirExists() {
     const dirInfo = await FileSystem.getInfoAsync(AppDocsDir);
     if (!dirInfo.exists) {
-        console.log("Gif directory doesn't exist, creating…");
         await FileSystem.makeDirectoryAsync(AppDocsDir, {
             intermediates: true,
         });
     }
 }
 
+/**
+ * Function to download the remote documents
+ * @param param0
+ * @param {string} param.documentName
+ * @param {URL} param.url
+ * @returns
+ */
 export async function downLoadRemoteDocument({
     documentName,
     url,
@@ -48,9 +86,11 @@ export async function downLoadRemoteDocument({
                 await StorageAccessFramework.requestDirectoryPermissionsAsync();
             if (!permissions.granted) {
                 throw new Error(
-                    "No se otorgaron permisos para acceder al almacenamiento externo"
+                    "No permissions granted to access external storage"
                 );
             }
+
+            console.log(url);
 
             // temporary document storage
             const tempDownloadRes = await FileSystem.downloadAsync(
@@ -82,7 +122,7 @@ export async function downLoadRemoteDocument({
                 await StorageAccessFramework.createFileAsync(
                     docsDirectory,
                     fileName!,
-                    "image/jpeg"
+                    getMimeType(fileName!)
                 );
             await FileSystem.writeAsStringAsync(
                 destinationFileUri,
