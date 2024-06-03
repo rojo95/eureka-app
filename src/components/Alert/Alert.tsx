@@ -16,9 +16,11 @@ export default function Alert({
     showModal,
     accept,
     cancel,
-    modalTytle,
+    titleStyle,
     acceptButtonText,
     cancelButtonText,
+    type = "alert",
+    showClose = true,
 }: {
     title: string;
     description?: string;
@@ -26,9 +28,11 @@ export default function Alert({
     showModal: boolean;
     accept?: () => void;
     cancel?: () => void;
-    modalTytle?: StyleProps;
+    titleStyle?: StyleProps;
     acceptButtonText?: string;
     cancelButtonText?: string;
+    type?: "alert" | "confirm";
+    showClose?: boolean;
 }) {
     const theme: DefaultTheme = useTheme();
     const { t } = useTranslation();
@@ -64,7 +68,7 @@ export default function Alert({
             justifyContent: "flex-start",
             padding: 20,
         },
-        modalTytle: {
+        modalTitle: {
             color: theme.colors.dark,
             fontWeight: "bold",
             alignItems: "center",
@@ -95,39 +99,43 @@ export default function Alert({
                             marginVertical: 5,
                         }}
                     >
-                        <Text style={[styles.modalTytle, modalTytle]}>
+                        <Text style={[styles.modalTitle, titleStyle]}>
                             {title}
                         </Text>
-                        <View>
-                            <Button
-                                type="link"
-                                onPress={closeModal}
-                                icon={
-                                    <Fontisto
-                                        name="close"
-                                        size={24}
-                                        color={theme.colors.dark}
-                                    />
-                                }
-                            />
-                        </View>
+                        {showClose && (
+                            <View>
+                                <Button
+                                    type="link"
+                                    onPress={closeModal}
+                                    icon={
+                                        <Fontisto
+                                            name="close"
+                                            size={24}
+                                            color={theme.colors.dark}
+                                        />
+                                    }
+                                />
+                            </View>
+                        )}
                     </View>
                     <Text style={styles.description}>{description}</Text>
                     <View style={styles.buttons}>
-                        <View>
-                            <Button
-                                text={cancelButtonText || t("cancel-label")}
-                                type="secondary"
-                                onPress={handleClose}
-                                icon={
-                                    <AntDesign
-                                        name="close"
-                                        size={20}
-                                        color={theme.colors.primary}
-                                    />
-                                }
-                            />
-                        </View>
+                        {type === "confirm" && (
+                            <View>
+                                <Button
+                                    text={cancelButtonText || t("cancel-label")}
+                                    type="secondary"
+                                    onPress={handleClose}
+                                    icon={
+                                        <AntDesign
+                                            name="close"
+                                            size={20}
+                                            color={theme.colors.primary}
+                                        />
+                                    }
+                                />
+                            </View>
+                        )}
                         <View>
                             <Button
                                 text={acceptButtonText || t("accept-label")}
