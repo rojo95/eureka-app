@@ -6,7 +6,8 @@ import {
     View,
 } from "react-native";
 import Text from "../Text/Text";
-import { Badge, DefaultTheme, useTheme } from "react-native-paper";
+import { DefaultTheme, useTheme } from "react-native-paper";
+import StateBadge from "../StateBadge/StateBadge";
 
 interface BudgetsCardInterface extends TouchableOpacityProps {
     index?: any;
@@ -58,15 +59,6 @@ const BudgetsCard = ({
             fontSize: 14,
             color: theme.colors.codeColor,
         },
-        badgeContainer: {
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 8,
-        },
-        badge: {
-            marginRight: 8,
-            color: theme.colors.dark,
-        },
         costo: {
             color: theme.colors.danger,
             fontWeight: "bold",
@@ -76,28 +68,6 @@ const BudgetsCard = ({
             fontWeight: "bold",
         },
     });
-
-    const CustomBadge: React.FC<{ id: number; name: string }> = ({
-        id,
-        name,
-    }) => {
-        const info = {
-            ...(id === 1
-                ? { color: theme.colors.primaryLight }
-                : id === 2
-                ? { color: theme.colors.deepBlueLight }
-                : id === 4
-                ? { color: theme.colors.dangerLight }
-                : { color: theme.colors.successLight }),
-        };
-        return (
-            <View style={styles.badgeContainer}>
-                <Badge style={[styles.badge, { backgroundColor: info.color }]}>
-                    {name}
-                </Badge>
-            </View>
-        );
-    };
 
     return (
         <TouchableOpacity
@@ -111,7 +81,7 @@ const BudgetsCard = ({
                             <Text style={styles.code}>{index}</Text>
                         </View>
                         <Text style={styles.description}>{description}</Text>
-                        <CustomBadge id={status?.id} name={status?.name} />
+                        <StateBadge id={status?.id} name={status?.name} />
                         <Text style={styles.number}>
                             <Text style={styles.costo}>{costo}€</Text> -{" "}
                             <Text style={styles.venta}>{venta}€</Text>

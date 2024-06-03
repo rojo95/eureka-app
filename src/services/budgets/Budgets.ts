@@ -99,10 +99,10 @@ export async function getBudgets({
         })
         .catch((err) => {
             console.error(
-                "err getting the budget information: ",
-                err.response || err
+                "Error getting the budget information: ",
+                err.response || err.request || err
             );
-            throw err.response || err;
+            throw err.response || err.request || err;
         });
 
     const total = await axios
@@ -119,11 +119,62 @@ export async function getBudgets({
         })
         .catch((err) => {
             console.error(
-                "err counting the budgets rows: ",
+                "Error counting the budgets rows: ",
                 err.response || err.request || err
             );
             throw err.response || err.request || err;
         });
 
     return { budgets: query, total: total.count };
+}
+
+export async function getBudget({ id }: { id: number }) {
+    const Authorization = await getSecureData(userKey);
+    const url = `${API_URL}Budgets/getCompleteById?id=${id}`;
+
+    const query = await axios
+        .get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization,
+            },
+        })
+        .then(async ({ request }) => {
+            const response = JSON.parse(request.response);
+            return response;
+        })
+        .catch((err) => {
+            console.error(
+                "Error getting the budget information: ",
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
+        });
+
+    return query;
+}
+
+export async function trackingBudget({ id }: { id: number }) {
+    const Authorization = await getSecureData(userKey);
+    const url = `${API_URL}Tracking/getTracking?model=Budget&modelId=${id}`;
+    const query = await axios
+        .get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization,
+            },
+        })
+        .then(async ({ request }) => {
+            const response = JSON.parse(request.response);
+            return response;
+        })
+        .catch((err) => {
+            console.error(
+                "Error getting the budget information: ",
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
+        });
+
+    return query;
 }

@@ -4,6 +4,7 @@ import { MD3Colors } from "react-native-paper/lib/typescript/types";
 interface CustomColors extends MD3Colors {
     dark: string;
     darkGrey: string;
+    lightGrey: string;
     background: string;
     backgroundCard: string;
     primaryContrast: string;

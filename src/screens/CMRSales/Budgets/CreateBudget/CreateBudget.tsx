@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import {
     Platform,
     PlatformOSType,
@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import Select from "../../../../components/Select/Select";
 import Button from "../../../../components/Button/Button";
 import { Fontisto } from "@expo/vector-icons";
+import Map from "../../../../components/Map/Map";
 
 interface formData {
     name: string;
@@ -65,15 +66,6 @@ export default function CreateBudget({
     function handleSelection({ value, name }: { value: string; name: string }) {
         handleData({ name, value });
     }
-
-    /**
-     * Dynamic Component; if the environment is mobile load a React Native Map
-     */
-    const DynamicMap = React.lazy(() =>
-        Platform.OS !== "web"
-            ? import("../../../../components/Map/Map")
-            : Promise.resolve({ default: () => <Text>Website Map</Text> })
-    );
 
     const styles = StyleSheet.create({
         container: {
@@ -272,9 +264,7 @@ export default function CreateBudget({
                 </View>
                 {
                     <View style={[styles.input]}>
-                        <Suspense fallback={<Text>{t("loading")}...</Text>}>
-                            <DynamicMap />
-                        </Suspense>
+                        <Map />
                     </View>
                 }
                 <View style={styles.formText}>

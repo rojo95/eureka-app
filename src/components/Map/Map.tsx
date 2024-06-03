@@ -1,8 +1,7 @@
-import { Alert, Platform, StyleSheet, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import React, { useEffect, useState } from "react";
-import * as Location from "expo-location";
-import { useTranslation } from "react-i18next";
+import { Platform, StyleSheet, Text, View } from "react-native";
+import React, { lazy, useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native-paper";
+import { StyleProps } from "react-native-reanimated";
 
 interface regionInterface {
     latitude: number;
@@ -11,81 +10,51 @@ interface regionInterface {
     longitudeDelta: number;
 }
 
-interface MarkerInterface {
-    latitude: number;
-    longitude: number;
-}
-
-export default function Map({ description }: { description?: string }) {
-    const { t } = useTranslation();
-    const [region, setRegion] = useState<regionInterface>({
-        latitude: 38.20486801970583,
-        latitudeDelta: 17.679489473469285,
-        longitude: -2.9028533957898617,
-        longitudeDelta: 12.98109669238329,
-    });
-    const [marker, setMarker] = useState<MarkerInterface | null>(null);
-
-    function onRegionChange(region: regionInterface) {
-        setRegion(region);
-    }
-
-    function addMarker(marker: MarkerInterface) {
-        setMarker(marker);
-    }
-
-    /**
-     * function to get the current user location
-     * @returns
-     */
-    async function getLocation() {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-            Alert.alert(t("location-denied"));
-            return;
-        }
-
-        const location = (await Location.getCurrentPositionAsync({})).coords;
-
-        const newState = {
-            ...region,
-            latitude: location?.latitude || 0,
-            longitude: location?.longitude || 0,
-        };
-        onRegionChange(newState);
-    }
+function Map({
+    markerPreset,
+    address,
+    readOnly = false,
+    mapStyle,
+}: {
+    markerPreset?: { latitude: number; longitude: number } | null;
+    address?: regionInterface | null;
+    readOnly?: boolean;
+    mapStyle?: StyleProps;
+}) {
+    const [Component, setComponent] = useState<any>(null);
 
     useEffect(() => {
-        getLocation;
-    }, []);
+        async function loadComponent() {
+            if (Platform.OS !== "web") {
+                // Carga el componente para la web
+                const PhoneMapComponent = await import("./PhoneMap");
+                setComponent(() => PhoneMapComponent.default);
+            } else {
+                // Carga el componente para Android
+                const WebMapComponent = {
+                    default: () => <Text>Website Map</Text>,
+                };
+                setComponent(() => WebMapComponent.default);
+            }
+        }
+
+        loadComponent();
+    }, [markerPreset, address]);
+
+    if (!Component) {
+        return <ActivityIndicator size="large" />;
+    }
 
     return (
-        <View>
-            <MapView
-                style={styles.map}
-                initialRegion={region}
-                onRegionChange={onRegionChange}
-                onPress={(e) => addMarker(e.nativeEvent.coordinate)}
-                mapType={"standard"}
-            >
-                {marker && (
-                    <Marker
-                        coordinate={marker}
-                        title={t("label-ubication")}
-                        description={
-                            description
-                        }
-                        draggable={true}
-                    />
-                )}
-            </MapView>
-        </View>
+        <Component
+            markerPreset={markerPreset}
+            readOnly={readOnly}
+            address={address}
+            mapStyle={mapStyle}
+        />
     );
 }
 
-const styles = StyleSheet.create({
-    map: {
-        width: "100%",
-        height: 300,
-    },
-});
+export default Map;
+
+const styles = StyleSheet.create({});

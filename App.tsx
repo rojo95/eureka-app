@@ -10,6 +10,7 @@ import CustomTheme from "./src/theme/Theme";
 
 import { UserProvider } from "./src/contexts/UserContext";
 import LeftDrawerScreen from "./src/components/drawers/LeftDrawerScreen";
+import { SharedParamsProvider } from "./src/contexts/SharedParamsProvider";
 
 const theme = CustomTheme;
 
@@ -22,14 +23,16 @@ export default function App() {
         setLanguage();
     }, []);
     return (
-        <PaperProvider theme={theme}>
-            <I18nextProvider i18n={i18n}>
-                <UserProvider>
-                    <NavigationContainer>
-                        <LeftDrawerScreen />
-                    </NavigationContainer>
-                </UserProvider>
-            </I18nextProvider>
-        </PaperProvider>
+        <SharedParamsProvider>
+            <PaperProvider theme={theme}>
+                <I18nextProvider i18n={i18n}>
+                    <UserProvider>
+                        <NavigationContainer>
+                            <LeftDrawerScreen />
+                        </NavigationContainer>
+                    </UserProvider>
+                </I18nextProvider>
+            </PaperProvider>
+        </SharedParamsProvider>
     );
 }

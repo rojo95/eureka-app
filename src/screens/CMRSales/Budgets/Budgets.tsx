@@ -29,6 +29,7 @@ import SelectClientsModal from "../../../components/SelectClientsModal/SelectCli
 import Alert from "../../../components/Alert/Alert";
 import { setDateFormat } from "../../../utils/numbers";
 import { exportBudget } from "../../../services/exportDocuments/exportDocuments";
+import { ParamsContext } from "../../../contexts/SharedParamsProvider";
 
 interface filtersInterface {
     id: number;
@@ -41,6 +42,8 @@ export default function Budgets() {
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
     const { OS } = Platform;
+    const { setContextParams } = useContext(ParamsContext)!;
+
     const [text, setText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -319,7 +322,8 @@ export default function Budgets() {
      * @param {number} item
      */
     const handlePress = (item: number) => {
-        navigation.navigate(`budget`, { itemId: item });
+        navigation.navigate(`budget`);
+        setContextParams({ itemId: item });
     };
 
     /**

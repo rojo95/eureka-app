@@ -7,6 +7,7 @@ import { Entypo } from "@expo/vector-icons";
 import Text from "../Text/Text";
 import { DefaultTheme, Modal, Portal, useTheme } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 
 export default function Alert({
     title,
@@ -16,6 +17,8 @@ export default function Alert({
     accept,
     cancel,
     modalTytle,
+    acceptButtonText,
+    cancelButtonText,
 }: {
     title: string;
     description?: string;
@@ -24,8 +27,11 @@ export default function Alert({
     accept?: () => void;
     cancel?: () => void;
     modalTytle?: StyleProps;
+    acceptButtonText?: string;
+    cancelButtonText?: string;
 }) {
     const theme: DefaultTheme = useTheme();
+    const { t } = useTranslation();
     const [disableActions, setDisableActions] = useState<boolean>(false);
 
     const handleAccept = useCallback(() => {
@@ -110,7 +116,7 @@ export default function Alert({
                     <View style={styles.buttons}>
                         <View>
                             <Button
-                                text="Cancelar"
+                                text={cancelButtonText || t("cancel-label")}
                                 type="secondary"
                                 onPress={handleClose}
                                 icon={
@@ -124,7 +130,7 @@ export default function Alert({
                         </View>
                         <View>
                             <Button
-                                text="Exportar"
+                                text={acceptButtonText || t("accept-label")}
                                 onPress={handleAccept}
                                 icon={
                                     <Entypo

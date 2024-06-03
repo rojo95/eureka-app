@@ -1,17 +1,26 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useTranslation } from "react-i18next";
+import { FontAwesome, Entypo } from "@expo/vector-icons";
+import { DefaultTheme, useTheme } from "react-native-paper";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Feather } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import Budgets from "../../screens/CMRSales/Budgets/Budgets";
 import HomeScreen from "../../screens/Home/Home";
 import CustomDrawer from "./CustomDrawer";
 import Configs from "../../screens/Configs/Configs";
-import { FontAwesome, Entypo } from "@expo/vector-icons";
-import { DefaultTheme, useTheme } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
 import LoginScreen from "../../screens/Login/Login";
 import { UserContext } from "../../contexts/UserContext";
 import Chapters from "../../screens/CMRSales/Budgets/Chapters/Chapters";
 import RightDrawerScreen from "./RightDrawerScreen";
+import DetailsBudget from "../../screens/CMRSales/Budgets/DetailsBudget/DetailsBudget";
+import { SharedParamsProvider } from "../../contexts/SharedParamsProvider";
+import Tracking from "../../screens/CMRSales/Budgets/Tracking/Tracking";
+
 const LeftDrawer = createDrawerNavigator();
 
 export default function LeftDrawerScreen() {
@@ -26,11 +35,77 @@ export default function LeftDrawerScreen() {
         </RightDrawerScreen>
     );
 
-    const ChaptersScreen: FC = () => (
-        <RightDrawerScreen>
-            <Chapters />
-        </RightDrawerScreen>
-    );
+    const BudgetsDetailsTabs: FC<any> = () => {
+        const Tab = createBottomTabNavigator();
+        const tabs = [
+            {
+                name: "budget-details",
+                component: DetailsBudget,
+                options: {
+                    title: t("information-label"),
+                    headerShown: false,
+                    tabBarIcon: () => (
+                        <Feather name="info" size={24} color="black" />
+                    ),
+                },
+            },
+            {
+                name: "budget-chapter",
+                component: Chapters,
+                options: {
+                    title: t("chapters-label"),
+                    headerShown: false,
+                    tabBarIcon: () => (
+                        <MaterialCommunityIcons
+                            name="clipboard-text"
+                            size={24}
+                            color="black"
+                        />
+                    ),
+                },
+            },
+            {
+                name: "budget-files",
+                component: Chapters,
+                options: {
+                    title: t("attachments-label"),
+                    headerShown: false,
+                    tabBarIcon: () => (
+                        <MaterialIcons
+                            name="file-copy"
+                            size={24}
+                            color="black"
+                        />
+                    ),
+                },
+            },
+            {
+                name: "budget-tracking",
+                component: Tracking,
+                options: {
+                    title: t("tracking-label"),
+                    headerShown: false,
+                    tabBarIcon: () => (
+                        <Feather name="list" size={24} color="black" />
+                    ),
+                },
+            },
+        ];
+        return (
+            <RightDrawerScreen>
+                <Tab.Navigator screenOptions={{ headerShown: false }}>
+                    {tabs.map((tab) => (
+                        <Tab.Screen
+                            key={tab.name}
+                            name={tab.name}
+                            component={tab.component}
+                            options={tab.options}
+                        />
+                    ))}
+                </Tab.Navigator>
+            </RightDrawerScreen>
+        );
+    };
 
     return (
         <LeftDrawer.Navigator
@@ -43,6 +118,7 @@ export default function LeftDrawerScreen() {
                 },
                 headerShown: false,
             }}
+            backBehavior="history"
         >
             {user ? (
                 <>
@@ -67,7 +143,7 @@ export default function LeftDrawerScreen() {
                     />
                     <LeftDrawer.Screen
                         name="budget"
-                        component={ChaptersScreen}
+                        component={BudgetsDetailsTabs}
                         options={{
                             title: t("menu-title-budgets"),
                             headerRight: () => (

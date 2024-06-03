@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Text, View, StyleSheet, Pressable } from "react-native";
 import DraggableFlatList, {
     RenderItemParams,
@@ -6,47 +6,97 @@ import DraggableFlatList, {
 } from "react-native-draggable-flatlist";
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { useTranslation } from "react-i18next";
-import { useNavigation } from "@react-navigation/native";
-
-const NUM_ITEMS = 10;
-function getColor(i: number) {
-    const multiplier = 255 / (NUM_ITEMS - 1);
-    const colorVal = i * multiplier;
-    return `rgb(${colorVal}, ${Math.abs(128 - colorVal)}, ${255 - colorVal})`;
-}
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import FAB from "../../../../components/FAB/FAB";
+import { Checkbox, DefaultTheme, useTheme } from "react-native-paper";
+import { getBudget } from "../../../../services/budgets/Budgets";
+import ItemCard from "../../../../components/ItemCard/ItemCard";
+import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 
 type Item = {
     key: string;
-    code: string;
-    label: string;
-    height: number;
-    width: number;
-    backgroundColor: string;
-    image?: string;
+    id: number;
+    rank: string;
+    description: string;
+    totalCost: number;
+    totalSale: number;
 };
 
-const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
-    const backgroundColor = getColor(index);
-    return {
-        key: `${index + 1}`,
-        code: `${index + 1}`,
-        label: " FOTOVOLTAICA AUTOCONSUMO [DEMO] [REVISION 300424]",
-        height: 100,
-        width: 60 + Math.random() * 40,
-        backgroundColor,
-    };
-});
-
 export default function Chapters() {
+    const {
+        contextParams: { itemId },
+    } = useContext(ParamsContext)!;
     const navigation: any = useNavigation();
+    const [loading, setLoading] = useState<boolean>(true);
+    const [selection, setSelection] = useState<boolean>(false);
+
     const { t } = useTranslation();
-    const [data, setData] = useState(initialData);
+    const theme: DefaultTheme = useTheme();
+
+    const [data, setData] = useState<Item[]>([]);
+
+    async function getChapters() {
+        const info = await getBudget({ id: itemId });
+        const chapters: Item[] = info?.chapters?.map((v: any, i: number) => ({
+            key: `${i}`,
+            id: v.id,
+            rank: v.rank,
+            description: v.description,
+            totalCost: v.totalCost,
+            totalSale: v.totalSale,
+        }));
+        setData(chapters);
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        getChapters();
+        return () => {
+            setLoading(true);
+        };
+    }, [itemId]);
+
+    const styles = StyleSheet.create({
+        container: {
+            backgroundColor: theme.colors.primaryContrast,
+            flex: 1,
+        },
+        rowItem: {
+            flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 15,
+        },
+        text: {
+            color: theme.colors.dark,
+        },
+        description: {
+            fontSize: 14,
+            fontWeight: "bold",
+        },
+        code: {
+            fontSize: 13,
+        },
+    });
 
     function handleListUpdate(listItems: Item[]) {
         const settedList: Item[] = listItems.map((v, k) => {
-            return { ...v, code: `${k + 1}` };
+            return { ...v, rank: `${k + 1}` };
         });
         setData(settedList);
+    }
+
+    useEffect(() => {
+        if (!loading) {
+            updateList();
+        }
+
+        return () => {};
+    }, [data]);
+
+    async function updateList() {
+        console.log("update list at api");
     }
 
     const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => {
@@ -59,54 +109,107 @@ export default function Chapters() {
                         styles.rowItem,
                         {
                             backgroundColor: isActive
-                                ? "red"
-                                : item.backgroundColor,
+                                ? "#efefef"
+                                : theme.colors.primaryContrast,
                         },
                     ]}
                 >
-                    <Text style={[styles.text, styles.code]}>{item.key}</Text>
-                    <Text style={[styles.text, styles.description]}>
-                        {item.label}
-                    </Text>
+                    {selection && <Checkbox status="checked" />}
+                    <ItemCard
+                        code={item.rank}
+                        description={item.description}
+                        cost={item.totalCost}
+                        sale={item.totalSale}
+                    />
                 </Pressable>
             </ScaleDecorator>
         );
     };
 
     return (
-        <View>
+        <View style={styles.container}>
             <AppHeader
-                title={t("menu-title-budgets")}
+                title={t("budget-details-title")}
                 actions={[{ icon: "dots-vertical" }]}
+                subtitle={t("chapters-label")}
+                subtitleAction={[
+                    {
+                        text: !selection ? t("edit-list") : t("cancel-label"),
+                        action: () => setSelection(!selection),
+                    },
+                ]}
             />
-            <DraggableFlatList
-                data={data}
-                onDragEnd={({ data }) => {
-                    handleListUpdate(data);
-                }}
-                keyExtractor={(item) => item.key}
-                renderItem={renderItem}
-            />
+            {loading ? (
+                <></>
+            ) : (
+                <View style={{ marginBottom: 150 }}>
+                    <DraggableFlatList
+                        data={data}
+                        onDragEnd={({ data }) => {
+                            handleListUpdate(data);
+                        }}
+                        keyExtractor={(item) => item.key}
+                        renderItem={renderItem}
+                    />
+                </View>
+            )}
+            <View style={{ flex: 1, marginTop: "-150%" }}>
+                <FAB
+                    actions={[
+                        {
+                            icon: "download",
+                            label: t("export-chapter-s"),
+                            onPress: () => {
+                                console.log("download");
+                            },
+                            color: theme.colors.primary,
+                            style: {
+                                backgroundColor: theme.colors.primaryContrast,
+                                borderRadius: 20,
+                            },
+                        },
+                        {
+                            icon: "upload",
+                            label: t("import-chapter-s"),
+                            onPress: () => {
+                                console.log("upload");
+                            },
+                            color: theme.colors.primary,
+                            style: {
+                                backgroundColor: theme.colors.primaryContrast,
+                                borderRadius: 20,
+                            },
+                        },
+                        ...[
+                            selection && {
+                                icon: "trash-can",
+                                label: t("delete-chapter-label"),
+                                onPress: () => {
+                                    setSelection(false);
+                                    console.log("delete");
+                                },
+                                color: theme.colors.primaryContrast,
+                                style: {
+                                    backgroundColor: "red",
+                                    borderRadius: 20,
+                                },
+                            },
+                        ],
+                        {
+                            icon: "content-save",
+                            label: t("save-label"),
+                            onPress: () => {
+                                console.log("save");
+                            },
+                            color: theme.colors.primary,
+                            style: {
+                                backgroundColor: theme.colors.primaryContrast,
+                                borderRadius: 20,
+                            },
+                        },
+                    ].filter(Boolean)}
+                ></FAB>
+            </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    rowItem: {
-        flex: 1,
-        height: 100,
-        alignItems: "flex-start",
-        justifyContent: "center",
-        paddingHorizontal: 15,
-    },
-    text: {
-        color: "white",
-    },
-    description: {
-        fontSize: 14,
-        fontWeight: "bold",
-    },
-    code: {
-        fontSize: 13,
-    },
-});

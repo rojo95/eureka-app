@@ -58,7 +58,6 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
 
     return (
         <View style={styles.container}>
-            {/* <ScrollView style={{}}> */}
             <View style={styles.formContent}>
                 <View
                     style={{
@@ -123,7 +122,6 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                     />
                 </View>
             </View>
-            {/* </ScrollView> */}
         </View>
     );
 };

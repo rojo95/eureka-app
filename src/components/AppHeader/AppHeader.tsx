@@ -3,13 +3,18 @@ import React, { useState } from "react";
 import { Appbar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import ChangeLanguageModal from "../ChangeLanguageModal/ChangeLanguageModal";
+import Button from "../Button/Button";
 
 export default function AppHeader({
     title,
     actions,
+    subtitle,
+    subtitleAction,
 }: {
     title: string;
     actions?: { icon: string; onPress?: () => void }[];
+    subtitle?: string;
+    subtitleAction?: { text: string; action: () => void }[];
 }) {
     const navigation: any = useNavigation();
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -17,6 +22,16 @@ export default function AppHeader({
     const styles = StyleSheet.create({
         container: { backgroundColor: "#FFF" },
         title: { color: "white", fontWeight: "bold" },
+        subtitleContainer: {
+            paddingHorizontal: 24,
+            paddingBottom: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+        },
+        subtitle: {
+            fontSize: 19,
+        },
     });
 
     return (
@@ -44,6 +59,25 @@ export default function AppHeader({
                         />
                     ))}
             </Appbar.Header>
+            {subtitle && (
+                <View style={styles.subtitleContainer}>
+                    <Text style={styles.subtitle}>{subtitle}</Text>
+                    <View>
+                        {subtitleAction &&
+                            subtitleAction.map((v) => (
+                                <Button
+                                    buttonStyle={{
+                                        paddingLeft: 10,
+                                        paddingVertical: 10,
+                                    }}
+                                    text={v.text}
+                                    type="link"
+                                    onPress={v.action}
+                                ></Button>
+                            ))}
+                    </View>
+                </View>
+            )}
         </View>
     );
 }

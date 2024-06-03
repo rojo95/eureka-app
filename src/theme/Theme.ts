@@ -40,6 +40,7 @@ const Theme = {
         codeColor: "#4F7396",
         danger: "#AC3500",
         success: "#59ACA3",
+        lightGrey: "#D0D0D0",
     },
 };
 

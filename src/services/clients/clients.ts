@@ -50,7 +50,10 @@ export async function getClientsApi(): Promise<any> {
             return response;
         })
         .catch((err) => {
-            console.error("err: ", err);
-            throw err;
+            console.error(
+                "Error getting the clients data: ",
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
         });
 }

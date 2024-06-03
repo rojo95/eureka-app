@@ -30,8 +30,11 @@ export async function getActivitiesApi(): Promise<any[]> {
             return response;
         })
         .catch((err) => {
-            console.error("err: ", err.response);
-            throw err.response;
+            console.error(
+                "Error getting the activities data: ",
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
         });
     return query;
 }

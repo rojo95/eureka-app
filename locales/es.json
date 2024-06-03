@@ -52,5 +52,20 @@
     "export-list-to-excel-title": "Exportar Listado a Excel",
     "export-list-to-excel-ask-description": "¿Quieres exportar el listado a excel con los filtros y columnas seleccionados?",
     "created-from": "Creado Desde",
-    "created-to": "Creado Hasta"
+    "created-to": "Creado Hasta",
+    "budget-details-title": "Detalles del Presupuesto",
+    "export-chapter-s": "Exportar Capítulos(s)",
+    "import-chapter-s": "Importar Capítulos(s)",
+    "chapters-label": "Capítulos",
+    "information-label": "Información",
+    "attachments-label": "Archivos Adjuntos",
+    "tracking-label": "Seguimiento",
+    "create-new-tracking-note": "Crear Nueva Nota de Seguimiento",
+    "save-label": "Guardar",
+    "select-label": "Seleccionar",
+    "edit-list": "Editar Lista",
+    "accept-label": "Aceptar",
+    "cancel-label": "Cancelar",
+    "delete-chapter-label": "Borrar Capítulo",
+    "no-address-provided": "No se ha proporcionado ninguna dirección"
 }

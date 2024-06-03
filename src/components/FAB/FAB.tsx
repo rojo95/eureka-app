@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { ReactNode, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
     DefaultTheme,
@@ -7,14 +8,23 @@ import {
     Provider,
     useTheme,
 } from "react-native-paper";
+import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 
 interface FABInterface {
     actions?: any[];
     onOpen?: () => void;
     onClose?: () => void;
+    inactiveIcon?: IconSource;
+    activeIcon?: IconSource;
 }
 
-const FAB = ({ actions, onOpen, onClose }: FABInterface) => {
+const FAB = ({
+    actions,
+    onOpen,
+    onClose,
+    inactiveIcon = "plus",
+    activeIcon = "close",
+}: FABInterface) => {
     const theme: DefaultTheme = useTheme();
     const [open, setOpen] = useState<boolean>(false);
 
@@ -40,11 +50,25 @@ const FAB = ({ actions, onOpen, onClose }: FABInterface) => {
         <Provider>
             <View style={styles.container}>
                 <Portal>
+                    <LinearGradient
+                        colors={[
+                            "transparent",
+                            theme.colors.primaryContrast,
+                            theme.colors.primaryContrast,
+                        ]}
+                        style={{
+                            position: "absolute",
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            height: open ? "100%" : 0,
+                        }}
+                    />
                     <FABButton.Group
                         open={open}
                         visible
                         color={theme.colors.primaryContrast}
-                        icon={open ? "clipboard-check-outline" : "plus"}
+                        icon={open ? activeIcon : inactiveIcon}
                         actions={actions || []}
                         fabStyle={{ backgroundColor: theme.colors.primary }}
                         backdropColor={"transparent"}
