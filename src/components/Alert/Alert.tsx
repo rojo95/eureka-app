@@ -54,8 +54,6 @@ export default function Alert({
 
     const handleClose = useCallback(() => {
         if (disableActions) return;
-        setDisableActions(true);
-
         closeModal();
         if (cancel) {
             cancel();
