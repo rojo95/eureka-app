@@ -67,5 +67,8 @@
     "accept-label": "Accept",
     "cancel-label": "Cancel",
     "delete-chapter-label": "Delete Chapter",
-    "no-address-provided": "No address Provided"
+    "no-address-provided": "No address Provided",
+    "fail-downloading-document": "Document could not be downloaded",
+    "success-downloading-document": "The document has been downloaded successfully",
+    "wish-download-document": "Do you want to download the document?"
 }
