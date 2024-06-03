@@ -154,7 +154,7 @@ export async function getBudget({ id }: { id: number }) {
     return query;
 }
 
-export async function trackingBudget({ id }: { id: number }) {
+export async function getBudgetTracking({ id }: { id: number }) {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Tracking/getTracking?model=Budget&modelId=${id}`;
     const query = await axios
@@ -171,6 +171,34 @@ export async function trackingBudget({ id }: { id: number }) {
         .catch((err) => {
             console.error(
                 "Error getting the budget information: ",
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
+        });
+
+    return query;
+}
+
+export async function getBudgetAttachment({ id }: { id: number }) {
+    const Authorization = await getSecureData(userKey);
+    const url = `${API_URL}AttachedFiles?`;
+    const params = { filter: { where: { budgetId: id } } };
+
+    const query = await axios
+        .get(url, {
+            params,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization,
+            },
+        })
+        .then(async ({ request }) => {
+            const response = JSON.parse(request.response);
+            return response;
+        })
+        .catch((err) => {
+            console.error(
+                "Error getting the budget attachments: ",
                 err.response || err.request || err
             );
             throw err.response || err.request || err;
