@@ -17,7 +17,10 @@ import Button from "../../../../components/Button/Button";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import { getBudgetAttachment } from "../../../../services/budgets/Budgets";
 import CleanCard from "../../../../components/CleanCard/CleanCard";
-import { downLoadRemoteDocument } from "../../../../services/files/files";
+import {
+    deleteRemoteBudgetDocument,
+    downLoadRemoteDocument,
+} from "../../../../services/files/files";
 import Alert from "../../../../components/Alert/Alert";
 import FAB from "../../../../components/FAB/FAB";
 
@@ -116,7 +119,23 @@ export default function Attachments() {
     }
 
     async function deleteDocument({ id }: { id: number }) {
-        console.log("delete document:", { id });
+        if (loading) return;
+        setLoading(true);
+        const deleted = await deleteRemoteBudgetDocument({ id }).catch((e) => {
+            Toast.show(`${t("fail-deleting-file")}.`, {
+                backgroundColor: theme.colors.dangerIntense,
+                duration: Toast.durations.LONG,
+            });
+            setLoading(false);
+            return;
+        });
+
+        if (deleted?.count! > 0) {
+            Toast.show(`${t("success-deleting-file")}.`, {
+                backgroundColor: theme.colors.successIntense,
+                duration: Toast.durations.LONG,
+            });
+        }
     }
 
     /**
@@ -166,7 +185,15 @@ export default function Attachments() {
                     </Text>
                     <View style={{ position: "absolute", top: 0, right: 0 }}>
                         <Button
-                            onPress={() => deleteDocument({ id: item.id })}
+                            onPress={() =>
+                                askFunction({
+                                    text: `${t("wish-delete-file")}: ${
+                                        item.name
+                                    }`,
+                                    accept: () =>
+                                        deleteDocument({ id: item.id }),
+                                })
+                            }
                             type="link"
                             buttonStyle={{
                                 borderTopStartRadius: 0,
@@ -215,6 +242,8 @@ export default function Attachments() {
                         data={data}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={renderItem}
+                        refreshing={loading}
+                        onRefresh={getAttachments}
                     />
                 )}
             </View>

@@ -1,8 +1,15 @@
 import * as FileSystem from "expo-file-system";
 import { Platform } from "react-native";
 import { StorageAccessFramework } from "expo-file-system";
+import Constants from "expo-constants";
+import sessionNames from "../../utils/sessionInfo";
+import { getSecureData } from "../storeData/storeData";
+import axios from "axios";
 
 const AppDocsDir = FileSystem.cacheDirectory + "Eureka/";
+const constants = Constants.expoConfig?.extra;
+const API_URL = constants?.API_URL;
+const { userKey } = sessionNames;
 
 /**
  * function to generate the local file uri
@@ -90,8 +97,6 @@ export async function downLoadRemoteDocument({
                 );
             }
 
-            console.log(url);
-
             // temporary document storage
             const tempDownloadRes = await FileSystem.downloadAsync(
                 url.toString(),
@@ -143,4 +148,39 @@ export async function downLoadRemoteDocument({
         // TODO: should make the functionality to donwload the document at the pc
         return true;
     }
+}
+
+export async function deleteRemoteBudgetDocument({
+    id,
+}: {
+    id: number;
+}): Promise<{ count: number }> {
+    console.log("deletong");
+
+    const Authorization = await getSecureData(userKey);
+    const url = `${API_URL}AttachedFiles/${id}`;
+    console.log(id);
+    console.log(url);
+
+    const query = await axios
+        .delete(url, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization,
+            },
+        })
+        .then(async ({ request }) => {
+            const response = JSON.parse(request.response);
+            return response;
+        })
+        .catch((err) => {
+            console.error(
+                "Error deleting the document data: ",
+                err.response || err.request || err
+            );
+            throw err.response || err.request || err;
+        });
+    console.log(query);
+
+    return query;
 }
