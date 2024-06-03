@@ -64,8 +64,9 @@ export default function AppHeader({
                     <Text style={styles.subtitle}>{subtitle}</Text>
                     <View>
                         {subtitleAction &&
-                            subtitleAction.map((v) => (
+                            subtitleAction.map((v, k) => (
                                 <Button
+                                    key={k}
                                     buttonStyle={{
                                         paddingLeft: 10,
                                         paddingVertical: 10,
