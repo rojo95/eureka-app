@@ -30,7 +30,7 @@ export default function ChangeLanguageModal({
             justifyContent: "flex-start",
             padding: 20,
         },
-        modalTytle: {
+        modalTitle: {
             color: theme.colors.dark,
             fontWeight: "bold",
             alignItems: "center",
@@ -62,7 +62,7 @@ export default function ChangeLanguageModal({
                 onDismiss={toggleModal}
                 contentContainerStyle={styles.modalStyle}
             >
-                <Text style={styles.modalTytle}>
+                <Text style={styles.modalTitle}>
                     {t("config-language-selection-label")}
                 </Text>
                 <FlatList
