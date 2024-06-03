@@ -358,7 +358,7 @@ export default function Budgets() {
         setTimer(
             setTimeout(() => {
                 handleRefresh();
-            }, 800)
+            }, 500)
         );
     }, [endDate, startDate, text, clients, activity, states, responsibles]);
 
