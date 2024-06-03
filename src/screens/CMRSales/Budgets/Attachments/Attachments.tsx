@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Icon } from "react-native-paper";
+import { ActivityIndicator, Icon } from "react-native-paper";
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { DefaultTheme, useTheme } from "react-native-paper";
 import Text from "../../../../components/Text/Text";
@@ -15,6 +15,9 @@ import Button from "../../../../components/Button/Button";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import { getBudgetAttachment } from "../../../../services/budgets/Budgets";
 import CleanCard from "../../../../components/CleanCard/CleanCard";
+import { downLoadRemoteDocument } from "../../../../services/files/files";
+import Alert from "../../../../components/Alert/Alert";
+import Toast from "react-native-root-toast";
 
 export default function Attachments() {
     const {
@@ -25,6 +28,11 @@ export default function Attachments() {
 
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [alert, setAlert] = useState<boolean>(false);
+    const [alertConfig, setAlertConfig] = useState<{
+        title: string;
+        accept: () => void;
+    }>({ title: "", accept: () => {} });
 
     const themedStyles = StyleSheet.create({
         container: {
@@ -38,17 +46,33 @@ export default function Attachments() {
     async function getAttachments() {
         const info = await getBudgetAttachment({ id: itemId });
         setData(info);
-        console.log(info);
     }
 
     useEffect(() => {
         setLoading(true);
-        async () => {
-            await getAttachments();
-            setLoading(false);
-        };
+        getAttachments();
+        setLoading(false);
         return () => {};
     }, [itemId]);
+
+    /**
+     * function to ask if the user want to download a document
+     * @param param0
+     * @returns
+     */
+    async function askFunction({
+        text,
+        accept,
+    }: {
+        text: string;
+        accept: () => void;
+    }) {
+        setAlert(true);
+        return setAlertConfig({
+            title: text,
+            accept: () => accept(),
+        });
+    }
 
     /**
      * funciton to download documents
@@ -63,7 +87,27 @@ export default function Attachments() {
         documentName: string;
         url: URL;
     }) {
-        console.log({ documentName, url });
+        if (loading) return;
+        setLoading(true);
+        const downloaded = await downLoadRemoteDocument({
+            documentName,
+            url,
+        }).catch((e) => {
+            Toast.show(`${t("fail-downloading-document")}.`, {
+                backgroundColor: theme.colors.dangerIntense,
+                duration: Toast.durations.LONG,
+            });
+            setLoading(false);
+            return;
+        });
+
+        if (downloaded === true) {
+            Toast.show(`${t("success-downloading-document")}.`, {
+                backgroundColor: theme.colors.successIntense,
+                duration: Toast.durations.LONG,
+            });
+        }
+        setLoading(false);
     }
 
     async function deleteDocument({ id }: { id: number }) {
@@ -79,9 +123,15 @@ export default function Attachments() {
             <CleanCard>
                 <Pressable
                     onPress={() =>
-                        downLoadDocument({
-                            documentName: item.name,
-                            url: item.url,
+                        askFunction({
+                            text: `${t("wish-download-document")}: ${
+                                item.name
+                            }`,
+                            accept: () =>
+                                downLoadDocument({
+                                    documentName: item.name,
+                                    url: item.url,
+                                }),
                         })
                     }
                     style={{
@@ -94,9 +144,19 @@ export default function Attachments() {
                     <Icon
                         source="file-document-outline"
                         size={50}
-                        color={theme.colors.dark}
+                        color={
+                            loading ? theme.colors.lightGrey : theme.colors.dark
+                        }
                     />
-                    <Text>{item.name}</Text>
+                    <Text
+                        style={{
+                            color: loading
+                                ? theme.colors.lightGrey
+                                : theme.colors.dark,
+                        }}
+                    >
+                        {item.name}
+                    </Text>
                     <View style={{ position: "absolute", top: 0, right: 0 }}>
                         <Button
                             onPress={() => deleteDocument({ id: item.id })}
@@ -104,7 +164,9 @@ export default function Attachments() {
                             buttonStyle={{
                                 borderTopStartRadius: 0,
                                 borderBottomEndRadius: 0,
-                                backgroundColor: theme.colors.primary,
+                                backgroundColor: loading
+                                    ? theme.colors.primaryLight
+                                    : theme.colors.primary,
                                 width: 30,
                                 height: 30,
                                 justifyContent: "center",
@@ -132,19 +194,32 @@ export default function Attachments() {
                 subtitle={t("attachments-label")}
             />
             <View style={styles.buttonsContainer}>
-                <Button text="Agregar Archivo Nuevo" />
+                <Button text={t("add-new-document")} />
             </View>
             <View>
-                <FlatList
-                    style={{
-                        width: "100%",
-                        paddingHorizontal: 10,
-                    }}
-                    data={data}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={renderItem}
-                />
+                {loading && data.length < 1 ? (
+                    <ActivityIndicator size="large" />
+                ) : (
+                    <FlatList
+                        style={{
+                            width: "100%",
+                            paddingHorizontal: 10,
+                        }}
+                        data={data}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={renderItem}
+                    />
+                )}
             </View>
+            <Alert
+                title={alertConfig.title}
+                closeModal={() => setAlert(false)}
+                showModal={alert}
+                type="confirm"
+                showClose={false}
+                accept={alertConfig.accept}
+                cancel={() => setAlertConfig({ title: "", accept: () => {} })}
+            />
         </View>
     );
 }
