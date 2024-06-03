@@ -20,21 +20,6 @@ export default function Configs() {
             alignItems: "center",
             padding: 5,
         },
-        modalStyle: {
-            flex: 1,
-            backgroundColor: "white",
-            justifyContent: "flex-start",
-            padding: 20,
-        },
-        listButton: {
-            paddingVertical: 15,
-            borderBottomWidth: 1,
-        },
-        modalTytle: {
-            color: theme.colors.dark,
-            fontWeight: "bold",
-            alignItems: "center",
-        },
     });
 
     function toggleModal(): void {
