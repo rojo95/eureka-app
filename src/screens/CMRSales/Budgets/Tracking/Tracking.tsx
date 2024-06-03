@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
-import { trackingBudget } from "../../../../services/budgets/Budgets";
+import { getBudgetTracking } from "../../../../services/budgets/Budgets";
 import FAB from "../../../../components/FAB/FAB";
 import CleanCard from "../../../../components/CleanCard/CleanCard";
 import Button from "../../../../components/Button/Button";
@@ -34,10 +34,9 @@ export default function Tracking() {
      * function to get the tracking
      */
     async function getTracking() {
-        const info = await trackingBudget({ id: itemId });
+        const info = await getBudgetTracking({ id: itemId });
         setData(info);
         setLoading(false);
-        console.log("tracking: ", info);
     }
 
     /**
