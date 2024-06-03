@@ -697,6 +697,7 @@ export default function Budgets() {
                 closeModal={() => setAlert(false)}
                 description={t("export-list-to-excel-ask-description")}
                 accept={exportListToExcel}
+                type="confirm"
             />
         </View>
     );
