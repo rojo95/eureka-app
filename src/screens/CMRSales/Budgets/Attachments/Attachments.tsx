@@ -8,6 +8,8 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Icon } from "react-native-paper";
+import Toast from "react-native-root-toast";
+import Constants from "expo-constants";
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { DefaultTheme, useTheme } from "react-native-paper";
 import Text from "../../../../components/Text/Text";
@@ -17,7 +19,7 @@ import { getBudgetAttachment } from "../../../../services/budgets/Budgets";
 import CleanCard from "../../../../components/CleanCard/CleanCard";
 import { downLoadRemoteDocument } from "../../../../services/files/files";
 import Alert from "../../../../components/Alert/Alert";
-import Toast from "react-native-root-toast";
+import FAB from "../../../../components/FAB/FAB";
 
 export default function Attachments() {
     const {
@@ -25,6 +27,9 @@ export default function Attachments() {
     } = useContext(ParamsContext)!;
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
+    const constants = Constants.expoConfig?.extra;
+    const API_URL = constants?.API_URL;
+    const API_URL_FRAGMENT = constants?.API_URL_FRAGMENT;
 
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -130,7 +135,9 @@ export default function Attachments() {
                             accept: () =>
                                 downLoadDocument({
                                     documentName: item.name,
-                                    url: item.url,
+                                    url: new URL(
+                                        `${API_URL}containers/${API_URL_FRAGMENT}/download/${item.name}`
+                                    ),
                                 }),
                         })
                     }
@@ -220,6 +227,7 @@ export default function Attachments() {
                 accept={alertConfig.accept}
                 cancel={() => setAlertConfig({ title: "", accept: () => {} })}
             />
+            <FAB inactiveIcon={"content-save"}></FAB>
         </View>
     );
 }
