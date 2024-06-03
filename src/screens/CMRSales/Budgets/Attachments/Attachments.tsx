@@ -135,7 +135,15 @@ export default function Attachments() {
                 backgroundColor: theme.colors.successIntense,
                 duration: Toast.durations.LONG,
             });
+
+            setData((prevData) => {
+                const objectIndex = prevData.findIndex((v) => v.id === id);
+                return objectIndex !== -1
+                    ? prevData.filter((v) => v.id !== id)
+                    : prevData;
+            });
         }
+        setLoading(false);
     }
 
     /**
