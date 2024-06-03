@@ -71,5 +71,8 @@
     "fail-downloading-document": "Document could not be downloaded",
     "success-downloading-document": "The document has been downloaded successfully",
     "wish-download-document": "Do you want to download the document?",
-    "add-new-document": "Add New Document"
+    "add-new-document": "Add New Document",
+    "wish-delete-file": "Do you want to delete the file?",
+    "fail-deleting-file": "Error deleting the file",
+    "success-deleting-file": "Successfully deleting the file"
 }
