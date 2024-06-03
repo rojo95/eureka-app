@@ -15,6 +15,8 @@ interface CustomColors extends MD3Colors {
     codeColor: string;
     danger: string;
     success: string;
+    successIntense: string;
+    dangerIntense: string;
 }
 
 declare module "react-native-paper" {

@@ -41,6 +41,8 @@ const Theme = {
         danger: "#AC3500",
         success: "#59ACA3",
         lightGrey: "#D0D0D0",
+        successIntense: "#44cf73",
+        dangerIntense: "#ee5a3f",
     },
 };
 
