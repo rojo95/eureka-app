@@ -20,6 +20,7 @@ import RightDrawerScreen from "./RightDrawerScreen";
 import DetailsBudget from "../../screens/CMRSales/Budgets/DetailsBudget/DetailsBudget";
 import { SharedParamsProvider } from "../../contexts/SharedParamsProvider";
 import Tracking from "../../screens/CMRSales/Budgets/Tracking/Tracking";
+import Attachments from "../../screens/CMRSales/Budgets/Attachments/Attachments";
 
 const LeftDrawer = createDrawerNavigator();
 
@@ -66,7 +67,7 @@ export default function LeftDrawerScreen() {
             },
             {
                 name: "budget-files",
-                component: Chapters,
+                component: Attachments,
                 options: {
                     title: t("attachments-label"),
                     headerShown: false,
