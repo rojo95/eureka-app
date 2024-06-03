@@ -75,13 +75,13 @@ export default function Tracking() {
                         style={{
                             backgroundColor:
                                 item.type === 1
-                                    ? "#44cf73"
+                                    ? theme.colors.successIntense
                                     : item.type === 2
                                     ? theme.colors.primary
                                     : item.type === 3
                                     ? "#42cfc3"
                                     : item.type === 4
-                                    ? "#ee5a3f"
+                                    ? theme.colors.dangerIntense
                                     : "#798deb",
                             width: 35,
                             height: 35,
