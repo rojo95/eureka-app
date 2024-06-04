@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import {
     FAB as FABRnp,
@@ -49,9 +49,9 @@ const FAB = ({
     secondaryIcon = "close",
 }: FABInterface) => {
     const theme: DefaultTheme = useTheme();
-    const [open, setOpen] = React.useState(false);
-    const translation = useSharedValue(0);
-    const opacity = useSharedValue(0);
+    const [open, setOpen] = useState(false);
+    const translations = actions?.reverse()?.map(() => useSharedValue(0)) || [];
+    const opacities = actions?.map(() => useSharedValue(0)) || [];
 
     const openFunction = () => {
         onOpen && onOpen();
@@ -64,58 +64,72 @@ const FAB = ({
     const handlePress = () => {
         if (open) {
             closeFunction();
-            translation.value = withTiming(0, { duration: 300 });
-            opacity.value = withTiming(0, { duration: 300 });
+            if (actions)
+                actions?.reverse()?.map((v, k) => {
+                    translations[k].value = withTiming(0, { duration: 300 });
+                    opacities[k].value = withTiming(0, { duration: 300 });
+                });
         } else {
             !actions && openFunction();
-            translation.value = withTiming(-100, { duration: 300 });
-            opacity.value = withTiming(1, { duration: 300 });
+            if (actions)
+                actions?.reverse()?.map((v, k) => {
+                    translations[k].value = withTiming(-(k + 1) * 75, {
+                        duration: 300,
+                    });
+                    opacities[k].value = withTiming(1, { duration: 300 });
+                });
         }
         setOpen(!open);
     };
 
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
-            transform: [{ translateY: translation.value }],
-            opacity: opacity.value,
-        };
-    });
-
     return (
         <View style={styles.container}>
-            <Animated.View style={[styles.actionsContainer, animatedStyle]}>
+            <View style={[styles.actionsContainer]}>
                 {actions &&
-                    actions.map((v, k) => (
-                        <Pressable
-                            key={k}
-                            onPress={() => v.onPress()}
-                            style={{
-                                backgroundColor:
-                                    v.backgroundColor || theme.colors.primary,
-                                flexDirection: "row",
-                                borderRadius: 100,
-                                alignItems: "center",
-                                paddingLeft: 15,
-                                marginVertical: 3,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    color:
-                                        v.color || theme.colors.primaryContrast,
-                                }}
-                            >
-                                {v.label}
-                            </Text>
-                            <IconButton
-                                iconColor={theme.colors.primaryContrast}
-                                icon={v.icon}
-                                size={15}
-                                style={{ margin: 0 }}
-                            />
-                        </Pressable>
-                    ))}
-            </Animated.View>
+                    actions.map((v, k) => {
+                        const animatedStyle = useAnimatedStyle(() => {
+                            return {
+                                transform: [
+                                    { translateY: translations[k].value },
+                                ],
+                                opacity: opacities[k].value,
+                            };
+                        });
+                        return (
+                            <Animated.View style={[animatedStyle]} key={k}>
+                                <Pressable
+                                    onPress={() => v.onPress()}
+                                    style={{
+                                        backgroundColor:
+                                            v.backgroundColor ||
+                                            theme.colors.primary,
+                                        flexDirection: "row",
+                                        borderRadius: 100,
+                                        alignItems: "center",
+                                        paddingLeft: 15,
+                                        marginVertical: 3,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color:
+                                                v.color ||
+                                                theme.colors.primaryContrast,
+                                        }}
+                                    >
+                                        {v.label}
+                                    </Text>
+                                    <IconButton
+                                        iconColor={theme.colors.primaryContrast}
+                                        icon={v.icon}
+                                        size={15}
+                                        style={{ margin: 0 }}
+                                    />
+                                </Pressable>
+                            </Animated.View>
+                        );
+                    })}
+            </View>
             <FABRnp
                 style={[
                     styles.fab,
@@ -158,9 +172,11 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
     },
     actionsContainer: {
-        marginBottom: -20,
+        position: "absolute",
+        top: -40,
         right: 10,
         alignItems: "flex-end",
+        justifyContent: "flex-end",
     },
     fab: {
         position: "absolute",
