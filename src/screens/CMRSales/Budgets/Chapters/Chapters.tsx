@@ -7,7 +7,7 @@ import DraggableFlatList, {
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { useTranslation } from "react-i18next";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import FAB from "../../../../components/FAB/FAB";
+import FAB, { actionsInterface } from "../../../../components/FAB/FAB";
 import { Checkbox, DefaultTheme, useTheme } from "react-native-paper";
 import { getBudget } from "../../../../services/budgets/Budgets";
 import ItemCard from "../../../../components/ItemCard/ItemCard";
@@ -126,6 +126,30 @@ export default function Chapters() {
         );
     };
 
+    const FABActions = [
+        {
+            icon: "download",
+            label: t("export-chapter-s"),
+            onPress: () => {
+                console.log("download");
+            },
+        },
+        {
+            icon: "upload",
+            label: t("import-chapter-s"),
+            onPress: () => {
+                console.log("upload");
+            },
+        },
+        {
+            icon: "content-save",
+            label: t("save-label"),
+            onPress: () => {
+                console.log("save");
+            },
+        },
+    ];
+
     return (
         <View style={styles.container}>
             <AppHeader
@@ -155,59 +179,23 @@ export default function Chapters() {
             )}
             <View style={{ flex: 1, marginTop: "-150%" }}>
                 <FAB
-                    actions={[
-                        {
-                            icon: "download",
-                            label: t("export-chapter-s"),
-                            onPress: () => {
-                                console.log("download");
-                            },
-                            color: theme.colors.primary,
-                            style: {
-                                backgroundColor: theme.colors.primaryContrast,
-                                borderRadius: 20,
-                            },
-                        },
-                        {
-                            icon: "upload",
-                            label: t("import-chapter-s"),
-                            onPress: () => {
-                                console.log("upload");
-                            },
-                            color: theme.colors.primary,
-                            style: {
-                                backgroundColor: theme.colors.primaryContrast,
-                                borderRadius: 20,
-                            },
-                        },
-                        ...[
-                            selection && {
-                                icon: "trash-can",
-                                label: t("delete-chapter-label"),
-                                onPress: () => {
-                                    setSelection(false);
-                                    console.log("delete");
-                                },
-                                color: theme.colors.primaryContrast,
-                                style: {
-                                    backgroundColor: "red",
-                                    borderRadius: 20,
-                                },
-                            },
-                        ],
-                        {
-                            icon: "content-save",
-                            label: t("save-label"),
-                            onPress: () => {
-                                console.log("save");
-                            },
-                            color: theme.colors.primary,
-                            style: {
-                                backgroundColor: theme.colors.primaryContrast,
-                                borderRadius: 20,
-                            },
-                        },
-                    ].filter(Boolean)}
+                    actions={
+                        selection
+                            ? [
+                                  ...FABActions,
+                                  {
+                                      icon: "trash-can",
+                                      label: t("delete-chapter-label"),
+                                      onPress: () => {
+                                          setSelection(false);
+                                          console.log("delete");
+                                      },
+                                      backgroundColor:
+                                          theme.colors.dangerIntense,
+                                  },
+                              ]
+                            : FABActions
+                    }
                 ></FAB>
             </View>
         </View>

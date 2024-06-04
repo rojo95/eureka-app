@@ -74,5 +74,6 @@
     "add-new-document": "Agregar Nuevo Documento",
     "wish-delete-file": "¿Desea eliminar el archivo?",
     "fail-deleting-file": "Error eliminando el archivo",
-    "success-deleting-file": "Éxito eliminando el archivo"
+    "success-deleting-file": "Éxito eliminando el archivo",
+    "new-note": "Nueva Nota"
 }

@@ -173,11 +173,6 @@ export default function Tracking() {
                             onPress: () => {
                                 console.log("create new");
                             },
-                            color: theme.colors.primary,
-                            style: {
-                                backgroundColor: theme.colors.primaryContrast,
-                                borderRadius: 20,
-                            },
                         },
                         {
                             icon: "check",
@@ -185,22 +180,12 @@ export default function Tracking() {
                             onPress: () => {
                                 console.log("select");
                             },
-                            color: theme.colors.primary,
-                            style: {
-                                backgroundColor: theme.colors.primaryContrast,
-                                borderRadius: 20,
-                            },
                         },
                         {
                             icon: "content-save",
                             label: t("save-label"),
                             onPress: () => {
                                 console.log("content-save");
-                            },
-                            color: theme.colors.primary,
-                            style: {
-                                backgroundColor: theme.colors.primaryContrast,
-                                borderRadius: 20,
                             },
                         },
                     ]}

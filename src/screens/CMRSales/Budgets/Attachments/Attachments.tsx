@@ -2,6 +2,7 @@ import {
     FlatList,
     ListRenderItem,
     Pressable,
+    ScrollView,
     StyleSheet,
     View,
 } from "react-native";
@@ -20,6 +21,7 @@ import CleanCard from "../../../../components/CleanCard/CleanCard";
 import {
     deleteRemoteBudgetDocument,
     downLoadRemoteDocument,
+    pickDocument,
 } from "../../../../services/files/files";
 import Alert from "../../../../components/Alert/Alert";
 import FAB from "../../../../components/FAB/FAB";
@@ -118,6 +120,12 @@ export default function Attachments() {
         setLoading(false);
     }
 
+    /**
+     * function to delete one file
+     * @param param0
+     * @param {number} param.id
+     * @returns
+     */
     async function deleteDocument({ id }: { id: number }) {
         if (loading) return;
         setLoading(true);
@@ -144,6 +152,14 @@ export default function Attachments() {
             });
         }
         setLoading(false);
+    }
+
+    async function uploadBudgetDocument() {
+        await pickDocument();
+    }
+
+    async function saveBudget() {
+        console.log("save budget data");
     }
 
     /**
@@ -236,25 +252,33 @@ export default function Attachments() {
                 subtitle={t("attachments-label")}
             />
             <View style={styles.buttonsContainer}>
-                <Button text={t("add-new-document")} />
+                <Button
+                    text={t("add-new-document")}
+                    onPress={uploadBudgetDocument}
+                />
             </View>
             <View>
                 {loading && data.length < 1 ? (
                     <ActivityIndicator size="large" />
                 ) : (
-                    <FlatList
-                        style={{
-                            width: "100%",
-                            paddingHorizontal: 10,
-                        }}
-                        data={data}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={renderItem}
-                        refreshing={loading}
-                        onRefresh={getAttachments}
-                    />
+                    <View>
+                        <View>
+                            <FlatList
+                                style={{
+                                    width: "100%",
+                                    paddingHorizontal: 10,
+                                }}
+                                data={data}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={renderItem}
+                                refreshing={loading}
+                                onRefresh={getAttachments}
+                            />
+                        </View>
+                    </View>
                 )}
             </View>
+            <FAB onOpen={() => saveBudget()} primaryIcon={"content-save"}></FAB>
             <Alert
                 title={alertConfig.title}
                 closeModal={() => setAlert(false)}
@@ -264,7 +288,6 @@ export default function Attachments() {
                 accept={alertConfig.accept}
                 cancel={() => setAlertConfig({ title: "", accept: () => {} })}
             />
-            <FAB inactiveIcon={"content-save"}></FAB>
         </View>
     );
 }

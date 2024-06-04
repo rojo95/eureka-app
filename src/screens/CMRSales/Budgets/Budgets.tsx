@@ -670,22 +670,12 @@ export default function Budgets() {
                                 setShowModal(!showModal);
                                 setTypeModal(1);
                             },
-                            color: theme.colors.primary,
-                            style: {
-                                backgroundColor: theme.colors.primaryContrast,
-                                borderRadius: 20,
-                            },
                         },
                         {
                             icon: "file-export",
                             label: t("export"),
                             onPress: () => {
                                 setAlert(true);
-                            },
-                            color: theme.colors.primary,
-                            style: {
-                                backgroundColor: theme.colors.primaryContrast,
-                                borderRadius: 20,
                             },
                         },
                     ]}

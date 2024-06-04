@@ -74,5 +74,6 @@
     "add-new-document": "Add New Document",
     "wish-delete-file": "Do you want to delete the file?",
     "fail-deleting-file": "Error deleting the file",
-    "success-deleting-file": "Successfully deleting the file"
+    "success-deleting-file": "Successfully deleting the file",
+    "new-note": "New Note"
 }

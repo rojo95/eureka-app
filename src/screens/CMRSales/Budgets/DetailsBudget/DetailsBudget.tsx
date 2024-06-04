@@ -187,7 +187,7 @@ export default function DetailsBudget() {
                 </View>
             )}
             <FAB
-                inactiveIcon="content-save"
+                primaryIcon="content-save"
                 onOpen={() => console.log("save")}
             />
         </View>

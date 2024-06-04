@@ -2,13 +2,15 @@ import * as FileSystem from "expo-file-system";
 import { Platform } from "react-native";
 import { StorageAccessFramework } from "expo-file-system";
 import Constants from "expo-constants";
+import axios from "axios";
+import * as DocumentPicker from "expo-document-picker";
 import sessionNames from "../../utils/sessionInfo";
 import { getSecureData } from "../storeData/storeData";
-import axios from "axios";
 
 const AppDocsDir = FileSystem.cacheDirectory + "Eureka/";
 const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
+const API_URL_FRAGMENT = constants?.API_URL_FRAGMENT;
 const { userKey } = sessionNames;
 
 /**
@@ -150,6 +152,12 @@ export async function downLoadRemoteDocument({
     }
 }
 
+/**
+ *Function to delete remote budget Document
+ * @param param0
+ * @param {number} param.id
+ * @returns
+ */
 export async function deleteRemoteBudgetDocument({
     id,
 }: {
@@ -183,4 +191,68 @@ export async function deleteRemoteBudgetDocument({
     console.log(query);
 
     return query;
+}
+
+/**
+ * function to pick the documents
+ */
+export async function pickDocument() {
+    try {
+        const result = await DocumentPicker.getDocumentAsync({
+            type: "*/*", // Allow to select any kind of file
+            copyToCacheDirectory: true,
+        });
+
+        if (result && !result.canceled && result.assets[0].name) {
+            const { uri, name } = result.assets[0];
+            await uploadFileToApi({ uri, name });
+        }
+    } catch (err: any) {
+        throw err.response || err.request || err;
+    }
+}
+
+async function uploadFileToApi({ uri, name }: { uri: string; name: string }) {
+    const url = `${API_URL}containers/${API_URL_FRAGMENT}/upload`;
+    const Authorization = await getSecureData(userKey);
+
+    try {
+        const request = await axios
+            .post(
+                url,
+                {},
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization,
+                    },
+                }
+            )
+            .then(async ({ request }) => {
+                console.log("da");
+                const response = JSON.parse(request.response);
+                return response;
+            })
+            .catch((err) => {
+                console.error(
+                    `Error uploading the document data: `,
+                    err.response || err.request || err
+                );
+                throw err.response || err.request || err;
+            });
+
+        console.log(request);
+
+        // const response = await FileSystem.uploadAsync(url, uri, {
+        //     headers: {
+        //         Authorization: Authorization!,
+        //     },
+        //     fieldName: name,
+        //     httpMethod: "POST",
+        //     uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
+        // });
+        // console.log(JSON.stringify(response, null, 4));
+    } catch (err: any) {
+        console.log(err.response || err.request || err);
+    }
 }
