@@ -78,10 +78,6 @@ export async function downLoadRemoteDocument({
             "Cache-Control": "no-store",
         },
 
-        progressDownload: (written: any, total: any) => {
-            console.log(`Downloaded ${written} of ${total}`);
-        },
-
         resume: true,
     };
 
