@@ -11,8 +11,10 @@ import { UserProvider } from "./src/contexts/UserContext";
 import LeftDrawerScreen from "./src/components/drawers/LeftDrawerScreen";
 import { SharedParamsProvider } from "./src/contexts/SharedParamsProvider";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { en, registerTranslation } from "react-native-paper-dates";
 
 const theme = CustomTheme;
+registerTranslation("en", en);
 
 export default function App() {
     async function setLanguage() {
