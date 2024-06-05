@@ -37,7 +37,7 @@ export async function getUserData({
                 "Error getting the users data: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
 }
 
@@ -69,6 +69,6 @@ export async function getResponsiblesApi() {
                 "Error getting the responsibles: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
 }

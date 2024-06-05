@@ -30,6 +30,7 @@ import Alert from "../../../components/Alert/Alert";
 import { setDateFormat } from "../../../utils/numbers";
 import { exportBudget } from "../../../services/exportDocuments/exportDocuments";
 import { ParamsContext } from "../../../contexts/SharedParamsProvider";
+import { notificationToast } from "../../../services/notifications/notifications";
 
 interface filtersInterface {
     id: number;
@@ -503,7 +504,21 @@ export default function Budgets() {
             translation: t,
         };
 
-        await exportBudget(filters);
+        const downloaded = await exportBudget(filters).catch((e) => {
+            notificationToast({
+                text: `${t("fail-downloading-document")}.`,
+                type: "danger",
+            });
+            setLoading(false);
+            return;
+        });
+
+        if (downloaded === true) {
+            notificationToast({
+                text: `${t("success-downloading-document")}.`,
+                type: "success",
+            });
+        }
     }
 
     return (

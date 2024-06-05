@@ -75,5 +75,13 @@
     "wish-delete-file": "Do you want to delete the file?",
     "fail-deleting-file": "Error deleting the file",
     "success-deleting-file": "Successfully deleting the file",
-    "new-note": "New Note"
+    "new-note": "New Note",
+    "failed-login": "An error occurred while logging in",
+    "invalid-user-pass": "Invalid username or password",
+    "server-error": "Server error",
+    "network-error": "Network error",
+    "invalid-user-pass-message": "You must enter a valid username or password",
+    "function-soon": "Functionality not yet implemented",
+    "error-uploading-file": "Error uploading file",
+    "file-successfully-uploaded": "File successfully uploaded"
 }

@@ -102,7 +102,7 @@ export async function getBudgets({
                 "Error getting the budget information: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
 
     const total = await axios
@@ -122,7 +122,7 @@ export async function getBudgets({
                 "Error counting the budgets rows: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
 
     return { budgets: query, total: total.count };
@@ -148,7 +148,7 @@ export async function getBudget({ id }: { id: number }) {
                 "Error getting the budget information: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
 
     return query;
@@ -173,7 +173,7 @@ export async function getBudgetTracking({ id }: { id: number }) {
                 "Error getting the budget information: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
 
     return query;
@@ -201,7 +201,7 @@ export async function getBudgetAttachment({ id }: { id: number }) {
                 "Error getting the budget attachments: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
 
     return query;

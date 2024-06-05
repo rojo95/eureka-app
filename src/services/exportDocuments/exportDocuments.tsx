@@ -212,7 +212,7 @@ export async function exportBudget({
                 "err getting the budget excel: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
 
     const { document } = query;
@@ -224,13 +224,17 @@ export async function exportBudget({
     };
 
     const url_document = new URL(`${API_URL}WorkOrders/download`);
-    const finalUrl = createUrl({
-        urlBase: url_document,
-        params: paramsDocument,
-    });
+    const finalUrl = new URL(
+        createUrl({
+            urlBase: url_document,
+            params: paramsDocument,
+        })
+    );
 
-    await downLoadRemoteDocument({
-        documentName: finalUrl,
-        url: url_document,
+    // const url_document = `${API_URL}containers/${API_URL_FRAGMENT}/download/`;
+
+    return await downLoadRemoteDocument({
+        documentName: document,
+        url: finalUrl,
     });
 }

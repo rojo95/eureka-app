@@ -62,24 +62,30 @@ const FAB = ({
     };
 
     const handlePress = () => {
-        if (open) {
-            closeFunction();
-            if (actions)
-                actions?.reverse()?.map((v, k) => {
-                    translations[k].value = withTiming(0, { duration: 300 });
-                    opacities[k].value = withTiming(0, { duration: 300 });
-                });
+        if (!actions) {
+            openFunction();
         } else {
-            !actions && openFunction();
-            if (actions)
-                actions?.reverse()?.map((v, k) => {
-                    translations[k].value = withTiming(-(k + 1) * 75, {
-                        duration: 300,
+            if (open) {
+                closeFunction();
+                if (actions)
+                    actions?.reverse()?.map((v, k) => {
+                        translations[k].value = withTiming(0, {
+                            duration: 300,
+                        });
+                        opacities[k].value = withTiming(0, { duration: 300 });
                     });
-                    opacities[k].value = withTiming(1, { duration: 300 });
-                });
+            } else {
+                !actions && openFunction();
+                if (actions)
+                    actions?.reverse()?.map((v, k) => {
+                        translations[k].value = withTiming(-(k + 1) * 75, {
+                            duration: 300,
+                        });
+                        opacities[k].value = withTiming(1, { duration: 300 });
+                    });
+            }
+            setOpen(!open);
         }
-        setOpen(!open);
     };
 
     return (
@@ -98,7 +104,10 @@ const FAB = ({
                         return (
                             <Animated.View style={[animatedStyle]} key={k}>
                                 <Pressable
-                                    onPress={() => v.onPress()}
+                                    onPress={() => {
+                                        handlePress();
+                                        v.onPress();
+                                    }}
                                     style={{
                                         backgroundColor:
                                             v.backgroundColor ||

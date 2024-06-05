@@ -5,11 +5,11 @@ import {
     ScrollView,
     StyleSheet,
     View,
+    useWindowDimensions,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Icon } from "react-native-paper";
-import Toast from "react-native-root-toast";
 import Constants from "expo-constants";
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { DefaultTheme, useTheme } from "react-native-paper";
@@ -21,20 +21,22 @@ import CleanCard from "../../../../components/CleanCard/CleanCard";
 import {
     deleteRemoteBudgetDocument,
     downLoadRemoteDocument,
-    pickDocument,
+    sendAttachmentBudget,
 } from "../../../../services/files/files";
 import Alert from "../../../../components/Alert/Alert";
 import FAB from "../../../../components/FAB/FAB";
+import { notificationToast } from "../../../../services/notifications/notifications";
 
 export default function Attachments() {
+    const constants = Constants.expoConfig?.extra;
+    const API_URL = constants?.API_URL;
+    const API_URL_FRAGMENT = constants?.API_URL_FRAGMENT;
     const {
         contextParams: { itemId },
     } = useContext(ParamsContext)!;
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
-    const constants = Constants.expoConfig?.extra;
-    const API_URL = constants?.API_URL;
-    const API_URL_FRAGMENT = constants?.API_URL_FRAGMENT;
+    const { width, height } = useWindowDimensions();
 
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -103,18 +105,18 @@ export default function Attachments() {
             documentName,
             url,
         }).catch((e) => {
-            Toast.show(`${t("fail-downloading-document")}.`, {
-                backgroundColor: theme.colors.dangerIntense,
-                duration: Toast.durations.LONG,
+            notificationToast({
+                text: t("fail-downloading-document"),
+                type: "danger",
             });
             setLoading(false);
             return;
         });
 
         if (downloaded === true) {
-            Toast.show(`${t("success-downloading-document")}.`, {
-                backgroundColor: theme.colors.successIntense,
-                duration: Toast.durations.LONG,
+            notificationToast({
+                text: t("success-downloading-document"),
+                type: "success",
             });
         }
         setLoading(false);
@@ -130,18 +132,18 @@ export default function Attachments() {
         if (loading) return;
         setLoading(true);
         const deleted = await deleteRemoteBudgetDocument({ id }).catch((e) => {
-            Toast.show(`${t("fail-deleting-file")}.`, {
-                backgroundColor: theme.colors.dangerIntense,
-                duration: Toast.durations.LONG,
+            notificationToast({
+                text: t("fail-deleting-file"),
+                type: "danger",
             });
             setLoading(false);
             return;
         });
 
         if (deleted?.count! > 0) {
-            Toast.show(`${t("success-deleting-file")}.`, {
-                backgroundColor: theme.colors.successIntense,
-                duration: Toast.durations.LONG,
+            notificationToast({
+                text: t("success-deleting-file"),
+                type: "success",
             });
 
             setData((prevData) => {
@@ -155,11 +157,41 @@ export default function Attachments() {
     }
 
     async function uploadBudgetDocument() {
-        await pickDocument();
+        setLoading(true);
+        const file = await sendAttachmentBudget({ idBudget: itemId }).catch(
+            (err) =>
+                notificationToast({
+                    text: t("error-uploading-file"),
+                    type: "danger",
+                })
+        );
+
+        if (file) {
+            if (file.error) {
+                notificationToast({
+                    text: t("error-uploading-file"),
+                    type: "danger",
+                });
+            } else {
+                notificationToast({
+                    text: t("file-successfully-uploaded"),
+                    type: "success",
+                });
+                setData((prevData) => [
+                    ...prevData,
+                    { name: file.name, id: file.id },
+                ]);
+            }
+        }
+        setLoading(false);
     }
 
     async function saveBudget() {
-        console.log("save budget data");
+        notificationToast({
+            text: t("function-soon"),
+            type: "danger",
+            position: "CENTER",
+        });
     }
 
     /**
@@ -245,38 +277,52 @@ export default function Attachments() {
     };
 
     return (
-        <View style={[styles.container, themedStyles.container]}>
-            <AppHeader
-                title={t("budget-details-title")}
-                actions={[{ icon: "dots-vertical" }]}
-                subtitle={t("attachments-label")}
-            />
-            <View style={styles.buttonsContainer}>
-                <Button
-                    text={t("add-new-document")}
-                    onPress={uploadBudgetDocument}
+        <View style={[{ flex: 1 }, themedStyles.container]}>
+            <View>
+                <AppHeader
+                    title={
+                        width > height
+                            ? t("attachments-label")
+                            : t("budget-details-title")
+                    }
+                    actions={[{ icon: "dots-vertical" }]}
+                    subtitle={width < height ? t("attachments-label") : ""}
                 />
             </View>
-            <View>
-                {loading && data.length < 1 ? (
-                    <ActivityIndicator size="large" />
-                ) : (
-                    <View>
-                        <View>
-                            <FlatList
-                                style={{
-                                    width: "100%",
-                                    paddingHorizontal: 10,
-                                }}
-                                data={data}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={renderItem}
-                                refreshing={loading}
-                                onRefresh={getAttachments}
-                            />
-                        </View>
-                    </View>
-                )}
+            <View
+                style={{
+                    flexDirection: width > height ? "row" : "column",
+                    ...(width > height && { flexWrap: "wrap" }),
+                    justifyContent: "flex-start",
+                    alignItems: "flex-start",
+                }}
+            >
+                <View
+                    style={{
+                        paddingVertical: 40,
+                        paddingHorizontal: 20,
+                        width: width > height ? "40%" : "100%",
+                    }}
+                >
+                    <Button
+                        text={t("add-new-document")}
+                        onPress={uploadBudgetDocument}
+                    />
+                </View>
+                <FlatList
+                    style={{
+                        paddingHorizontal: 10,
+                        ...(width < height && {
+                            width: "100%",
+                        }),
+                        height: width < height ? 500 : 250,
+                    }}
+                    data={data}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={renderItem}
+                    refreshing={loading}
+                    onRefresh={getAttachments}
+                />
             </View>
             <FAB onOpen={() => saveBudget()} primaryIcon={"content-save"}></FAB>
             <Alert
@@ -290,6 +336,66 @@ export default function Attachments() {
             />
         </View>
     );
+
+    return (
+        <View style={[styles.container, themedStyles.container]}>
+            <AppHeader
+                title={t("budget-details-title")}
+                actions={[{ icon: "dots-vertical" }]}
+                subtitle={t("attachments-label")}
+            />
+            <View
+                style={{
+                    paddingBottom: 338,
+                    flexDirection: width > height ? "row" : "column",
+                    width: "100%",
+                }}
+            >
+                <View
+                    style={[
+                        styles.buttonsContainer,
+                        {
+                            width: width > height ? "40%" : "100%",
+                        },
+                    ]}
+                >
+                    <Button
+                        text={t("add-new-document")}
+                        onPress={uploadBudgetDocument}
+                    />
+                </View>
+                <View
+                    style={{
+                        width: width > height ? "55%" : "100%",
+                        height: "100%",
+                    }}
+                >
+                    {loading && data.length < 1 ? (
+                        <ActivityIndicator size="large" />
+                    ) : (
+                        <View>
+                            <View>
+                                <FlatList
+                                    style={{
+                                        width: "100%",
+                                        paddingHorizontal: 10,
+                                        height: "100%",
+                                    }}
+                                    data={data}
+                                    keyExtractor={(item, index) =>
+                                        index.toString()
+                                    }
+                                    renderItem={renderItem}
+                                    refreshing={loading}
+                                    onRefresh={getAttachments}
+                                />
+                            </View>
+                        </View>
+                    )}
+                </View>
+            </View>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -297,6 +403,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     buttonsContainer: {
+        height: "100%",
         marginVertical: 30,
         marginHorizontal: 20,
     },

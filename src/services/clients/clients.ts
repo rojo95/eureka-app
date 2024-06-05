@@ -54,6 +54,6 @@ export async function getClientsApi(): Promise<any> {
                 "Error getting the clients data: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
 }

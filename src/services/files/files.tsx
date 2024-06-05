@@ -163,12 +163,8 @@ export async function deleteRemoteBudgetDocument({
 }: {
     id: number;
 }): Promise<{ count: number }> {
-    console.log("deletong");
-
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}AttachedFiles/${id}`;
-    console.log(id);
-    console.log(url);
 
     const query = await axios
         .delete(url, {
@@ -188,39 +184,46 @@ export async function deleteRemoteBudgetDocument({
             );
             throw err.response || err.request || err;
         });
-    console.log(query);
 
     return query;
 }
 
-/**
- * function to pick the documents
- */
-export async function pickDocument() {
-    try {
-        const result = await DocumentPicker.getDocumentAsync({
-            type: "*/*", // Allow to select any kind of file
-            copyToCacheDirectory: true,
+export async function sendAttachmentBudget({
+    idBudget,
+}: {
+    idBudget: number;
+}): Promise<{ error?: boolean } | any> {
+    const Authorization = await getSecureData(userKey);
+    const url = `${API_URL}AttachedFiles`;
+
+    const document = await pickDocument();
+    if (document) {
+        const { uri, name, mimeType } = document!;
+        const {
+            result: {
+                files: { file },
+            },
+        } = await uploadFileToApi({
+            uri,
+            name,
+            mimeType: mimeType || getMimeType(name),
         });
 
-        if (result && !result.canceled && result.assets[0].name) {
-            const { uri, name } = result.assets[0];
-            await uploadFileToApi({ uri, name });
-        }
-    } catch (err: any) {
-        throw err.response || err.request || err;
-    }
-}
+        const {
+            name: fileName,
+            type: fileType,
+            providerResponse: { location: urlFile },
+        } = file[0];
 
-async function uploadFileToApi({ uri, name }: { uri: string; name: string }) {
-    const url = `${API_URL}containers/${API_URL_FRAGMENT}/upload`;
-    const Authorization = await getSecureData(userKey);
-
-    try {
-        const request = await axios
-            .post(
+        const query = await axios
+            .put(
                 url,
-                {},
+                {
+                    name: fileName,
+                    type: fileType,
+                    budgetId: idBudget,
+                    url: urlFile,
+                },
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -229,30 +232,79 @@ async function uploadFileToApi({ uri, name }: { uri: string; name: string }) {
                 }
             )
             .then(async ({ request }) => {
-                console.log("da");
                 const response = JSON.parse(request.response);
                 return response;
             })
             .catch((err) => {
                 console.error(
-                    `Error uploading the document data: `,
+                    "Error syncronizing the document data: ",
                     err.response || err.request || err
                 );
+                console.log(err.response.data);
                 throw err.response || err.request || err;
             });
 
-        console.log(request);
+        return query;
+    } else return { error: true };
+}
 
-        // const response = await FileSystem.uploadAsync(url, uri, {
-        //     headers: {
-        //         Authorization: Authorization!,
-        //     },
-        //     fieldName: name,
-        //     httpMethod: "POST",
-        //     uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
-        // });
-        // console.log(JSON.stringify(response, null, 4));
+/**
+ * function to pick the documents
+ */
+async function pickDocument() {
+    try {
+        const result = await DocumentPicker.getDocumentAsync({
+            type: "*/*", // Allow to select any kind of file
+            copyToCacheDirectory: true,
+        });
+
+        if (result && !result.canceled && result.assets[0].name) {
+            return result.assets[0];
+        }
     } catch (err: any) {
-        console.log(err.response || err.request || err);
+        throw err.response || err.request || err;
     }
+}
+
+/**
+ * function to upload files to Api
+ * @param param0
+ * @param {string} param.name
+ * @param {URL} param.uri
+ */
+async function uploadFileToApi({
+    uri,
+    name,
+    mimeType,
+}: {
+    uri: string;
+    name: string;
+    mimeType: string;
+}) {
+    const url = `${API_URL}containers/${API_URL_FRAGMENT}/upload`;
+
+    const formData: any = new FormData();
+
+    formData.append("file", {
+        uri,
+        name,
+        type: mimeType,
+    });
+
+    const headers = {
+        "Content-Type": "multipart/form-data",
+    };
+
+    const resp = await fetch(url, {
+        method: "post",
+        body: formData,
+        headers,
+    })
+        .then((res) => res.json())
+        .then((res) => res)
+        .catch((err) => {
+            throw err;
+        });
+
+    return resp;
 }

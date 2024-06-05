@@ -26,7 +26,7 @@ export async function getStatesApi(): Promise<any[]> {
                 "Error getting the state data: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
     return query;
 }

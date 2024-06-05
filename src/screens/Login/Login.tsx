@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Image } from "expo-image";
 import { LoginProps } from "../../utils/login";
 import { UserContext } from "../../contexts/UserContext";
+import { notificationToast } from "../../services/notifications/notifications";
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
     const { login } = useContext(UserContext);
@@ -16,7 +17,6 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         email: "",
         password: "",
     });
-    const [error, setError] = useState("");
     const [showPass, setShowPass] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -43,16 +43,32 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         const { email, password } = formData;
         if (email !== "" && password !== "") {
             setLoading(true);
-            const loged = await login({ email, password }).finally(() =>
-                setLoading(false)
-            );
+            const loged = await login({ email, password })
+                .catch((err) => {
+                    const { status } = err;
+                    let errorMsg = "";
+                    if (status === 401) {
+                        errorMsg = t("invalid-user-pass");
+                    } else if (status === 500) {
+                        errorMsg = t("server-error");
+                    } else if (status === 0) {
+                        errorMsg = t("network-error");
+                    } else {
+                        errorMsg = t("failed-login");
+                    }
+
+                    notificationToast({ text: errorMsg, type: "danger" });
+                    throw err;
+                })
+                .finally(() => setLoading(false));
             if (loged) {
                 navigation.navigate("home");
-            } else {
-                setError("An error has occurred login");
             }
         } else {
-            setError("Invalid username or password");
+            notificationToast({
+                text: t("invalid-user-pass-message"),
+                type: "danger",
+            });
         }
     };
 
@@ -112,9 +128,6 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
                     />
                 </View>
                 <View style={styles.input}>
-                    {error ? (
-                        <Text style={{ color: "red" }}>{error}</Text>
-                    ) : null}
                     <Button
                         disabled={loading}
                         text={t("button-login")}

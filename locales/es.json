@@ -75,5 +75,13 @@
     "wish-delete-file": "¿Desea eliminar el archivo?",
     "fail-deleting-file": "Error eliminando el archivo",
     "success-deleting-file": "Éxito eliminando el archivo",
-    "new-note": "Nueva Nota"
+    "new-note": "Nueva Nota",
+    "failed-login": "Ha ocurrido un error al iniciar sesión",
+    "invalid-user-pass": "Usuario o contraseña no válidos",
+    "server-error": "Error del servidor",
+    "network-error": "Error de conexión",
+    "invalid-user-pass-message": "Debe ingresar un usuario o contraseña válidos",
+    "function-soon": "Funcionalidad aún no implementada.",
+    "error-uploading-file": "Error al subir el archivo",
+    "file-successfully-uploaded": "Archivo cargado correctamente"
 }

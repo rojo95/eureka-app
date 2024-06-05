@@ -66,8 +66,8 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             }
             return false;
         } catch (error) {
-            console.error(error);
-            return false;
+            console.error("Error loging: ", error);
+            throw error;
         }
     };
 

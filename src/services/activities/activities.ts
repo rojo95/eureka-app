@@ -34,7 +34,7 @@ export async function getActivitiesApi(): Promise<any[]> {
                 "Error getting the activities data: ",
                 err.response || err.request || err
             );
-            throw err.response || err.request || err;
+            throw err;
         });
     return query;
 }
