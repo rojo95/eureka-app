@@ -240,7 +240,7 @@ export async function sendAttachmentBudget({
                     "Error syncronizing the document data: ",
                     err.response || err.request || err
                 );
-                console.log(err.response.data);
+                console.error(err.response.data);
                 throw err.response || err.request || err;
             });
 

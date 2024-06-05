@@ -14,6 +14,7 @@ import CleanCard from "../../../../components/CleanCard/CleanCard";
 import Button from "../../../../components/Button/Button";
 import Text from "../../../../components/Text/Text";
 import { setDateFormat } from "../../../../utils/numbers";
+import { notificationToast } from "../../../../services/notifications/notifications";
 
 export default function Tracking() {
     const {
@@ -171,21 +172,33 @@ export default function Tracking() {
                             icon: "plus",
                             label: t("new-note"),
                             onPress: () => {
-                                console.log("create new");
+                                notificationToast({
+                                    text: t("function-soon"),
+                                    type: "danger",
+                                    position: "CENTER",
+                                });
                             },
                         },
                         {
                             icon: "check",
                             label: t("select-label"),
                             onPress: () => {
-                                console.log("select");
+                                notificationToast({
+                                    text: t("function-soon"),
+                                    type: "danger",
+                                    position: "CENTER",
+                                });
                             },
                         },
                         {
                             icon: "content-save",
                             label: t("save-label"),
                             onPress: () => {
-                                console.log("content-save");
+                                notificationToast({
+                                    text: t("function-soon"),
+                                    type: "danger",
+                                    position: "CENTER",
+                                });
                             },
                         },
                     ]}

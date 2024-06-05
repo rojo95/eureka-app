@@ -12,6 +12,7 @@ import { Checkbox, DefaultTheme, useTheme } from "react-native-paper";
 import { getBudget } from "../../../../services/budgets/Budgets";
 import ItemCard from "../../../../components/ItemCard/ItemCard";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
+import { notificationToast } from "../../../../services/notifications/notifications";
 
 type Item = {
     key: string;
@@ -96,7 +97,11 @@ export default function Chapters() {
     }, [data]);
 
     async function updateList() {
-        console.log("update list at api");
+        notificationToast({
+            text: t("function-soon"),
+            type: "danger",
+            position: "CENTER",
+        });
     }
 
     const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => {
@@ -131,21 +136,33 @@ export default function Chapters() {
             icon: "download",
             label: t("export-chapter-s"),
             onPress: () => {
-                console.log("download");
+                notificationToast({
+                    text: t("function-soon"),
+                    type: "danger",
+                    position: "CENTER",
+                });
             },
         },
         {
             icon: "upload",
             label: t("import-chapter-s"),
             onPress: () => {
-                console.log("upload");
+                notificationToast({
+                    text: t("function-soon"),
+                    type: "danger",
+                    position: "CENTER",
+                });
             },
         },
         {
             icon: "content-save",
             label: t("save-label"),
             onPress: () => {
-                console.log("save");
+                notificationToast({
+                    text: t("function-soon"),
+                    type: "danger",
+                    position: "CENTER",
+                });
             },
         },
     ];
@@ -188,7 +205,11 @@ export default function Chapters() {
                                       label: t("delete-chapter-label"),
                                       onPress: () => {
                                           setSelection(false);
-                                          console.log("delete");
+                                          notificationToast({
+                                              text: t("function-soon"),
+                                              type: "danger",
+                                              position: "CENTER",
+                                          });
                                       },
                                       backgroundColor:
                                           theme.colors.dangerIntense,

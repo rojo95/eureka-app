@@ -19,7 +19,7 @@ export interface LoginProps {
 const API_URL = constants?.API_URL;
 
 /**
- * function to log in to the system api
+ * function to login to the system api
  * @param param0
  * @returns
  */
