@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
         margin: 2,
         borderRadius: 5,
         overflow: "hidden",
-        elevation: 10,
+        elevation: 6,
         shadowColor: "#000",
+        backgroundColor: "white",
     },
 });

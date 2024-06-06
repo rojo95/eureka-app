@@ -5,5 +5,6 @@ const sessionNames = {
     userName: "userName",
     userLastName: "userLastName",
     wcId: "wcId",
+    lang: "lang",
 };
 export default sessionNames;

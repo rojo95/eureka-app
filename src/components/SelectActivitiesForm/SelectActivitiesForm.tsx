@@ -26,12 +26,10 @@ interface ItemInterface {
 }
 
 export default function SelectActivitiesForm({
-    title,
     onClose,
     selectedValues = [],
     setSelectedValues,
 }: {
-    title: string;
     onClose: () => void;
     selectedValues?: ItemInterface[];
     setSelectedValues: (values: ItemInterface[]) => void;
@@ -133,7 +131,7 @@ export default function SelectActivitiesForm({
                                 { color: theme.colors.dark },
                             ]}
                         >
-                            {title}
+                            {t("placeholder-select-activity-multiple")}
                         </Text>
                         <View>
                             <Button

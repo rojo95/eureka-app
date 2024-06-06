@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Platform } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import { DefaultTheme, TextInput, useTheme } from "react-native-paper";
 import Button from "../../components/Button/Button";
 import { useTranslation } from "react-i18next";

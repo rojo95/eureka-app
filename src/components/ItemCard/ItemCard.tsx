@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DefaultTheme, useTheme } from "react-native-paper";
 import CleanCard from "../CleanCard/CleanCard";
+import { formatPrices } from "../../utils/numbers";
 
 export default function ItemCard({
     code,
@@ -11,19 +12,34 @@ export default function ItemCard({
 }: {
     code?: string;
     description: string;
-    cost?: number;
-    sale?: number;
+    cost: number;
+    sale: number;
 }) {
     const theme: DefaultTheme = useTheme();
+    const [totalCost, setTotalCost] = useState<string>("");
+    const [totalSale, setTotalSale] = useState<string>("");
+
+    useEffect(() => {
+        const formatCostAndSale = async () => {
+            const totalCost = await formatPrices({ number: cost });
+            const totalSale = await formatPrices({ number: sale });
+            setTotalCost(totalCost);
+            setTotalSale(totalSale);
+        };
+
+        formatCostAndSale();
+
+        return () => {};
+    }, [cost, sale]);
 
     const stylesThemed = StyleSheet.create({
         text: {
             color: theme.colors.dark,
         },
-        costo: {
+        cost: {
             color: theme.colors.danger,
         },
-        venta: {
+        sale: {
             color: theme.colors.success,
         },
         code: {
@@ -36,7 +52,6 @@ export default function ItemCard({
             <View
                 style={[
                     styles.container,
-                    { backgroundColor: theme.colors.primaryContrast },
                 ]}
             >
                 <Text
@@ -61,12 +76,12 @@ export default function ItemCard({
                     </Text>
                 </View>
                 <Text style={styles.number}>
-                    <Text style={[styles.costo, stylesThemed.costo]}>
-                        {cost}€
+                    <Text style={[styles.cost, stylesThemed.cost]}>
+                        {totalCost}€
                     </Text>{" "}
                     -{" "}
-                    <Text style={[styles.venta, stylesThemed.venta]}>
-                        {sale}€
+                    <Text style={[styles.sale, stylesThemed.sale]}>
+                        {totalSale}€
                     </Text>
                 </Text>
             </View>
@@ -115,10 +130,10 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlign: "right",
     },
-    costo: {
+    cost: {
         fontWeight: "bold",
     },
-    venta: {
+    sale: {
         fontWeight: "bold",
     },
 });

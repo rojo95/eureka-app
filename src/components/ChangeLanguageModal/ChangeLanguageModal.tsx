@@ -6,6 +6,7 @@ import changeLanguage from "../../utils/Language";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { languageResources } from "../../services/languages/i18next";
 import languageList from "../../services/languages/languagesList.json";
+import sessionNames from "../../utils/sessionInfo";
 
 export default function ChangeLanguageModal({
     showModal,
@@ -40,8 +41,10 @@ export default function ChangeLanguageModal({
      * @param lang {string}
      */
     async function changeLang(lang: string) {
+        const { lang: langSelected } = sessionNames;
+
         try {
-            await AsyncStorage.setItem("lang", lang);
+            await AsyncStorage.setItem(langSelected, lang);
             changeLanguage(lang);
             onToggleModal();
         } catch (e) {

@@ -62,7 +62,6 @@ export default function Tracking() {
                     width: "100%",
                     alignContent: "space-between",
                     padding: 30,
-                    backgroundColor: "white",
                 }}
             >
                 <View

@@ -7,7 +7,7 @@ import DraggableFlatList, {
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
-import FAB, { actionsInterface } from "../../../../components/FAB/FAB";
+import FAB from "../../../../components/FAB/FAB";
 import { Checkbox, DefaultTheme, useTheme } from "react-native-paper";
 import { getBudget } from "../../../../services/budgets/Budgets";
 import ItemCard from "../../../../components/ItemCard/ItemCard";
@@ -66,7 +66,6 @@ export default function Chapters() {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
-            padding: 15,
         },
         text: {
             color: theme.colors.dark,

@@ -9,40 +9,36 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
     });
 
     it("should rendeer correctly the cost value", () => {
-        const testCosto = 500;
+        const totalCost = 500;
 
         const tree: any = renderer
-            .create(<BudgetsCard costo={testCosto} />)
+            .create(<BudgetsCard cost={totalCost} />)
             .toJSON();
 
         const componentBase =
             tree?.children[0]?.children[0]?.children[0]?.children[3]
                 ?.children[0].children;
-        expect(componentBase).toEqual([`${testCosto}`, "€"]);
+        expect(componentBase).toEqual([`${totalCost}`, "€"]);
     });
 
     it("should rendeer correctly the sell value", () => {
-        const testVenta = 600;
+        const totalSale = 600;
 
         const tree: any = renderer
-            .create(<BudgetsCard venta={testVenta} />)
+            .create(<BudgetsCard sale={totalSale} />)
             .toJSON();
 
         const componentBase =
             tree?.children[0]?.children[0]?.children[0]?.children[3]
                 ?.children[3].children;
-        expect(componentBase).toEqual([`${testVenta}`, "€"]);
+        expect(componentBase).toEqual([`${totalSale}`, "€"]);
     });
 
     it("should rendeer correctly the status text", () => {
-        const testStatusText = "En progreso";
+        const testStatusText = "progress";
 
         const tree: any = renderer
-            .create(
-                <BudgetsCard
-                    status={{ id: 1, name: testStatusText }}
-                />
-            )
+            .create(<BudgetsCard status={{ id: 1, name: testStatusText }} />)
             .toJSON();
 
         const componentBase =
@@ -65,7 +61,7 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
     });
 
     it("should rendeer correctly the description", () => {
-        const testDesc = "Descripcion de prueba";
+        const testDesc = "test description";
 
         const tree: any = renderer
             .create(<BudgetsCard description={testDesc} />)

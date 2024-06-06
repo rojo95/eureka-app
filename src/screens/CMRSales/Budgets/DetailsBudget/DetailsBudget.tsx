@@ -15,7 +15,7 @@ import StateBadge from "../../../../components/StateBadge/StateBadge";
 import {
     calculateKTotal,
     calculateMarginProfit,
-    formatDecimal,
+    formatPrices,
     setDateFormat,
 } from "../../../../utils/numbers";
 import FAB from "../../../../components/FAB/FAB";
@@ -31,12 +31,46 @@ export default function DetailsBudget() {
 
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [totalCost, setTotalCost] = useState<string>("");
+    const [totalSale, setTotalSale] = useState<string>("");
+    const [kTotal, setTotalKTotal] = useState<string>("");
+    const [totalMarginProfit, setTotalMarginProfit] = useState<string>("");
 
     async function getDetails() {
         const info = await getBudget({ id: itemId });
         setData(info);
         setLoading(false);
     }
+
+    /**
+     * function to format the supplied costs and sales
+     */
+    useEffect(() => {
+        const formatCostAndSale = async () => {
+            const totalCost = await formatPrices({ number: data?.totalCost });
+            const totalSale = await formatPrices({ number: data?.totalSale });
+            const kTotal = await formatPrices({
+                number: calculateKTotal({
+                    totalCost: data.totalCost,
+                    totalSale: data.totalSale,
+                }),
+            });
+            const totalMarginProfit = await formatPrices({
+                number: calculateMarginProfit({
+                    totalCost: data.totalCost,
+                    totalSale: data.totalSale,
+                }),
+            });
+            setTotalCost(totalCost);
+            setTotalSale(totalSale);
+            setTotalKTotal(kTotal);
+            setTotalMarginProfit(totalMarginProfit);
+        };
+
+        formatCostAndSale();
+
+        return () => {};
+    }, [data]);
 
     useEffect(() => {
         setLoading(true);
@@ -52,10 +86,10 @@ export default function DetailsBudget() {
         text: {
             color: theme.colors.dark,
         },
-        costo: {
+        cost: {
             color: theme.colors.danger,
         },
-        venta: {
+        sale: {
             color: theme.colors.success,
         },
     });
@@ -135,24 +169,15 @@ export default function DetailsBudget() {
                                     size={50}
                                     color="black"
                                 />
-                                <Text>
-                                    K=
-                                    {formatDecimal({
-                                        number: calculateKTotal({
-                                            totalCost: data.totalCost,
-                                            totalSale: data.totalSale,
-                                        }),
-                                    })}
-                                </Text>
-                                <Text>
-                                    {formatDecimal({
-                                        number: calculateMarginProfit({
-                                            totalCost: data.totalCost,
-                                            totalSale: data.totalSale,
-                                        }),
-                                    })}
-                                    %
-                                </Text>
+                                {kTotal !== "" && (
+                                    <View>
+                                        <Text>
+                                            K=
+                                            {kTotal}
+                                        </Text>
+                                        <Text>{totalMarginProfit}%</Text>
+                                    </View>
+                                )}
                             </View>
                         </View>
                         <View style={styles.mapContainer}>
@@ -200,12 +225,28 @@ export default function DetailsBudget() {
                                 marginTop: 20,
                             }}
                         >
-                            <Text style={[styles.price, stylesThemed.costo]}>
-                                {formatDecimal({ number: data?.totalCost })}€
-                            </Text>
-                            <Text style={[styles.price, stylesThemed.venta]}>
-                                {formatDecimal({ number: data?.totalSale })}€
-                            </Text>
+                            {totalCost === "" ? (
+                                <ActivityIndicator size={"small"} />
+                            ) : (
+                                <View>
+                                    <Text
+                                        style={[
+                                            styles.price,
+                                            stylesThemed.cost,
+                                        ]}
+                                    >
+                                        {totalCost}€
+                                    </Text>
+                                    <Text
+                                        style={[
+                                            styles.price,
+                                            stylesThemed.sale,
+                                        ]}
+                                    >
+                                        {totalSale}€
+                                    </Text>
+                                </View>
+                            )}
                         </View>
                     </ScrollView>
                 </View>

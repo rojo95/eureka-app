@@ -5,15 +5,17 @@ import {
     TouchableOpacity,
 } from "react-native";
 import Text from "../Text/Text";
-import { DefaultTheme, useTheme } from "react-native-paper";
+import { ActivityIndicator, DefaultTheme, useTheme } from "react-native-paper";
 import StateBadge from "../StateBadge/StateBadge";
+import { formatPrices } from "../../utils/numbers";
+import { useEffect, useState } from "react";
 
 interface BudgetsCardInterface extends TouchableOpacityProps {
     index?: any;
     description: any;
     status: { id: number; name: string };
-    costo: any;
-    venta: any;
+    cost: any;
+    sale: any;
     onPress?: () => void;
 }
 
@@ -21,11 +23,14 @@ const BudgetsCard = ({
     index,
     description,
     status,
-    costo,
-    venta,
+    cost,
+    sale,
     onPress,
 }: BudgetsCardInterface) => {
     const theme: DefaultTheme = useTheme();
+    const [formattedCost, setFormattedCost] = useState<string>("");
+    const [formattedSale, setFormattedSale] = useState<string>("");
+
     const styles = StyleSheet.create({
         container: {
             flexDirection: "row",
@@ -58,34 +63,54 @@ const BudgetsCard = ({
             fontSize: 14,
             color: theme.colors.codeColor,
         },
-        costo: {
+        cost: {
             color: theme.colors.danger,
             fontWeight: "bold",
         },
-        venta: {
+        sale: {
             color: theme.colors.success,
             fontWeight: "bold",
         },
     });
+
+    useEffect(() => {
+        const formatCostAndSale = async () => {
+            const formattedCost = await formatPrices({ number: cost });
+            const formattedSale = await formatPrices({ number: sale });
+            setFormattedCost(formattedCost);
+            setFormattedSale(formattedSale);
+        };
+
+        formatCostAndSale();
+    }, [cost, sale]);
 
     return (
         <TouchableOpacity
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
             onPress={onPress}
         >
-            <View>
-                <View style={styles.container}>
-                    <View style={styles.content}>
-                        <View>
-                            <Text style={styles.code}>{index}</Text>
-                        </View>
-                        <Text style={styles.description}>{description}</Text>
-                        <StateBadge id={status?.id} name={status?.name} />
-                        <Text style={styles.number}>
-                            <Text style={styles.costo}>{costo}€</Text> -{" "}
-                            <Text style={styles.venta}>{venta}€</Text>
-                        </Text>
+            <View style={styles.container}>
+                <View style={styles.content}>
+                    <View>
+                        <Text style={styles.code}>{index}</Text>
                     </View>
+                    <Text style={styles.description}>{description}</Text>
+                    <StateBadge id={status?.id} name={status?.name} />
+                    <Text style={styles.number}>
+                        {formattedCost === "" ? (
+                            <ActivityIndicator size="small" />
+                        ) : (
+                            <Text>
+                                <Text style={styles.cost}>
+                                    {formattedCost}€
+                                </Text>{" "}
+                                -{" "}
+                                <Text style={styles.sale}>
+                                    {formattedSale}€
+                                </Text>
+                            </Text>
+                        )}
+                    </Text>
                 </View>
             </View>
         </TouchableOpacity>

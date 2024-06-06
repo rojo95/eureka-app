@@ -35,7 +35,7 @@
     "placeholder-select-activity-multiple": "Select one or more Activities",
     "client-label": "Client",
     "placeholder-select-client": "Select a Client",
-    "placeholder-select-multiple-client": "Select one or more Clients",
+    "placeholder-select-multiple-client": "Select one Clients",
     "clean-filters": "Clean Filters",
     "manage-columns": "Manage Columns",
     "date-from": "Date From",

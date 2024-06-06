@@ -265,8 +265,8 @@ export default function Budgets() {
                     code: d.number,
                     description: d.title,
                     status: { id: d.state.id, name: d.state.name },
-                    costo: d.totalCost,
-                    venta: d.totalSale,
+                    cost: d.totalCost,
+                    sale: d.totalSale,
                 };
             });
             if (budgets[0]?.id) {
@@ -341,15 +341,14 @@ export default function Budgets() {
             index={item.code}
             description={item.description}
             status={item.status}
-            costo={item.costo}
-            venta={item.venta}
+            cost={item.cost}
+            sale={item.sale}
         />
     );
 
     /**
-     * Function to get data with filters 1.5 seconds
+     * Function to get data with filters .5 seconds
      * after the last change in them
-     * @param {() => void} param.functionality
      */
     useEffect(() => {
         if (timer) {
@@ -396,7 +395,7 @@ export default function Budgets() {
     }
 
     /**
-     * functio to change the renderized component in the modal
+     * function to change the renderized component in the modal
      * @param param
      * @returns
      */
@@ -412,7 +411,6 @@ export default function Budgets() {
                             selectedValues={activity}
                             setSelectedValues={setActivity}
                             onClose={() => setShowModal(false)}
-                            title={t("placeholder-select-activity-multiple")}
                         />
                     </View>
                 );

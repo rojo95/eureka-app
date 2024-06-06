@@ -1,3 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import sessionNames from "../utils/sessionInfo";
+
 /**
  * function to give format to date fields
  *
@@ -49,12 +52,16 @@ export const calculateMarginProfit = ({
     return (1 - 1 / kTotal) * 100;
 };
 
-export function formatDecimal({
+export async function formatPrices({
     number,
-    locale = "es-ES",
 }: {
     number: number;
-    locale?: string;
-}) {
+}): Promise<string> {
+    const { lang } = sessionNames;
+
+    const selectedLang = await AsyncStorage.getItem(lang);
+
+    const locale = selectedLang === "es" ? "es-ES" : "en-US";
+
     return parseFloat(number.toFixed(2)).toLocaleString(locale);
 }
