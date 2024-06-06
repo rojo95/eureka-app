@@ -15,7 +15,20 @@ interface ItemInterface {
     name: string;
 }
 
-export async function exportBudget({
+/**
+ * function to download budgets
+ * @param param0
+ * @param { string } param.textFilter
+ * @param { ItemInterface } param.client
+ * @param { ItemInterface[] } param.states
+ * @param { ItemInterface[] } param.responsibles
+ * @param { ItemInterface[] } param.activities
+ * @param { Date } param.createdFrom
+ * @param { Date } param.createdTo
+ * @param { any } param.translation
+ * @returns
+ */
+export async function exportBudgets({
     textFilter,
     client,
     states,
@@ -230,8 +243,6 @@ export async function exportBudget({
             params: paramsDocument,
         })
     );
-
-    // const url_document = `${API_URL}containers/${API_URL_FRAGMENT}/download/`;
 
     return await downLoadRemoteDocument({
         documentName: document,

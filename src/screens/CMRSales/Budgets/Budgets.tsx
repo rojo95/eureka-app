@@ -28,7 +28,7 @@ import SelectResponsiblesModal from "../../../components/SelectResponsiblesModal
 import SelectClientsModal from "../../../components/SelectClientsModal/SelectClientsModal";
 import Alert from "../../../components/Alert/Alert";
 import { setDateFormat } from "../../../utils/numbers";
-import { exportBudget } from "../../../services/exportDocuments/exportDocuments";
+import { exportBudgets } from "../../../services/exportDocuments/exportDocuments";
 import { ParamsContext } from "../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../services/notifications/notifications";
 
@@ -103,7 +103,7 @@ export default function Budgets() {
     }
 
     // Now TypeScript knows that contextValue is of type RightDrawerContextType
-    const { toggleOpenRight, setRightDrawerContent } = contextValue;
+    const { onToggleOpenRight, setRightDrawerContent } = contextValue;
 
     // create the content to be rendered in the drawer
     const rightDrawerContent = (
@@ -191,7 +191,7 @@ export default function Budgets() {
                         text={t("clean-filters")}
                         onPress={() => {
                             cleanFilters();
-                            toggleOpenRight();
+                            onToggleOpenRight();
                         }}
                     />
                 </View>
@@ -325,8 +325,8 @@ export default function Budgets() {
      * @param {number} item
      */
     const handlePress = (item: number) => {
-        navigation.navigate(`budget`);
         setContextParams({ itemId: item });
+        navigation.navigate(`budget`);
     };
 
     /**
@@ -403,9 +403,7 @@ export default function Budgets() {
     function rendererListType(param: number) {
         switch (param) {
             case 1:
-                return (
-                    <CreateBudget setShowModal={() => setShowModal(false)} />
-                );
+                return <CreateBudget onClose={() => setShowModal(false)} />;
 
             case 2:
                 return (
@@ -413,7 +411,7 @@ export default function Budgets() {
                         <SelectActivitiesForm
                             selectedValues={activity}
                             setSelectedValues={setActivity}
-                            setShowModal={() => setShowModal(false)}
+                            onClose={() => setShowModal(false)}
                             title={t("placeholder-select-activity-multiple")}
                         />
                     </View>
@@ -424,7 +422,7 @@ export default function Budgets() {
                     <SelectStatesModal
                         selectedValues={states}
                         setSelectedValues={setStates}
-                        setShowModal={() => setShowModal(false)}
+                        onClose={() => setShowModal(false)}
                     />
                 );
             case 4:
@@ -432,7 +430,7 @@ export default function Budgets() {
                     <SelectResponsiblesModal
                         selectedValues={responsibles}
                         setSelectedValues={setResponsibles}
-                        setShowModal={() => setShowModal(false)}
+                        onClose={() => setShowModal(false)}
                     />
                 );
             case 5:
@@ -440,13 +438,11 @@ export default function Budgets() {
                     <SelectClientsModal
                         selectedValues={clients}
                         setSelectedValues={setClients}
-                        setShowModal={() => setShowModal(false)}
+                        onClose={() => setShowModal(false)}
                     />
                 );
             default:
-                return (
-                    <CreateBudget setShowModal={() => setShowModal(false)} />
-                );
+                return <CreateBudget onClose={() => setShowModal(false)} />;
         }
     }
 
@@ -504,7 +500,7 @@ export default function Budgets() {
             translation: t,
         };
 
-        const downloaded = await exportBudget(filters).catch((e) => {
+        const downloaded = await exportBudgets(filters).catch((e) => {
             notificationToast({
                 text: `${t("fail-downloading-document")}.`,
                 type: "danger",
@@ -526,7 +522,7 @@ export default function Budgets() {
             <View>
                 <AppbarHeader
                     title={t("menu-title-budgets")}
-                    actions={[{ icon: "filter", onPress: toggleOpenRight }]}
+                    actions={[{ icon: "filter", onPress: onToggleOpenRight }]}
                 />
             </View>
             <View style={styles.containerSearch}>
@@ -666,7 +662,7 @@ export default function Budgets() {
 
             <Modal
                 visible={showModal}
-                setShowModal={setShowModal}
+                onToggleShowModal={setShowModal}
                 style={{
                     ...(OS === "web" && {
                         alignItems: "center",
@@ -699,9 +695,9 @@ export default function Budgets() {
             <Alert
                 showModal={alert}
                 title={t("export-list-to-excel-title")}
-                closeModal={() => setAlert(false)}
+                onCloseModal={() => setAlert(false)}
                 description={t("export-list-to-excel-ask-description")}
-                accept={exportListToExcel}
+                onAccept={exportListToExcel}
                 type="confirm"
             />
         </View>

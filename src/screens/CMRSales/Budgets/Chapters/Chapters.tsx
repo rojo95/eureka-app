@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 import DraggableFlatList, {
     RenderItemParams,
     ScaleDecorator,
 } from "react-native-draggable-flatlist";
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { useTranslation } from "react-i18next";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import FAB, { actionsInterface } from "../../../../components/FAB/FAB";
 import { Checkbox, DefaultTheme, useTheme } from "react-native-paper";
 import { getBudget } from "../../../../services/budgets/Budgets";
@@ -24,16 +24,15 @@ type Item = {
 };
 
 export default function Chapters() {
+    const theme: DefaultTheme = useTheme();
+    const { t } = useTranslation();
+
     const {
         contextParams: { itemId },
     } = useContext(ParamsContext)!;
     const navigation: any = useNavigation();
     const [loading, setLoading] = useState<boolean>(true);
     const [selection, setSelection] = useState<boolean>(false);
-
-    const { t } = useTranslation();
-    const theme: DefaultTheme = useTheme();
-
     const [data, setData] = useState<Item[]>([]);
 
     async function getChapters() {
@@ -131,42 +130,6 @@ export default function Chapters() {
         );
     };
 
-    const FABActions = [
-        {
-            icon: "download",
-            label: t("export-chapter-s"),
-            onPress: () => {
-                notificationToast({
-                    text: t("function-soon"),
-                    type: "danger",
-                    position: "CENTER",
-                });
-            },
-        },
-        {
-            icon: "upload",
-            label: t("import-chapter-s"),
-            onPress: () => {
-                notificationToast({
-                    text: t("function-soon"),
-                    type: "danger",
-                    position: "CENTER",
-                });
-            },
-        },
-        {
-            icon: "content-save",
-            label: t("save-label"),
-            onPress: () => {
-                notificationToast({
-                    text: t("function-soon"),
-                    type: "danger",
-                    position: "CENTER",
-                });
-            },
-        },
-    ];
-
     return (
         <View style={styles.container}>
             <AppHeader
@@ -176,7 +139,7 @@ export default function Chapters() {
                 subtitleAction={[
                     {
                         text: !selection ? t("edit-list") : t("cancel-label"),
-                        action: () => setSelection(!selection),
+                        onAction: () => setSelection(!selection),
                     },
                 ]}
             />
@@ -196,28 +159,42 @@ export default function Chapters() {
             )}
             <View style={{ flex: 1, marginTop: "-150%" }}>
                 <FAB
-                    actions={
-                        selection
-                            ? [
-                                  ...FABActions,
-                                  {
-                                      icon: "trash-can",
-                                      label: t("delete-chapter-label"),
-                                      onPress: () => {
-                                          setSelection(false);
-                                          notificationToast({
-                                              text: t("function-soon"),
-                                              type: "danger",
-                                              position: "CENTER",
-                                          });
-                                      },
-                                      backgroundColor:
-                                          theme.colors.dangerIntense,
-                                  },
-                              ]
-                            : FABActions
-                    }
-                ></FAB>
+                    actions={[
+                        {
+                            icon: "download",
+                            label: t("export-chapter-s"),
+                            onPress: () => {
+                                notificationToast({
+                                    text: t("function-soon"),
+                                    type: "danger",
+                                    position: "CENTER",
+                                });
+                            },
+                        },
+                        {
+                            icon: "upload",
+                            label: t("import-chapter-s"),
+                            onPress: () => {
+                                notificationToast({
+                                    text: t("function-soon"),
+                                    type: "danger",
+                                    position: "CENTER",
+                                });
+                            },
+                        },
+                        {
+                            icon: "content-save",
+                            label: t("save-label"),
+                            onPress: () => {
+                                notificationToast({
+                                    text: t("function-soon"),
+                                    type: "danger",
+                                    position: "CENTER",
+                                });
+                            },
+                        },
+                    ]}
+                />
             </View>
         </View>
     );

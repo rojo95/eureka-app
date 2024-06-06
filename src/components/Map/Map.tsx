@@ -1,5 +1,5 @@
-import { Platform, StyleSheet, Text, View } from "react-native";
-import React, { lazy, useEffect, useState } from "react";
+import { Platform, Text } from "react-native";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
 
@@ -26,11 +26,11 @@ function Map({
     useEffect(() => {
         async function loadComponent() {
             if (Platform.OS !== "web") {
-                // Carga el componente para la web
+                // Load phone component
                 const PhoneMapComponent = await import("./PhoneMap");
                 setComponent(() => PhoneMapComponent.default);
             } else {
-                // Carga el componente para Android
+                // Load web component
                 const WebMapComponent = {
                     default: () => <Text>Website Map</Text>,
                 };
@@ -56,5 +56,3 @@ function Map({
 }
 
 export default Map;
-
-const styles = StyleSheet.create({});

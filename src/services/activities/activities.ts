@@ -7,6 +7,10 @@ const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
 const { userKey, wcId: idWc } = sessionNames;
 
+/**
+ * Function to get the activities list
+ * @returns
+ */
 export async function getActivitiesApi(): Promise<any[]> {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Activities`;

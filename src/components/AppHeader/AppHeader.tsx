@@ -14,31 +14,16 @@ export default function AppHeader({
     title: string;
     actions?: { icon: string; onPress?: () => void }[];
     subtitle?: string;
-    subtitleAction?: { text: string; action: () => void }[];
+    subtitleAction?: { text: string; onAction: () => void }[];
 }) {
     const navigation: any = useNavigation();
     const [showModal, setShowModal] = useState<boolean>(false);
-
-    const styles = StyleSheet.create({
-        container: { backgroundColor: "#FFF" },
-        title: { color: "white", fontWeight: "bold" },
-        subtitleContainer: {
-            paddingHorizontal: 24,
-            paddingBottom: 10,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-        },
-        subtitle: {
-            fontSize: 19,
-        },
-    });
 
     return (
         <View>
             <ChangeLanguageModal
                 showModal={showModal}
-                toggleModal={() => setShowModal(!showModal)}
+                onToggleModal={() => setShowModal(!showModal)}
             />
             <Appbar.Header style={styles.container}>
                 <Appbar.Action
@@ -73,7 +58,7 @@ export default function AppHeader({
                                     }}
                                     text={v.text}
                                     type="link"
-                                    onPress={v.action}
+                                    onPress={v.onAction}
                                 ></Button>
                             ))}
                     </View>
@@ -82,3 +67,18 @@ export default function AppHeader({
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: { backgroundColor: "#FFF" },
+    title: { color: "white", fontWeight: "bold" },
+    subtitleContainer: {
+        paddingHorizontal: 24,
+        paddingBottom: 10,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    subtitle: {
+        fontSize: 19,
+    },
+});

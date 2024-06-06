@@ -82,6 +82,6 @@
     "network-error": "Error de conexión",
     "invalid-user-pass-message": "Debe ingresar un usuario o contraseña válidos",
     "function-soon": "Funcionalidad aún no implementada.",
-    "error-uploading-file": "Error al subir el archivo",
+    "error-uploading-file": "Error al surbir el achivo o tipo de archivo no permitido",
     "file-successfully-uploaded": "Archivo cargado correctamente"
 }

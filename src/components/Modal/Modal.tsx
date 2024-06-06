@@ -6,13 +6,17 @@ import { StyleProps } from "react-native-reanimated";
 interface ModalInterface {
     visible: boolean;
     children: React.ReactNode;
-    setShowModal: any;
+    onToggleShowModal: (value: boolean) => void;
     style: StyleProps;
 }
 
-const Modal = ({ visible, children, setShowModal, style }: ModalInterface) => {
-    const hideModal = () => setShowModal(false);
-    const containerStyle = { backgroundColor: "white", padding: 20 };
+const Modal = ({
+    visible,
+    children,
+    onToggleShowModal,
+    style,
+}: ModalInterface) => {
+    const hideModal = () => onToggleShowModal(false);
 
     return (
         <View>
@@ -29,5 +33,7 @@ const Modal = ({ visible, children, setShowModal, style }: ModalInterface) => {
         </View>
     );
 };
+
+const containerStyle = { backgroundColor: "white", padding: 20 };
 
 export default Modal;

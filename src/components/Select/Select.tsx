@@ -27,25 +27,10 @@ const Select: React.FC<SelectionProps> = ({
     const theme: DefaultTheme = useTheme();
     const [visible, setVisible] = useState(false);
 
-    const styles = StyleSheet.create({
-        container: {
-            width: "100%",
-            borderWidth: 1,
-            borderRadius: 3,
-        },
-        button: {
-            flexDirection: "row-reverse",
-            justifyContent: "space-between",
-            width: "100%",
-        },
+    const themedStyles = StyleSheet.create({
         text: { color: theme.colors.dark },
         fieldLabel: {
-            position: "absolute",
-            top: -9,
-            left: 8,
             backgroundColor: theme.colors.primaryContrast,
-            paddingHorizontal:5,
-            fontSize: 12,
         },
     });
 
@@ -54,7 +39,9 @@ const Select: React.FC<SelectionProps> = ({
 
     return (
         <View style={[styles.container, buttonStyle]}>
-            <Text style={styles.fieldLabel}>{label}</Text>
+            <Text style={[styles.fieldLabel, themedStyles.fieldLabel]}>
+                {label}
+            </Text>
             <Menu
                 visible={visible}
                 onDismiss={closeMenu}
@@ -64,7 +51,7 @@ const Select: React.FC<SelectionProps> = ({
                         contentStyle={[styles.button, buttonStyle]}
                         icon={!visible ? "chevron-down" : "chevron-up"}
                     >
-                        <Text style={styles.text}>
+                        <Text style={[themedStyles.text]}>
                             {(typeof options[0] === "string"
                                 ? selectedValue
                                 : (
@@ -100,5 +87,25 @@ const Select: React.FC<SelectionProps> = ({
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        width: "100%",
+        borderWidth: 1,
+        borderRadius: 3,
+    },
+    button: {
+        flexDirection: "row-reverse",
+        justifyContent: "space-between",
+        width: "100%",
+    },
+    fieldLabel: {
+        position: "absolute",
+        top: -9,
+        left: 8,
+        paddingHorizontal: 5,
+        fontSize: 12,
+    },
+});
 
 export default Select;

@@ -8,8 +8,20 @@ const API_URL = constants?.API_URL;
 const { userKey, wcId: idWc } = sessionNames;
 
 /**
- * function to get the user data
+ * function to get the budgets list
+ *
  * @param param0
+ * @param { number } page
+ * @param { number } limit
+ * @param { string[] } fields
+ * @param { string } textFilter
+ * @param { number } client
+ * @param { number[] } states
+ * @param { number[] } responsibles
+ * @param { number[] } activities
+ * @param { Date } createdFrom
+ * @param { Date } createdTo
+ * @returns
  */
 export async function getBudgets({
     page,
@@ -128,6 +140,12 @@ export async function getBudgets({
     return { budgets: query, total: total.count };
 }
 
+/**
+ * Function to get the budget details by id
+ * @param param0
+ * @param {number} param.id
+ * @returns
+ */
 export async function getBudget({ id }: { id: number }) {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Budgets/getCompleteById?id=${id}`;
@@ -154,6 +172,12 @@ export async function getBudget({ id }: { id: number }) {
     return query;
 }
 
+/**
+ * Function to get te budget tracking by budget id
+ * @param param0
+ * @param {number} param.id
+ * @returns
+ */
 export async function getBudgetTracking({ id }: { id: number }) {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Tracking/getTracking?model=Budget&modelId=${id}`;
@@ -179,6 +203,12 @@ export async function getBudgetTracking({ id }: { id: number }) {
     return query;
 }
 
+/**
+ * Function to get the budget Attachment by budget id
+ * @param param0
+ * @param {number} param.id
+ * @returns
+ */
 export async function getBudgetAttachment({ id }: { id: number }) {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}AttachedFiles?`;

@@ -3,7 +3,7 @@ import { Drawer } from "react-native-drawer-layout";
 
 interface RightDrawerContextType {
     isOpen: boolean;
-    toggleOpenRight: () => void;
+    onToggleOpenRight: () => void;
     setRightDrawerContent: (content: JSX.Element) => void;
 }
 
@@ -16,9 +16,9 @@ export default function RightDrawerScreen({ children }: { children: any }) {
         useState<JSX.Element | null>(null);
 
     const value = useMemo(
-        () => ({
+        (): RightDrawerContextType => ({
             isOpen: rightDrawerOpen,
-            toggleOpenRight: () => setRightDrawerOpen(!rightDrawerOpen),
+            onToggleOpenRight: () => setRightDrawerOpen(!rightDrawerOpen),
             setRightDrawerContent: (content: JSX.Element) =>
                 setRightDrawerContent(content),
         }),

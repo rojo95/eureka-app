@@ -1,10 +1,4 @@
-import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { FlatList, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { DefaultTheme, Modal, Portal, useTheme } from "react-native-paper";
 import { useTranslation } from "react-i18next";
@@ -15,10 +9,10 @@ import languageList from "../../services/languages/languagesList.json";
 
 export default function ChangeLanguageModal({
     showModal,
-    toggleModal,
+    onToggleModal,
 }: {
     showModal: boolean;
-    toggleModal: () => void;
+    onToggleModal: () => void;
 }) {
     const theme: DefaultTheme = useTheme();
     const { t } = useTranslation();
@@ -49,7 +43,7 @@ export default function ChangeLanguageModal({
         try {
             await AsyncStorage.setItem("lang", lang);
             changeLanguage(lang);
-            toggleModal();
+            onToggleModal();
         } catch (e) {
             console.error("Error", e);
         }
@@ -59,7 +53,7 @@ export default function ChangeLanguageModal({
         <Portal>
             <Modal
                 visible={showModal}
-                onDismiss={toggleModal}
+                onDismiss={onToggleModal}
                 contentContainerStyle={styles.modalStyle}
             >
                 <Text style={styles.modalTitle}>

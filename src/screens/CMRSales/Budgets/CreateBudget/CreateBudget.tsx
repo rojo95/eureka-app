@@ -29,10 +29,10 @@ interface formData {
 
 export default function CreateBudget({
     data,
-    setShowModal,
+    onClose,
 }: {
     data?: formData;
-    setShowModal: () => void;
+    onClose: () => void;
 }) {
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
@@ -103,7 +103,7 @@ export default function CreateBudget({
                     <View>
                         <Button
                             type="link"
-                            onPress={setShowModal}
+                            onPress={onClose}
                             icon={
                                 <Fontisto
                                     name="close"

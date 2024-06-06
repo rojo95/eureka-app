@@ -27,38 +27,17 @@ interface ItemInterface {
 
 export default function SelectActivitiesForm({
     title,
-    setShowModal,
+    onClose,
     selectedValues = [],
     setSelectedValues,
 }: {
     title: string;
-    setShowModal: () => void;
+    onClose: () => void;
     selectedValues?: ItemInterface[];
     setSelectedValues: (values: ItemInterface[]) => void;
 }) {
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
-
-    const styles = StyleSheet.create({
-        formStyle: {
-            padding: 20,
-        },
-        formTytle: {
-            color: theme.colors.dark,
-            fontWeight: "bold",
-            alignItems: "center",
-            justifyContent: "space-between",
-        },
-        listButton: {
-            paddingVertical: 15,
-            borderBottomWidth: 1,
-        },
-        titleContainer: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginVertical: 5,
-        },
-    });
 
     const [listItems, setListItems] = useState<any[]>([]);
     const [selected, setSelected] = useState<ItemInterface[]>(selectedValues);
@@ -80,7 +59,6 @@ export default function SelectActivitiesForm({
 
     useEffect(() => {
         getActivities();
-
         return () => {};
     }, []);
 
@@ -133,7 +111,7 @@ export default function SelectActivitiesForm({
 
     function finishSelection() {
         setSelectedValues(selected);
-        setShowModal();
+        onClose();
     }
 
     function checkUncheckAll() {
@@ -149,11 +127,18 @@ export default function SelectActivitiesForm({
             {listItems?.length > 0 ? (
                 <View>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.formTytle}>{title}</Text>
+                        <Text
+                            style={[
+                                styles.formTytle,
+                                { color: theme.colors.dark },
+                            ]}
+                        >
+                            {title}
+                        </Text>
                         <View>
                             <Button
                                 type="link"
-                                onPress={setShowModal}
+                                onPress={onClose}
                                 icon={
                                     <Fontisto
                                         name="close"
@@ -184,7 +169,7 @@ export default function SelectActivitiesForm({
                         </View>
                     </View>
                     <Button
-                        onPress={() => finishSelection()}
+                        onPress={finishSelection}
                         text={t("finish-selection")}
                     ></Button>
                 </View>
@@ -197,4 +182,22 @@ export default function SelectActivitiesForm({
     );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    formStyle: {
+        padding: 20,
+    },
+    formTytle: {
+        fontWeight: "bold",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    listButton: {
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+    },
+    titleContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: 5,
+    },
+});

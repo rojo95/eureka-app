@@ -11,12 +11,12 @@ interface BudgetContextType {
     setContextParams: Dispatch<SetStateAction<any>>;
 }
 
-// Crear el contexto
+// Create context
 export const ParamsContext = createContext<BudgetContextType | undefined>(
     undefined
 );
 
-// Crear un proveedor para el contexto
+// Create a context provider
 export const SharedParamsProvider = ({ children }: { children: ReactNode }) => {
     const [contextParams, setContextParams] = useState<any>({});
 

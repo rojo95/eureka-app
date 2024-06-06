@@ -40,10 +40,20 @@ const getMimeType = (fileName: string) => {
             return "image/jpeg";
         case "png":
             return "image/png";
+        case "xlsx":
+            return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        case "xls":
+            return "application/vnd.ms-excel";
         default:
             return "application/octet-stream";
     }
 };
+
+function restrictFileTypes({ name }: { name: string }): boolean {
+    const type = getMimeType(name);
+
+    return type !== "application/octet-stream";
+}
 
 /**
  * Checks if directory exists. If not, creates it
@@ -149,7 +159,7 @@ export async function downLoadRemoteDocument({
 }
 
 /**
- *Function to delete remote budget Document
+ * Function to delete remote budget Document
  * @param param0
  * @param {number} param.id
  * @returns
@@ -184,6 +194,12 @@ export async function deleteRemoteBudgetDocument({
     return query;
 }
 
+/**
+ * Function to send files to the api and append to the budget
+ * @param param0
+ * @param {number} param.idBudget
+ * @returns
+ */
 export async function sendAttachmentBudget({
     idBudget,
 }: {
@@ -195,6 +211,8 @@ export async function sendAttachmentBudget({
     const document = await pickDocument();
     if (document) {
         const { uri, name, mimeType } = document!;
+
+        if (!restrictFileTypes({ name: name })) return { error: true };
         const {
             result: {
                 files: { file },
@@ -211,6 +229,7 @@ export async function sendAttachmentBudget({
             providerResponse: { location: urlFile },
         } = file[0];
 
+        console.log(fileType);
         const query = await axios
             .put(
                 url,
@@ -263,7 +282,7 @@ async function pickDocument() {
 }
 
 /**
- * function to upload files to Api
+ * function to upload files to the Api
  * @param param0
  * @param {string} param.name
  * @param {URL} param.uri

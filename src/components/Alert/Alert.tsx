@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Button from "../Button/Button";
 import { Fontisto } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -12,10 +12,10 @@ import { useTranslation } from "react-i18next";
 export default function Alert({
     title,
     description,
-    closeModal,
+    onCloseModal,
     showModal,
-    accept,
-    cancel,
+    onAccept,
+    onCancel,
     titleStyle,
     acceptButtonText,
     cancelButtonText,
@@ -24,10 +24,10 @@ export default function Alert({
 }: {
     title: string;
     description?: string;
-    closeModal: () => void;
+    onCloseModal: () => void;
     showModal: boolean;
-    accept?: () => void;
-    cancel?: () => void;
+    onAccept?: () => void;
+    onCancel?: () => void;
     titleStyle?: StyleProps;
     acceptButtonText?: string;
     cancelButtonText?: string;
@@ -42,51 +42,29 @@ export default function Alert({
         if (disableActions) return;
         setDisableActions(true);
 
-        closeModal();
-        if (accept) {
-            accept();
+        onCloseModal();
+        if (onAccept) {
+            onAccept();
         }
 
         setTimeout(() => {
             setDisableActions(false);
         }, 3000);
-    }, [disableActions, closeModal, accept]);
+    }, [disableActions, onCloseModal, onAccept]);
 
     const handleClose = useCallback(() => {
         if (disableActions) return;
-        closeModal();
-        if (cancel) {
-            cancel();
+        onCloseModal();
+        if (onCancel) {
+            onCancel();
         }
-    }, [disableActions, closeModal, cancel]);
-
-    const styles = StyleSheet.create({
-        modalStyle: {
-            backgroundColor: "white",
-            justifyContent: "flex-start",
-            padding: 20,
-        },
-        modalTitle: {
-            color: theme.colors.dark,
-            fontWeight: "bold",
-            alignItems: "center",
-        },
-        buttons: {
-            flexDirection: "row",
-            alignContent: "center",
-            justifyContent: "space-around",
-            marginVertical: 5,
-        },
-        description: {
-            marginVertical: 10,
-        },
-    });
+    }, [disableActions, onCloseModal, onCancel]);
 
     return (
         <Portal>
             <Modal
                 visible={showModal}
-                onDismiss={closeModal}
+                onDismiss={onCloseModal}
                 contentContainerStyle={styles.modalStyle}
             >
                 <View>
@@ -97,14 +75,20 @@ export default function Alert({
                             marginVertical: 5,
                         }}
                     >
-                        <Text style={[styles.modalTitle, titleStyle]}>
+                        <Text
+                            style={[
+                                styles.modalTitle,
+                                { color: theme.colors.dark },
+                                titleStyle,
+                            ]}
+                        >
                             {title}
                         </Text>
                         {showClose && (
                             <View>
                                 <Button
                                     type="link"
-                                    onPress={closeModal}
+                                    onPress={onCloseModal}
                                     icon={
                                         <Fontisto
                                             name="close"
@@ -153,3 +137,24 @@ export default function Alert({
         </Portal>
     );
 }
+
+const styles = StyleSheet.create({
+    modalStyle: {
+        backgroundColor: "white",
+        justifyContent: "flex-start",
+        padding: 20,
+    },
+    modalTitle: {
+        fontWeight: "bold",
+        alignItems: "center",
+    },
+    buttons: {
+        flexDirection: "row",
+        alignContent: "center",
+        justifyContent: "space-around",
+        marginVertical: 5,
+    },
+    description: {
+        marginVertical: 10,
+    },
+});

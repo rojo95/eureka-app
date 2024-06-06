@@ -1,9 +1,8 @@
 import {
-    Image,
     StyleSheet,
-    TouchableOpacity,
     TouchableOpacityProps,
     View,
+    TouchableOpacity,
 } from "react-native";
 import Text from "../Text/Text";
 import { DefaultTheme, useTheme } from "react-native-paper";

@@ -1,9 +1,9 @@
-import { FC, useContext, useEffect } from "react";
+import { FC, useContext } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useTranslation } from "react-i18next";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { DefaultTheme, useTheme } from "react-native-paper";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -18,7 +18,6 @@ import { UserContext } from "../../contexts/UserContext";
 import Chapters from "../../screens/CMRSales/Budgets/Chapters/Chapters";
 import RightDrawerScreen from "./RightDrawerScreen";
 import DetailsBudget from "../../screens/CMRSales/Budgets/DetailsBudget/DetailsBudget";
-import { SharedParamsProvider } from "../../contexts/SharedParamsProvider";
 import Tracking from "../../screens/CMRSales/Budgets/Tracking/Tracking";
 import Attachments from "../../screens/CMRSales/Budgets/Attachments/Attachments";
 

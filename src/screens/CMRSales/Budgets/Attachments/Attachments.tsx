@@ -327,73 +327,13 @@ export default function Attachments() {
             <FAB onOpen={() => saveBudget()} primaryIcon={"content-save"}></FAB>
             <Alert
                 title={alertConfig.title}
-                closeModal={() => setAlert(false)}
+                onCloseModal={() => setAlert(false)}
                 showModal={alert}
                 type="confirm"
                 showClose={false}
-                accept={alertConfig.accept}
-                cancel={() => setAlertConfig({ title: "", accept: () => {} })}
+                onAccept={alertConfig.accept}
+                onCancel={() => setAlertConfig({ title: "", accept: () => {} })}
             />
-        </View>
-    );
-
-    return (
-        <View style={[styles.container, themedStyles.container]}>
-            <AppHeader
-                title={t("budget-details-title")}
-                actions={[{ icon: "dots-vertical" }]}
-                subtitle={t("attachments-label")}
-            />
-            <View
-                style={{
-                    paddingBottom: 338,
-                    flexDirection: width > height ? "row" : "column",
-                    width: "100%",
-                }}
-            >
-                <View
-                    style={[
-                        styles.buttonsContainer,
-                        {
-                            width: width > height ? "40%" : "100%",
-                        },
-                    ]}
-                >
-                    <Button
-                        text={t("add-new-document")}
-                        onPress={uploadBudgetDocument}
-                    />
-                </View>
-                <View
-                    style={{
-                        width: width > height ? "55%" : "100%",
-                        height: "100%",
-                    }}
-                >
-                    {loading && data.length < 1 ? (
-                        <ActivityIndicator size="large" />
-                    ) : (
-                        <View>
-                            <View>
-                                <FlatList
-                                    style={{
-                                        width: "100%",
-                                        paddingHorizontal: 10,
-                                        height: "100%",
-                                    }}
-                                    data={data}
-                                    keyExtractor={(item, index) =>
-                                        index.toString()
-                                    }
-                                    renderItem={renderItem}
-                                    refreshing={loading}
-                                    onRefresh={getAttachments}
-                                />
-                            </View>
-                        </View>
-                    )}
-                </View>
-            </View>
         </View>
     );
 }

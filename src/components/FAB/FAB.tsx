@@ -15,11 +15,11 @@ import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import Text from "../Text/Text";
 
 export interface actionsInterface {
+    backgroundColor?: string;
     icon: IconSource;
     label: string;
     color?: string;
     onPress: () => void;
-    backgroundColor?: string;
 }
 
 interface FABInterfaceBase {
@@ -41,6 +41,7 @@ interface FABInterfaceWithActions extends FABInterfaceBase {
 }
 
 type FABInterface = FABInterfaceWithoutActions | FABInterfaceWithActions;
+
 const FAB = ({
     actions,
     onOpen,
@@ -108,16 +109,14 @@ const FAB = ({
                                         handlePress();
                                         v.onPress();
                                     }}
-                                    style={{
-                                        backgroundColor:
-                                            v.backgroundColor ||
-                                            theme.colors.primary,
-                                        flexDirection: "row",
-                                        borderRadius: 100,
-                                        alignItems: "center",
-                                        paddingLeft: 15,
-                                        marginVertical: 3,
-                                    }}
+                                    style={[
+                                        styles.actions,
+                                        {
+                                            backgroundColor:
+                                                v.backgroundColor ||
+                                                theme.colors.primary,
+                                        },
+                                    ]}
                                 >
                                     <Text
                                         style={{
@@ -192,6 +191,13 @@ const styles = StyleSheet.create({
         margin: 16,
         right: 0,
         bottom: 0,
+    },
+    actions: {
+        flexDirection: "row",
+        borderRadius: 100,
+        alignItems: "center",
+        paddingLeft: 15,
+        marginVertical: 3,
     },
 });
 

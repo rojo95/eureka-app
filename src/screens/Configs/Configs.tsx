@@ -34,7 +34,7 @@ export default function Configs() {
             <View style={styles.container}>
                 <ChangeLanguageModal
                     showModal={showModal}
-                    toggleModal={toggleModal}
+                    onToggleModal={toggleModal}
                 />
                 <Button
                     onPress={toggleModal}

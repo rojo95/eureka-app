@@ -25,42 +25,16 @@ interface ItemInterface {
 }
 
 export default function SelectStatesModal({
-    setShowModal,
+    onClose,
     selectedValues = [],
     setSelectedValues,
 }: {
-    setShowModal: () => void;
+    onClose: () => void;
     selectedValues?: ItemInterface[];
     setSelectedValues: (values: ItemInterface[]) => void;
 }) {
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
-
-    const styles = StyleSheet.create({
-        formStyle: {
-            padding: 20,
-        },
-        formTytle: {
-            color: theme.colors.dark,
-            fontWeight: "bold",
-            alignItems: "center",
-            justifyContent: "space-between",
-        },
-        listButton: {
-            paddingVertical: 15,
-            borderBottomWidth: 1,
-        },
-        titleContainer: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginVertical: 5,
-        },
-        topButtonsContainer: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignSelf: "center",
-        },
-    });
 
     const [listItems, setListItems] = useState<any[]>([]);
     const [selected, setSelected] = useState<ItemInterface[]>(selectedValues);
@@ -76,7 +50,6 @@ export default function SelectStatesModal({
 
     useEffect(() => {
         getStates();
-
         return () => {};
     }, []);
 
@@ -129,7 +102,7 @@ export default function SelectStatesModal({
 
     function finishSelection() {
         setSelectedValues(selected);
-        setShowModal();
+        onClose();
     }
 
     function checkUncheckAll() {
@@ -145,13 +118,18 @@ export default function SelectStatesModal({
             {listItems?.length > 0 ? (
                 <View>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.formTytle}>
+                        <Text
+                            style={[
+                                styles.formTytle,
+                                { color: theme.colors.dark },
+                            ]}
+                        >
                             {t("placeholder-select-multiple-state")}
                         </Text>
                         <View>
                             <Button
                                 type="link"
-                                onPress={setShowModal}
+                                onPress={onClose}
                                 icon={
                                     <Fontisto
                                         name="close"
@@ -182,7 +160,7 @@ export default function SelectStatesModal({
                         </View>
                     </View>
                     <Button
-                        onPress={() => finishSelection()}
+                        onPress={finishSelection}
                         text={t("finish-selection")}
                     ></Button>
                 </View>
@@ -195,4 +173,27 @@ export default function SelectStatesModal({
     );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    formStyle: {
+        padding: 20,
+    },
+    formTytle: {
+        fontWeight: "bold",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    listButton: {
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+    },
+    titleContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: 5,
+    },
+    topButtonsContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignSelf: "center",
+    },
+});

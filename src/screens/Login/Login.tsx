@@ -33,10 +33,18 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         image: { flex: 1, width: "100%", backgroundColor: "#0553" },
     });
 
+    /**
+     * function to handle the formulary data
+     * @param param0
+     */
     function handleData({ name, value }: { name: string; value: string }) {
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
 
+    /**
+     * Function to log in to the app
+     * @returns
+     */
     const handleLogin = async () => {
         if (loading) return;
 
