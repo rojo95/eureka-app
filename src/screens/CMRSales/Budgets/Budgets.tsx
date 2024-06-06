@@ -16,7 +16,7 @@ import CreateBudget from "./CreateBudget/CreateBudget";
 import { getBudgets } from "../../../services/budgets/Budgets";
 import AppbarHeader from "../../../components/AppHeader/AppHeader";
 import { useNavigation } from "@react-navigation/native";
-import { RightDrawerContext } from "../../../components/drawers/RightDrawerScreen";
+import { RightDrawerContext } from "../../../contexts/navigation/RightDrawerScreen";
 import Button from "../../../components/Button/Button";
 import { DatePickerInput } from "react-native-paper-dates";
 import { FontAwesome } from "@expo/vector-icons";

@@ -14,7 +14,7 @@ import HomeScreen from "../../screens/Home/Home";
 import CustomDrawer from "./CustomDrawer";
 import Configs from "../../screens/Configs/Configs";
 import LoginScreen from "../../screens/Login/Login";
-import { UserContext } from "../../contexts/UserContext";
+import { UserContext } from "../UserContext";
 import Chapters from "../../screens/CMRSales/Budgets/Chapters/Chapters";
 import RightDrawerScreen from "./RightDrawerScreen";
 import DetailsBudget from "../../screens/CMRSales/Budgets/DetailsBudget/DetailsBudget";

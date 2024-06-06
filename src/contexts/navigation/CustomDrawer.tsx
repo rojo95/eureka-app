@@ -5,7 +5,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme, useTheme } from "react-native-paper";
-import { UserContext } from "../../contexts/UserContext";
+import { UserContext } from "../UserContext";
 
 export default function CustomDrawer(props: any) {
     const { logout } = useContext(UserContext);

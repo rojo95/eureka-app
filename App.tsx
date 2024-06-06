@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import changeLanguage from "./src/utils/Language";
 import CustomTheme from "./src/theme/Theme";
 import { UserProvider } from "./src/contexts/UserContext";
-import LeftDrawerScreen from "./src/components/drawers/LeftDrawerScreen";
+import LeftDrawerScreen from "./src/contexts/navigation/LeftDrawerScreen";
 import { SharedParamsProvider } from "./src/contexts/SharedParamsProvider";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { en, registerTranslation } from "react-native-paper-dates";
