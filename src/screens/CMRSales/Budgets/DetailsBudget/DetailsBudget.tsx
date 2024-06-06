@@ -11,7 +11,7 @@ import { getBudget } from "../../../../services/budgets/Budgets";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import Text from "../../../../components/Text/Text";
 import Button from "../../../../components/Button/Button";
-import StateBadge from "../../../../components/StateBadge/StateBadge";
+import StateBadge from "../../../../components/CustomBadge/CustomBadge";
 import {
     calculateKTotal,
     calculateMarginProfit,
@@ -21,6 +21,8 @@ import {
 import FAB from "../../../../components/FAB/FAB";
 import Map from "../../../../components/Map/Map";
 import { notificationToast } from "../../../../services/notifications/notifications";
+import CustomBadge from "../../../../components/CustomBadge/CustomBadge";
+import { getBackgroundColorState } from "../utils/utils";
 
 export default function DetailsBudget() {
     const {
@@ -129,14 +131,19 @@ export default function DetailsBudget() {
                         <Text style={[styles.title, stylesThemed.text]}>
                             {data.title}
                         </Text>
-                        <StateBadge
-                            id={data?.state?.id}
-                            name={data?.state?.name}
+                        <CustomBadge
                             customStyles={{
                                 fontSize: 15,
                                 paddingHorizontal: 10,
+                                color: theme.colors.dark,
+                                backgroundColor: getBackgroundColorState({
+                                    statusId: data.state.id,
+                                    theme,
+                                }),
                             }}
-                        />
+                        >
+                            {data?.state?.name}
+                        </CustomBadge>
                         <Text>{setDateFormat(data.createdAt)}</Text>
                         <View
                             style={{

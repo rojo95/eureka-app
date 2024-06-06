@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { FC, ReactNode, useContext, useEffect, useState } from "react";
 import {
     FlatList,
     ListRenderItem,
@@ -20,7 +20,6 @@ import { RightDrawerContext } from "../../../contexts/navigation/RightDrawerScre
 import Button from "../../../components/Button/Button";
 import { DatePickerInput } from "react-native-paper-dates";
 import { FontAwesome } from "@expo/vector-icons";
-import Tag from "../../../components/Tag/Tag";
 import { ScrollView } from "react-native-gesture-handler";
 import SelectActivitiesForm from "../../../components/SelectActivitiesForm/SelectActivitiesForm";
 import SelectStatesModal from "../../../components/SelectStatesModal/SelectStatesModal";
@@ -28,11 +27,12 @@ import SelectResponsiblesModal from "../../../components/SelectResponsiblesModal
 import SelectClientsModal from "../../../components/SelectClientsModal/SelectClientsModal";
 import Alert from "../../../components/Alert/Alert";
 import { setDateFormat } from "../../../utils/numbers";
-import { exportBudgets } from "../../../services/exportDocuments/exportDocuments";
+import { exportBudgets } from "../../../services/export-documents/exportDocuments";
 import { ParamsContext } from "../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../services/notifications/notifications";
+import CustomBadge from "../../../components/CustomBadge/CustomBadge";
 
-interface filtersInterface {
+interface Filters {
     id: number;
     name: string;
     lastName?: string;
@@ -52,45 +52,20 @@ export default function Budgets() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalBudgets, setTotalBudgets] = useState<number>(0);
     const [limit, setLimit] = useState<number>(10);
-    const [clients, setClients] = useState<filtersInterface | null>(null);
-    const [states, setStates] = useState<filtersInterface[]>([]);
-    const [responsibles, setResponsibles] = useState<filtersInterface[]>([]);
-    const [activity, setActivity] = useState<filtersInterface[]>([]);
+    const [clients, setClients] = useState<Filters | null>(null);
+    const [states, setStates] = useState<Filters[]>([]);
+    const [responsibles, setResponsibles] = useState<Filters[]>([]);
+    const [activity, setActivity] = useState<Filters[]>([]);
     const [startDate, setStartDate] = useState<Date | undefined>(undefined);
     const [endDate, setEndDate] = useState<Date | undefined>(undefined);
     const [timer, setTimer] = useState<any>(null);
     const [typeModal, setTypeModal] = useState<number>(1);
     const [alert, setAlert] = useState<boolean>(false);
 
-    const styles = StyleSheet.create({
+    const themedStyles = StyleSheet.create({
         container: {
-            flex: 1,
             backgroundColor: theme.colors.background,
         },
-        containerSearch: {
-            marginHorizontal: 10,
-        },
-        card: {
-            minHeight: 100,
-            backgroundColor: theme.colors.backgroundCard,
-            padding: 20,
-            elevation: 5,
-            marginEnd: 10,
-            justifyContent: "center",
-            borderTopEndRadius: 10,
-            borderBottomEndRadius: 10,
-        },
-        cardsContainer: { marginVertical: 20 },
-        drawerContainer: {
-            flex: 1,
-            marginVertical: 40,
-            marginHorizontal: 10,
-            justifyContent: "space-between",
-        },
-        input: {
-            marginVertical: 5,
-        },
-        inputDate: { marginVertical: 32 },
     });
 
     // start get context right drawer
@@ -515,8 +490,22 @@ export default function Budgets() {
         }
     }
 
+    const BadgeBase: FC<{ children: string; onPress: () => void }> = ({
+        children,
+        onPress,
+    }) => (
+        <CustomBadge
+            customStyles={styles.badge}
+            onPress={onPress}
+            colorStyle={{ color: theme.colors.primaryContrast }}
+            icon={<FontAwesome name="close" size={15} color="white" />}
+        >
+            {children}
+        </CustomBadge>
+    );
+
     return (
-        <View style={styles.container}>
+        <View style={[themedStyles.container, styles.container]}>
             <View>
                 <AppbarHeader
                     title={t("menu-title-budgets")}
@@ -546,102 +535,56 @@ export default function Budgets() {
                     }}
                 >
                     {clients && (
-                        <Tag
-                            text={`${t("client-label").toLowerCase()}: ${
+                        <BadgeBase onPress={removeClients}>
+                            {`${t("client-label").toLowerCase()}: ${
                                 clients.name
-                            }`}
-                            icon={
-                                <FontAwesome
-                                    name="close"
-                                    size={15}
-                                    color="white"
-                                />
-                            }
-                            onPress={() => removeClients()}
-                        />
+                            } `}
+                        </BadgeBase>
                     )}
                     {states &&
                         states.map((v) => (
-                            <Tag
+                            <BadgeBase
                                 key={v.id}
-                                text={`${t("state-label").toLowerCase()}: ${
-                                    v.name
-                                }`}
-                                icon={
-                                    <FontAwesome
-                                        name="close"
-                                        size={15}
-                                        color="white"
-                                    />
-                                }
                                 onPress={() => removeStates(v.id)}
-                            />
+                            >
+                                {`${t("state-label").toLowerCase()}: ${v.name}`}
+                            </BadgeBase>
                         ))}
                     {responsibles &&
                         responsibles.map((v) => (
-                            <Tag
+                            <BadgeBase
                                 key={v.id}
-                                text={`${t(
-                                    "responsible-label"
-                                ).toLowerCase()}: ${v.name}${
-                                    v.lastName ? " " + v.lastName : ""
-                                }`}
-                                icon={
-                                    <FontAwesome
-                                        name="close"
-                                        size={15}
-                                        color="white"
-                                    />
-                                }
                                 onPress={() => removeResponsible(v.id)}
-                            />
+                            >
+                                {`${t("responsible-label").toLowerCase()}: ${
+                                    v.name
+                                }${v.lastName ? " " + v.lastName : ""}`}
+                            </BadgeBase>
                         ))}
                     {activity &&
                         activity.map((v) => (
-                            <Tag
+                            <BadgeBase
                                 key={v.id}
-                                text={`${t("activity-label").toLowerCase()}: ${
+                                onPress={() => removeActivity(v.id)}
+                            >
+                                {`${t("activity-label").toLowerCase()}: ${
                                     v.name
                                 }`}
-                                icon={
-                                    <FontAwesome
-                                        name="close"
-                                        size={15}
-                                        color="white"
-                                    />
-                                }
-                                onPress={() => removeActivity(v.id)}
-                            />
+                            </BadgeBase>
                         ))}
                     {startDate && (
-                        <Tag
-                            text={`${t(
-                                "date-from"
-                            ).toLowerCase()}: ${setDateFormat(startDate)}`}
-                            icon={
-                                <FontAwesome
-                                    name="close"
-                                    size={15}
-                                    color="white"
-                                />
-                            }
-                            onPress={() => setStartDate(undefined)}
-                        />
+                        <BadgeBase onPress={() => setStartDate(undefined)}>
+                            {`${t("date-from").toLowerCase()}: ${setDateFormat(
+                                startDate
+                            )}`}
+                        </BadgeBase>
                     )}
                     {endDate && (
-                        <Tag
-                            text={`${t(
-                                "date-from"
-                            ).toLowerCase()}: ${setDateFormat(endDate)}`}
-                            icon={
-                                <FontAwesome
-                                    name="close"
-                                    size={15}
-                                    color="white"
-                                />
-                            }
-                            onPress={() => setEndDate(undefined)}
-                        />
+                        <BadgeBase onPress={() => setEndDate(undefined)}>
+                            {`${t("date-from").toLowerCase()}: ${setDateFormat(
+                                endDate
+                            )}`}
+                        </BadgeBase>
                     )}
                 </ScrollView>
             </View>
@@ -701,3 +644,30 @@ export default function Budgets() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    badge: {
+        height: 30,
+        margin: 3,
+        paddingHorizontal: 7,
+        paddingVertical: 5,
+        borderRadius: 100,
+        fontSize: 13,
+    },
+    container: {
+        flex: 1,
+    },
+    containerSearch: {
+        marginHorizontal: 10,
+    },
+    drawerContainer: {
+        flex: 1,
+        marginVertical: 40,
+        marginHorizontal: 10,
+        justifyContent: "space-between",
+    },
+    input: {
+        marginVertical: 5,
+    },
+    inputDate: { marginVertical: 32 },
+});

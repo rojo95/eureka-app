@@ -6,9 +6,10 @@ import {
 } from "react-native";
 import Text from "../Text/Text";
 import { ActivityIndicator, DefaultTheme, useTheme } from "react-native-paper";
-import StateBadge from "../StateBadge/StateBadge";
+import CustomBadge from "../CustomBadge/CustomBadge";
 import { formatPrices } from "../../utils/numbers";
 import { useEffect, useState } from "react";
+import { getBackgroundColorState } from "../../screens/CMRSales/Budgets/utils/utils";
 
 interface BudgetsCardInterface extends TouchableOpacityProps {
     index?: any;
@@ -95,7 +96,17 @@ const BudgetsCard = ({
                         <Text style={styles.code}>{index}</Text>
                     </View>
                     <Text style={styles.description}>{description}</Text>
-                    <StateBadge id={status?.id} name={status?.name} />
+                    <CustomBadge
+                        customStyles={{
+                            backgroundColor: getBackgroundColorState({
+                                statusId: status.id,
+                                theme,
+                            }),
+                            color: theme.colors.dark,
+                        }}
+                    >
+                        {status.name}
+                    </CustomBadge>
                     <Text style={styles.number}>
                         {formattedCost === "" ? (
                             <ActivityIndicator size="small" />
