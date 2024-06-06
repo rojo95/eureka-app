@@ -25,16 +25,16 @@ function Map({
 
     useEffect(() => {
         async function loadComponent() {
-            if (Platform.OS !== "web") {
-                // Load phone component
-                const PhoneMapComponent = await import("./PhoneMap");
-                setComponent(() => PhoneMapComponent.default);
-            } else {
+            if (Platform.OS === "web") {
                 // Load web component
                 const WebMapComponent = {
                     default: () => <Text>Website Map</Text>,
                 };
                 setComponent(() => WebMapComponent.default);
+            } else {
+                // Load phone component
+                const PhoneMapComponent = await import("./PhoneMap");
+                setComponent(() => PhoneMapComponent.default);
             }
         }
 
