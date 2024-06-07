@@ -23,11 +23,13 @@ import Map from "../../../../components/Map/Map";
 import { notificationToast } from "../../../../services/notifications/notifications";
 import CustomBadge from "../../../../components/CustomBadge/CustomBadge";
 import { getBackgroundColorState } from "../utils/utils";
+import { UserContext } from "../../../../contexts/UserContext";
 
 export default function DetailsBudget() {
     const {
         contextParams: { itemId },
     } = useContext(ParamsContext)!;
+    const { language } = useContext(UserContext);
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
 
@@ -49,19 +51,27 @@ export default function DetailsBudget() {
      */
     useEffect(() => {
         const formatCostAndSale = async () => {
-            const totalCost = await formatPrices({ number: data?.totalCost });
-            const totalSale = await formatPrices({ number: data?.totalSale });
+            const totalCost = await formatPrices({
+                number: data?.totalCost,
+                language,
+            });
+            const totalSale = await formatPrices({
+                number: data?.totalSale,
+                language,
+            });
             const kTotal = await formatPrices({
                 number: calculateKTotal({
                     totalCost: data.totalCost,
                     totalSale: data.totalSale,
                 }),
+                language,
             });
             const totalMarginProfit = await formatPrices({
                 number: calculateMarginProfit({
                     totalCost: data.totalCost,
                     totalSale: data.totalSale,
                 }),
+                language,
             });
             setTotalCost(totalCost);
             setTotalSale(totalSale);

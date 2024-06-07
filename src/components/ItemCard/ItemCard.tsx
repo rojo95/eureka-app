@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DefaultTheme, useTheme } from "react-native-paper";
 import CleanCard from "../CleanCard/CleanCard";
 import { formatPrices } from "../../utils/numbers";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function ItemCard({
     code,
@@ -16,13 +17,14 @@ export default function ItemCard({
     sale: number;
 }) {
     const theme: DefaultTheme = useTheme();
+    const { language } = useContext(UserContext);
     const [totalCost, setTotalCost] = useState<string>("");
     const [totalSale, setTotalSale] = useState<string>("");
 
     useEffect(() => {
         const formatCostAndSale = async () => {
-            const totalCost = await formatPrices({ number: cost });
-            const totalSale = await formatPrices({ number: sale });
+            const totalCost = await formatPrices({ number: cost, language });
+            const totalSale = await formatPrices({ number: sale, language });
             setTotalCost(totalCost);
             setTotalSale(totalSale);
         };
@@ -49,11 +51,7 @@ export default function ItemCard({
     });
     return (
         <CleanCard>
-            <View
-                style={[
-                    styles.container,
-                ]}
-            >
+            <View style={[styles.container]}>
                 <Text
                     style={[
                         styles.text,

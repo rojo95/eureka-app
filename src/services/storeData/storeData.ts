@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
@@ -73,6 +74,41 @@ export async function deleteSecureData(key: string): Promise<boolean> {
                     throw err;
                 });
         }
+    } catch (error) {
+        throw error;
+    }
+}
+
+/**
+ * function to store non secured data
+ *
+ * @param {SecureStoreInterface} param
+ * @param {string} param.key
+ * @param {string} param.value
+ * @returns {Promise<boolean>}
+ */
+export async function saveData({
+    key,
+    value,
+}: SecureStoreInterface): Promise<boolean> {
+    try {
+        await AsyncStorage.setItem(key, value);
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
+
+/**
+ * function to obtain secure storage data
+ *
+ * @param {string} key {string}
+ * @returns {Promise<string | null | undefined>}
+ */
+export async function getData(key: string): Promise<string | null | undefined> {
+    try {
+        const value = await AsyncStorage.getItem(key);
+        return value;
     } catch (error) {
         throw error;
     }

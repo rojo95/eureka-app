@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { DefaultTheme, useTheme } from "react-native-paper";
 import { TextInput } from "react-native-paper";
-import BudgetsCard from "../../../components/BudgetsCard/BudgetsCard";
+import BudgetsCard from "./components/BudgetsCard/BudgetsCard";
 import { useTranslation } from "react-i18next";
 import FAB from "../../../components/FAB/FAB";
 import Modal from "../../../components/Modal/Modal";
@@ -313,11 +313,11 @@ export default function Budgets() {
     const renderItem: ListRenderItem<any> = ({ item }) => (
         <BudgetsCard
             onPress={() => handlePress(item.id)}
-            index={item.code}
+            number={item.code}
             description={item.description}
             status={item.status}
-            cost={item.cost}
-            sale={item.sale}
+            totalCost={item.cost}
+            totalSale={item.sale}
         />
     );
 

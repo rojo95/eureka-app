@@ -1,12 +1,10 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { DefaultTheme, Modal, Portal, useTheme } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import changeLanguage from "../../utils/Language";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { languageResources } from "../../services/languages/i18next";
 import languageList from "../../services/languages/languagesList.json";
-import sessionNames from "../../utils/sessionInfo";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function ChangeLanguageModal({
     showModal,
@@ -15,6 +13,7 @@ export default function ChangeLanguageModal({
     showModal: boolean;
     onToggleModal: () => void;
 }) {
+    const { changeLanguage } = useContext(UserContext);
     const theme: DefaultTheme = useTheme();
     const { t } = useTranslation();
 
@@ -41,10 +40,7 @@ export default function ChangeLanguageModal({
      * @param lang {string}
      */
     async function changeLang(lang: string) {
-        const { lang: langSelected } = sessionNames;
-
         try {
-            await AsyncStorage.setItem(langSelected, lang);
             changeLanguage(lang);
             onToggleModal();
         } catch (e) {
