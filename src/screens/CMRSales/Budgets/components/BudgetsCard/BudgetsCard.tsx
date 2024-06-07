@@ -9,7 +9,7 @@ import { ActivityIndicator, DefaultTheme, useTheme } from "react-native-paper";
 import CustomBadge from "../../../../../components/CustomBadge/CustomBadge";
 import { formatPrices } from "../../../../../utils/numbers";
 import { useContext, useEffect, useState } from "react";
-import { getBackgroundColorState } from "../../utils/utils";
+import { getColorState } from "../../utils/utils";
 import { UserContext } from "../../../../../contexts/UserContext";
 
 interface BudgetsCardInterface extends TouchableOpacityProps {
@@ -86,7 +86,7 @@ const BudgetsCard = ({
                     </Text>
                     <CustomBadge
                         customStyles={{
-                            backgroundColor: getBackgroundColorState({
+                            backgroundColor: getColorState({
                                 statusId: status.id,
                                 theme,
                             }),

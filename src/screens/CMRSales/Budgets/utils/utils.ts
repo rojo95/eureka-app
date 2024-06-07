@@ -1,6 +1,6 @@
 import { DefaultTheme } from "react-native-paper";
 
-export function getBackgroundColorState({
+export function getColorState({
     statusId,
     theme,
 }: {
@@ -18,3 +18,39 @@ export function getBackgroundColorState({
             return theme.colors.successLight;
     }
 }
+
+/**
+ * Function to calculate K total
+ * @param param0
+ * @param { number } param.totalCost
+ * @param { number } param.totalSale
+ * @returns
+ */
+export const calculateKTotal = ({
+    totalCost,
+    totalSale,
+}: {
+    totalCost: number;
+    totalSale: number;
+}) => {
+    return totalSale / totalCost;
+};
+
+/**
+ * Function to calculate the Margin Profit
+ * @param param0
+ * @param { number } param.totalCost
+ * @param { number } param.totalSale
+ * @returns
+ */
+export const calculateMarginProfit = ({
+    totalCost,
+    totalSale,
+}: {
+    totalCost: number;
+    totalSale: number;
+}) => {
+    const kTotal = calculateKTotal({ totalCost, totalSale });
+    if (!kTotal) return 0;
+    return (1 - 1 / kTotal) * 100;
+};

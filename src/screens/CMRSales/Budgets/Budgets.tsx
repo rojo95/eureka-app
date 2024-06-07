@@ -31,6 +31,7 @@ import { exportBudgets } from "../../../services/export-documents/exportDocument
 import { ParamsContext } from "../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../services/notifications/notifications";
 import CustomBadge from "../../../components/CustomBadge/CustomBadge";
+import { UserContext } from "../../../contexts/UserContext";
 
 interface Filters {
     id: number;
@@ -44,6 +45,7 @@ export default function Budgets() {
     const theme: DefaultTheme = useTheme();
     const { OS } = Platform;
     const { setContextParams } = useContext(ParamsContext)!;
+    const { language } = useContext(UserContext);
 
     const [text, setText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -471,6 +473,7 @@ export default function Budgets() {
                 responsibles: responsibles,
             }),
             translation: t,
+            language,
         };
 
         const downloaded = await exportBudgets(filters).catch((e) => {
@@ -574,16 +577,18 @@ export default function Budgets() {
                         ))}
                     {startDate && (
                         <BadgeBase onPress={() => setStartDate(undefined)}>
-                            {`${t("date-from").toLowerCase()}: ${setDateFormat(
-                                startDate
-                            )}`}
+                            {`${t("date-from").toLowerCase()}: ${setDateFormat({
+                                value: startDate,
+                                language,
+                            })}`}
                         </BadgeBase>
                     )}
                     {endDate && (
                         <BadgeBase onPress={() => setEndDate(undefined)}>
-                            {`${t("date-from").toLowerCase()}: ${setDateFormat(
-                                endDate
-                            )}`}
+                            {`${t("date-from").toLowerCase()}: ${setDateFormat({
+                                value: endDate,
+                                language,
+                            })}`}
                         </BadgeBase>
                     )}
                 </ScrollView>

@@ -5,6 +5,7 @@ import sessionNames from "../../utils/sessionInfo";
 import { getSecureData } from "../storeData/storeData";
 import { setDateFormat } from "../../utils/numbers";
 import axios from "axios";
+import { Language } from "../../contexts/UserContext";
 
 const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
@@ -37,6 +38,7 @@ export async function exportBudgets({
     createdFrom,
     createdTo,
     translation,
+    language,
 }: {
     textFilter?: string;
     client?: ItemInterface;
@@ -46,6 +48,7 @@ export async function exportBudgets({
     createdFrom?: Date;
     createdTo?: Date;
     translation: any;
+    language: Language;
 }) {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Personnels/exportViewAsExcel`;
@@ -80,14 +83,14 @@ export async function exportBudgets({
                 ...[
                     createdFrom && {
                         value: createdFrom,
-                        text: setDateFormat(createdFrom),
+                        text: setDateFormat({ value: createdFrom, language }),
                         filterName: translation("created-from"),
                     },
                 ],
                 ...[
                     createdTo && {
                         value: createdTo,
-                        text: setDateFormat(createdTo),
+                        text: setDateFormat({ value: createdTo, language }),
                         filterName: translation("created-to"),
                     },
                 ],

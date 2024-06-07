@@ -11,18 +11,16 @@ import { getBudget } from "../../../../services/budgets/Budgets";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import Text from "../../../../components/Text/Text";
 import Button from "../../../../components/Button/Button";
-import StateBadge from "../../../../components/CustomBadge/CustomBadge";
-import {
-    calculateKTotal,
-    calculateMarginProfit,
-    formatPrices,
-    setDateFormat,
-} from "../../../../utils/numbers";
+import { formatPrices, setDateFormat } from "../../../../utils/numbers";
 import FAB from "../../../../components/FAB/FAB";
 import Map from "../../../../components/Map/Map";
 import { notificationToast } from "../../../../services/notifications/notifications";
 import CustomBadge from "../../../../components/CustomBadge/CustomBadge";
-import { getBackgroundColorState } from "../utils/utils";
+import {
+    calculateKTotal,
+    calculateMarginProfit,
+    getColorState,
+} from "../utils/utils";
 import { UserContext } from "../../../../contexts/UserContext";
 
 export default function DetailsBudget() {
@@ -146,7 +144,7 @@ export default function DetailsBudget() {
                                 fontSize: 15,
                                 paddingHorizontal: 10,
                                 color: theme.colors.dark,
-                                backgroundColor: getBackgroundColorState({
+                                backgroundColor: getColorState({
                                     statusId: data.state.id,
                                     theme,
                                 }),
@@ -154,7 +152,9 @@ export default function DetailsBudget() {
                         >
                             {data?.state?.name}
                         </CustomBadge>
-                        <Text>{setDateFormat(data.createdAt)}</Text>
+                        <Text>
+                            {setDateFormat({ value: data.createdAt, language })}
+                        </Text>
                         <View
                             style={{
                                 flexDirection: "row",

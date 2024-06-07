@@ -1,6 +1,8 @@
+import { Language } from "../contexts/UserContext";
+
 /**
  * Function to create an URL with params
- * 
+ *
  * @param param0
  * @param {URL} param.urlBase
  * @param {object} param.param
@@ -24,3 +26,6 @@ export function createUrl({
     // merge and return the URLSearchParams object to the URL
     return `${urlBase}?${searchParams.toString()}`;
 }
+
+export const getLocale = ({ locale }: { locale: Language }) =>
+    locale === "es" ? "es-ES" : "en-US";
