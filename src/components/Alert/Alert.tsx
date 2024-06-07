@@ -8,6 +8,7 @@ import Text from "../Text/Text";
 import { DefaultTheme, Modal, Portal, useTheme } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
+import { notificationToast } from "../../services/notifications/notifications";
 
 export default function Alert({
     title,
@@ -26,7 +27,7 @@ export default function Alert({
     description?: string;
     onCloseModal: () => void;
     showModal: boolean;
-    onAccept?: () => void;
+    onAccept?: () => Promise<void>;
     onCancel?: () => void;
     titleStyle?: StyleProps;
     acceptButtonText?: string;
@@ -38,18 +39,26 @@ export default function Alert({
     const { t } = useTranslation();
     const [disableActions, setDisableActions] = useState<boolean>(false);
 
-    const handleAccept = useCallback(() => {
+    const handleAccept = useCallback(async () => {
         if (disableActions) return;
-        setDisableActions(true);
 
-        onCloseModal();
         if (onAccept) {
-            onAccept();
+            setDisableActions(true);
+            await onAccept()
+                .catch((e) => {
+                    notificationToast({
+                        type: "danger",
+                        text: t("fail-action"),
+                    });
+                    console.error(e);
+                })
+                .finally(() => {
+                    onCloseModal();
+                    setTimeout(() => {
+                        setDisableActions(false);
+                    }, 500);
+                });
         }
-
-        setTimeout(() => {
-            setDisableActions(false);
-        }, 3000);
     }, [disableActions, onCloseModal, onAccept]);
 
     const handleClose = useCallback(() => {
@@ -108,11 +117,16 @@ export default function Alert({
                                     text={cancelButtonText || t("cancel-label")}
                                     type="secondary"
                                     onPress={handleClose}
+                                    disabled={disableActions}
                                     icon={
                                         <AntDesign
                                             name="close"
                                             size={20}
-                                            color={theme.colors.primary}
+                                            color={
+                                                disableActions
+                                                    ? theme.colors.primaryLight
+                                                    : theme.colors.primary
+                                            }
                                         />
                                     }
                                 />
@@ -129,6 +143,7 @@ export default function Alert({
                                         color={theme.colors.primaryContrast}
                                     />
                                 }
+                                disabled={disableActions}
                             />
                         </View>
                     </View>

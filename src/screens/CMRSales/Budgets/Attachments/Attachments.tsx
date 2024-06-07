@@ -43,8 +43,8 @@ export default function Attachments() {
     const [alert, setAlert] = useState<boolean>(false);
     const [alertConfig, setAlertConfig] = useState<{
         title: string;
-        accept: () => void;
-    }>({ title: "", accept: () => {} });
+        accept: () => Promise<void>;
+    }>({ title: "", accept: async () => {} });
 
     const themedStyles = StyleSheet.create({
         container: {
@@ -82,7 +82,7 @@ export default function Attachments() {
         setAlert(true);
         return setAlertConfig({
             title: text,
-            accept: () => accept(),
+            accept: async () => accept(),
         });
     }
 
@@ -332,7 +332,6 @@ export default function Attachments() {
                 type="confirm"
                 showClose={false}
                 onAccept={alertConfig.accept}
-                onCancel={() => setAlertConfig({ title: "", accept: () => {} })}
             />
         </View>
     );
