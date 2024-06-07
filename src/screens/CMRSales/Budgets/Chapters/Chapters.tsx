@@ -10,11 +10,11 @@ import { useNavigation } from "@react-navigation/native";
 import FAB from "../../../../components/FAB/FAB";
 import { Checkbox, DefaultTheme, useTheme } from "react-native-paper";
 import { getBudget } from "../../../../services/budgets/Budgets";
-import ItemCard from "../../../../components/ItemCard/ItemCard";
+import ItemCard from "./components/ItemCard/ItemCard";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../../services/notifications/notifications";
 
-type Item = {
+export type ItemChapter = {
     key: string;
     id: number;
     rank: string;
@@ -33,18 +33,16 @@ export default function Chapters() {
     const navigation: any = useNavigation();
     const [loading, setLoading] = useState<boolean>(true);
     const [selection, setSelection] = useState<boolean>(false);
-    const [data, setData] = useState<Item[]>([]);
+    const [data, setData] = useState<ItemChapter[]>([]);
 
     async function getChapters() {
         const info = await getBudget({ id: itemId });
-        const chapters: Item[] = info?.chapters?.map((v: any, i: number) => ({
-            key: `${i}`,
-            id: v.id,
-            rank: v.rank,
-            description: v.description,
-            totalCost: v.totalCost,
-            totalSale: v.totalSale,
-        }));
+        const chapters: ItemChapter[] = info?.chapters?.map(
+            (v: ItemChapter, i: number) => ({
+                ...v,
+                key: `${i}`,
+            })
+        );
         setData(chapters);
         setLoading(false);
     }
@@ -56,45 +54,20 @@ export default function Chapters() {
         };
     }, [itemId]);
 
-    const styles = StyleSheet.create({
+    const themedStyles = StyleSheet.create({
         container: {
             backgroundColor: theme.colors.primaryContrast,
-            flex: 1,
-        },
-        rowItem: {
-            flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-        },
-        text: {
-            color: theme.colors.dark,
-        },
-        description: {
-            fontSize: 14,
-            fontWeight: "bold",
-        },
-        code: {
-            fontSize: 13,
         },
     });
 
-    function handleListUpdate(listItems: Item[]) {
-        const settedList: Item[] = listItems.map((v, k) => {
+    function handleListUpdate(listItems: ItemChapter[]) {
+        const settedList: ItemChapter[] = listItems.map((v, k) => {
             return { ...v, rank: `${k + 1}` };
         });
         setData(settedList);
     }
 
-    useEffect(() => {
-        if (!loading) {
-            updateList();
-        }
-
-        return () => {};
-    }, [data]);
-
-    async function updateList() {
+    async function saveChanges() {
         notificationToast({
             text: t("function-soon"),
             type: "danger",
@@ -102,35 +75,34 @@ export default function Chapters() {
         });
     }
 
-    const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => {
+    const renderItem = ({
+        item,
+        drag,
+        isActive,
+    }: RenderItemParams<ItemChapter>) => {
         return (
             <ScaleDecorator>
-                <Pressable
-                    onLongPress={drag}
-                    disabled={isActive}
-                    style={[
-                        styles.rowItem,
-                        {
-                            backgroundColor: isActive
-                                ? "#efefef"
-                                : theme.colors.primaryContrast,
-                        },
-                    ]}
+                {selection && <Checkbox status="checked" />}
+                <View
+                    style={{
+                        backgroundColor: isActive
+                            ? "#ececec"
+                            : theme.colors.primaryContrast,
+                    }}
                 >
-                    {selection && <Checkbox status="checked" />}
                     <ItemCard
-                        code={item.rank}
-                        description={item.description}
-                        cost={item.totalCost}
-                        sale={item.totalSale}
+                        style={[styles.rowItem]}
+                        onLongPress={drag}
+                        disabled={isActive}
+                        data={item}
                     />
-                </Pressable>
+                </View>
             </ScaleDecorator>
         );
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, themedStyles.container]}>
             <AppHeader
                 title={t("budget-details-title")}
                 actions={[{ icon: "dots-vertical" }]}
@@ -184,13 +156,7 @@ export default function Chapters() {
                         {
                             icon: "content-save",
                             label: t("save-label"),
-                            onPress: () => {
-                                notificationToast({
-                                    text: t("function-soon"),
-                                    type: "danger",
-                                    position: "CENTER",
-                                });
-                            },
+                            onPress: saveChanges,
                         },
                     ]}
                 />
@@ -198,3 +164,21 @@ export default function Chapters() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    rowItem: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    description: {
+        fontSize: 14,
+        fontWeight: "bold",
+    },
+    code: {
+        fontSize: 13,
+    },
+});

@@ -17,7 +17,7 @@ import Text from "../../../../components/Text/Text";
 import Button from "../../../../components/Button/Button";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import { getBudgetAttachment } from "../../../../services/budgets/Budgets";
-import CleanCard from "../../../../components/CleanCard/CleanCard";
+import CleanCard from "../../../../components/Card/Card";
 import {
     deleteRemoteBudgetDocument,
     downLoadRemoteDocument,
@@ -56,14 +56,16 @@ export default function Attachments() {
      * function to get the budget attachments by ID
      */
     async function getAttachments() {
+        setLoading(true);
         const info = await getBudgetAttachment({ id: itemId });
         setData(info);
+        setLoading(false);
     }
 
     useEffect(() => {
-        setLoading(true);
-        getAttachments();
-        setLoading(false);
+        async () => {
+            await getAttachments();
+        };
         return () => {};
     }, [itemId]);
 
@@ -216,61 +218,66 @@ export default function Attachments() {
                                 }),
                         })
                     }
-                    style={{
-                        backgroundColor: "#fff",
-                        minHeight: 90,
-                        flexDirection: "row",
-                        alignItems: "center",
-                    }}
                 >
-                    <Icon
-                        source="file-document-outline"
-                        size={50}
-                        color={
-                            loading ? theme.colors.lightGrey : theme.colors.dark
-                        }
-                    />
-                    <Text
+                    <CleanCard.Body
                         style={{
-                            color: loading
-                                ? theme.colors.lightGrey
-                                : theme.colors.dark,
+                            flexDirection: "row",
+                            alignItems: "center",
                         }}
                     >
-                        {item.name}
-                    </Text>
-                    <View style={{ position: "absolute", top: 0, right: 0 }}>
-                        <Button
-                            onPress={() =>
-                                askFunction({
-                                    text: `${t("wish-delete-file")}: ${
-                                        item.name
-                                    }`,
-                                    accept: () =>
-                                        deleteDocument({ id: item.id }),
-                                })
-                            }
-                            type="link"
-                            buttonStyle={{
-                                borderTopStartRadius: 0,
-                                borderBottomEndRadius: 0,
-                                backgroundColor: loading
-                                    ? theme.colors.primaryLight
-                                    : theme.colors.primary,
-                                width: 30,
-                                height: 30,
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                            icon={
-                                <Icon
-                                    source="close"
-                                    size={20}
-                                    color={theme.colors.primaryContrast}
-                                />
+                        <Icon
+                            source="file-document-outline"
+                            size={50}
+                            color={
+                                loading
+                                    ? theme.colors.lightGrey
+                                    : theme.colors.dark
                             }
                         />
-                    </View>
+                        <Text
+                            style={{
+                                color: loading
+                                    ? theme.colors.lightGrey
+                                    : theme.colors.dark,
+                            }}
+                        >
+                            {item.name}
+                        </Text>
+                        <View
+                            style={{ position: "absolute", top: 0, right: 0 }}
+                        >
+                            <Button
+                                onPress={() =>
+                                    askFunction({
+                                        text: `${t("wish-delete-file")}: ${
+                                            item.name
+                                        }`,
+                                        accept: () =>
+                                            deleteDocument({ id: item.id }),
+                                    })
+                                }
+                                type="link"
+                                buttonStyle={{
+                                    borderTopStartRadius: 0,
+                                    borderBottomEndRadius: 0,
+                                    backgroundColor: loading
+                                        ? theme.colors.primaryLight
+                                        : theme.colors.primary,
+                                    width: 30,
+                                    height: 30,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                                icon={
+                                    <Icon
+                                        source="close"
+                                        size={20}
+                                        color={theme.colors.primaryContrast}
+                                    />
+                                }
+                            />
+                        </View>
+                    </CleanCard.Body>
                 </Pressable>
             </CleanCard>
         );
@@ -309,20 +316,26 @@ export default function Attachments() {
                         onPress={uploadBudgetDocument}
                     />
                 </View>
-                <FlatList
-                    style={{
-                        paddingHorizontal: 10,
-                        ...(width < height && {
-                            width: "100%",
-                        }),
-                        height: width < height ? 500 : 250,
-                    }}
-                    data={data}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={renderItem}
-                    refreshing={loading}
-                    onRefresh={getAttachments}
-                />
+                {loading ? (
+                    <View style={{ justifyContent: "center", width: "100%" }}>
+                        <ActivityIndicator size={"large"} />
+                    </View>
+                ) : (
+                    <FlatList
+                        style={{
+                            paddingHorizontal: 10,
+                            ...(width < height && {
+                                width: "100%",
+                            }),
+                            height: width < height ? 500 : 250,
+                        }}
+                        data={data}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={renderItem}
+                        refreshing={loading}
+                        onRefresh={getAttachments}
+                    />
+                )}
             </View>
             <FAB onOpen={() => saveBudget()} primaryIcon={"content-save"}></FAB>
             <Alert

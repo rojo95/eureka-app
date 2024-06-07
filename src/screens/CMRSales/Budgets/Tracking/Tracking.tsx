@@ -10,7 +10,7 @@ import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import { getBudgetTracking } from "../../../../services/budgets/Budgets";
 import FAB from "../../../../components/FAB/FAB";
-import CleanCard from "../../../../components/CleanCard/CleanCard";
+import CleanCard from "../../../../components/Card/Card";
 import Button from "../../../../components/Button/Button";
 import Text from "../../../../components/Text/Text";
 import { setDateFormat } from "../../../../utils/numbers";
