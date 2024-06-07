@@ -83,5 +83,6 @@
     "invalid-user-pass-message": "You must enter a valid username or password",
     "function-soon": "Functionality not yet implemented",
     "error-uploading-file": "Error when downloading the file or file type not allowed",
-    "file-successfully-uploaded": "File successfully uploaded"
+    "file-successfully-uploaded": "File successfully uploaded",
+    "fail-action": "Error when performing the action"
 }

@@ -83,5 +83,6 @@
     "invalid-user-pass-message": "Debe ingresar un usuario o contraseña válidos",
     "function-soon": "Funcionalidad aún no implementada.",
     "error-uploading-file": "Error al surbir el achivo o tipo de archivo no permitido",
-    "file-successfully-uploaded": "Archivo cargado correctamente"
+    "file-successfully-uploaded": "Archivo cargado correctamente",
+    "fail-action": "Error al realizar la acción"
 }
