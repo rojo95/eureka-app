@@ -229,7 +229,6 @@ export async function sendAttachmentBudget({
             providerResponse: { location: urlFile },
         } = file[0];
 
-        console.log(fileType);
         const query = await axios
             .put(
                 url,
