@@ -1,7 +1,6 @@
 import { Alert, StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import React, { useEffect, useState } from "react";
-import * as Location from "expo-location";
 import { useTranslation } from "react-i18next";
 import { StyleProps } from "react-native-reanimated";
 
@@ -41,8 +40,8 @@ export default function PhoneMap({
     );
     const [marker, setMarker] = useState<MarkerInterface | null>(markerPreset);
 
-    function onRegionChange(region: regionInterface) {
-        !readOnly && setRegion(region);
+    function getRegion(region: regionInterface) {
+        return region;
     }
 
     function addMarker(marker: MarkerInterface) {
@@ -54,39 +53,13 @@ export default function PhoneMap({
         setRegion(address!);
     }, [markerPreset, address]);
 
-    /**
-     * function to get the current user location
-     * @returns
-     */
-    async function getLocation() {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-            Alert.alert(t("location-denied"));
-            return;
-        }
-
-        const location = (await Location.getCurrentPositionAsync({})).coords;
-
-        const newState = {
-            ...region,
-            latitude: location?.latitude || 0,
-            longitude: location?.longitude || 0,
-        };
-        onRegionChange(newState);
-    }
-
-    useEffect(() => {
-        getLocation;
-        return () => {};
-    }, []);
-
     return (
         <View>
             <MapView
                 style={[styles.map, mapStyle]}
                 initialRegion={region}
                 region={region}
-                onRegionChange={onRegionChange}
+                onRegionChange={getRegion}
                 onPress={(e) => addMarker(e.nativeEvent.coordinate)}
                 mapType={"standard"}
             >

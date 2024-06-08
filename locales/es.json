@@ -13,7 +13,7 @@
     "budgets-input-search-label": "Buscar Presupuesto",
     "budget-input-search-placeholder": "Escribe un código o descripción",
     "loading": "Cargando",
-    "location-denied": "Permiso para acceder a la localización del dispositivo",
+    "location-denied": "Permiso denegado para acceder a la localización del dispositivo",
     "label-name": "Nombre",
     "responsible-label": "Responsable",
     "placeholder-select-responsible-multiple": "Seleccione uno o más Responsables",
