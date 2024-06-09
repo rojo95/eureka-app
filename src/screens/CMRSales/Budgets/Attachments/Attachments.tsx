@@ -56,17 +56,16 @@ export default function Attachments() {
      * function to get the budget attachments by ID
      */
     async function getAttachments() {
-        setLoading(true);
         const info = await getBudgetAttachment({ id: itemId });
         setData(info);
-        setLoading(false);
     }
 
     useEffect(() => {
-        async () => {
+        setLoading(true);
+        (async () => {
             await getAttachments();
-        };
-        return () => {};
+            setLoading(false);
+        })();
     }, [itemId]);
 
     /**
@@ -316,7 +315,7 @@ export default function Attachments() {
                         onPress={uploadBudgetDocument}
                     />
                 </View>
-                {loading ? (
+                {loading && data.length <= 0 ? (
                     <View style={{ justifyContent: "center", width: "100%" }}>
                         <ActivityIndicator size={"large"} />
                     </View>
