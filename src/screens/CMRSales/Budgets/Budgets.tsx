@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import {
     FlatList,
     ListRenderItem,
@@ -13,7 +13,10 @@ import { useTranslation } from "react-i18next";
 import FAB from "../../../components/FAB/FAB";
 import Modal from "../../../components/Modal/Modal";
 import CreateBudget from "./CreateBudget/CreateBudget";
-import { getBudgets } from "../../../services/budgets/Budgets";
+import {
+    Budgets as BudgetsInterface,
+    getBudgets,
+} from "../../../services/budgets/Budgets";
 import AppbarHeader from "../../../components/AppHeader/AppHeader";
 import { useNavigation } from "@react-navigation/native";
 import { RightDrawerContext } from "../../../contexts/navigation/RightDrawerScreen";
@@ -21,10 +24,7 @@ import Button from "../../../components/Button/Button";
 import { DatePickerInput } from "react-native-paper-dates";
 import { FontAwesome } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
-import SelectActivitiesForm from "../../../components/SelectActivitiesForm/SelectActivitiesForm";
-import SelectStatesModal from "../../../components/SelectStatesModal/SelectStatesModal";
-import SelectResponsiblesModal from "../../../components/SelectResponsiblesModal/SelectResponsiblesModal";
-import SelectClientsModal from "../../../components/SelectClientsModal/SelectClientsModal";
+import SelectModal from "../../../components/SelectModal/SelectModal";
 import Alert from "../../../components/Alert/Alert";
 import { setDateFormat } from "../../../utils/numbers";
 import { exportBudgets } from "../../../services/export-documents/exportDocuments";
@@ -32,12 +32,27 @@ import { ParamsContext } from "../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../services/notifications/notifications";
 import CustomBadge from "../../../components/CustomBadge/CustomBadge";
 import { UserContext } from "../../../contexts/UserContext";
+import { getStatesApi } from "../../../services/states/states";
+import { getClientsApi } from "../../../services/clients/clients";
+import { getActivitiesApi } from "../../../services/activities/activities";
+import { getResponsiblesApi } from "../../../services/users/users";
 
-interface Filters {
+type FilterListItems = {
     id: number;
     name: string;
     lastName?: string;
-}
+    profileImage?: string;
+    activityType?: { id: number; name: string };
+};
+
+type Filter = {
+    client?: FilterListItems;
+    state?: FilterListItems[];
+    responsibles?: FilterListItems[];
+    activities?: FilterListItems[];
+    createdFrom?: Date;
+    createdTo?: Date;
+};
 
 export default function Budgets() {
     const navigation: any = useNavigation();
@@ -50,19 +65,19 @@ export default function Budgets() {
     const [text, setText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
-    const [data, setData] = useState<any[]>([]);
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [budgets, setBudgets] = useState<BudgetsInterface[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(0);
     const [totalBudgets, setTotalBudgets] = useState<number>(0);
     const [limit, setLimit] = useState<number>(10);
-    const [clients, setClients] = useState<Filters | null>(null);
-    const [states, setStates] = useState<Filters[]>([]);
-    const [responsibles, setResponsibles] = useState<Filters[]>([]);
-    const [activity, setActivity] = useState<Filters[]>([]);
-    const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-    const [endDate, setEndDate] = useState<Date | undefined>(undefined);
     const [timer, setTimer] = useState<any>(null);
     const [typeModal, setTypeModal] = useState<number>(1);
     const [alert, setAlert] = useState<boolean>(false);
+    const [itemsFilterItems, setFilterListItems] = useState<FilterListItems[]>(
+        []
+    );
+    const [titleFilter, setTitleFilter] = useState<string>("");
+    const [filterSelected, setFilterSelected] = useState("");
+    const [filter, setFilter] = useState<Filter>({});
 
     const themedStyles = StyleSheet.create({
         container: {
@@ -90,8 +105,8 @@ export default function Budgets() {
                     buttonStyle={styles.input}
                     type="secondary"
                     text={
-                        clients
-                            ? `${clients.name} ${t("selected-singular")}`
+                        filter.client
+                            ? `${filter.client?.name} ${t("selected-singular")}`
                             : t("placeholder-select-client")
                     }
                     onPress={getClients}
@@ -100,10 +115,10 @@ export default function Budgets() {
                     buttonStyle={styles.input}
                     type="secondary"
                     text={
-                        states.length > 0
-                            ? `${states.length} ${t("state-label")}(s) ${t(
-                                  "selected-plural"
-                              )}`
+                        filter.state?.length
+                            ? `${filter.state?.length} ${t(
+                                  "state-label"
+                              )}(s) ${t("selected-plural")}`
                             : t("placeholder-select-state")
                     }
                     onPress={getStates}
@@ -112,8 +127,8 @@ export default function Budgets() {
                     buttonStyle={styles.input}
                     type="secondary"
                     text={
-                        responsibles.length > 0
-                            ? `${responsibles.length} ${t(
+                        filter.responsibles?.length
+                            ? `${filter.responsibles?.length} ${t(
                                   "responsible-label"
                               )}(s) ${t("selected-plural")}`
                             : t("placeholder-select-responsible")
@@ -124,8 +139,8 @@ export default function Budgets() {
                     buttonStyle={styles.input}
                     type="secondary"
                     text={
-                        activity.length > 0
-                            ? `${activity.length} ${t(
+                        filter.activities?.length
+                            ? `${filter.activities?.length} ${t(
                                   "activity-label"
                               )}(ies) ${t("selected-plural")}`
                             : t("placeholder-select-activity")
@@ -138,8 +153,10 @@ export default function Budgets() {
                         mode="outlined"
                         locale="en"
                         label={t("date-from")}
-                        value={startDate}
-                        onChange={(d) => setStartDate(d)}
+                        value={filter.createdFrom}
+                        onChange={(d) =>
+                            setFilter((prev) => ({ ...prev, createdFrom: d }))
+                        }
                         inputMode="start"
                     />
                 </View>
@@ -149,8 +166,10 @@ export default function Budgets() {
                         mode="outlined"
                         locale="en"
                         label={t("date-to")}
-                        value={endDate}
-                        onChange={(d) => setEndDate(d)}
+                        value={filter.createdTo}
+                        onChange={(d) =>
+                            setFilter((prev) => ({ ...prev, createdTo: d }))
+                        }
                         inputMode="start"
                     />
                 </View>
@@ -198,70 +217,42 @@ export default function Budgets() {
      * Function to reset all the search parameters
      */
     function cleanFilters() {
-        setActivity([]);
-        setEndDate(undefined);
-        setStartDate(undefined);
         setText("");
-        setClients(null);
-        setStates([]);
-        setResponsibles([]);
+        setFilter({});
     }
 
     /**
-     * Function to fetch data
+     * Function to fetch budgets
      * @returns
      */
-    async function searchBudgets(page?: number) {
+    async function searchBudgets() {
         if (loading) return;
 
-        const p = page || currentPage + 1;
+        const p = currentPage + 1;
 
         setLoading(true);
         try {
             const filters = {
                 page: p,
                 limit: limit,
-                ...(clients && { client: clients.id }),
+                ...(filter.client && { client: filter.client.id }),
                 textFilter: text,
-                ...(activity.length > 0 && {
-                    activities: activity.map((v) => v.id),
+                ...(filter.activities?.length && {
+                    activities: filter.activities?.map((v) => v.id),
                 }),
-                createdTo: endDate,
-                createdFrom: startDate,
-                ...(states.length > 0 && { states: states.map((v) => v.id) }),
-                ...(responsibles.length > 0 && {
-                    responsibles: responsibles.map((v) => v.id),
+                createdTo: filter.createdTo,
+                createdFrom: filter.createdFrom,
+                ...(filter.state?.length && {
+                    states: filter.state?.map((v) => v.id),
+                }),
+                ...(filter.responsibles?.length && {
+                    responsibles: filter.responsibles?.map((v) => v.id),
                 }),
             };
             const { budgets, total } = await getBudgets(filters);
+
             setTotalBudgets(total);
-            let newData: any[] = [];
-            const fields: any[] = await budgets?.map((d: any, i: any) => {
-                return {
-                    id: d.id,
-                    code: d.number,
-                    description: d.title,
-                    status: { id: d.state.id, name: d.state.name },
-                    cost: d.totalCost,
-                    sale: d.totalSale,
-                };
-            });
-            if (budgets[0]?.id) {
-                if (page === 1) {
-                    newData = fields;
-                } else {
-                    for (let field of fields) {
-                        if (field.id) {
-                            if (!data?.find((v) => v.id === field.id)) {
-                                newData.push(field);
-                            }
-                        }
-                    }
-                }
-            } else {
-                newData = fields;
-            }
-            setData((prevData) => [...prevData, ...newData]);
+            setBudgets((prevData) => [...prevData, ...budgets]);
         } catch (error) {
             console.error(error);
             setLoading(false);
@@ -271,17 +262,17 @@ export default function Budgets() {
     }
 
     /**
-     * Fetch data when the component mounts or the page changes
+     * Fetch budgets when the component mounts or the page changes
      */
     useEffect(() => {
-        searchBudgets(1);
-    }, []);
+        searchBudgets();
+    }, [currentPage]);
 
     /**
-     * Handle loading more data when the end of the list is reached
+     * Handle loading more budgets when the end of the list is reached
      */
     const handleLoadMore = () => {
-        if (data.length < totalBudgets) {
+        if (budgets.length < totalBudgets) {
             searchBudgets();
         }
     };
@@ -290,11 +281,8 @@ export default function Budgets() {
      * Handle refreshing the list
      */
     const handleRefresh = () => {
-        setData([]);
-        setLoading(true);
-        setCurrentPage(1);
-        searchBudgets(1);
-        setLoading(false);
+        setBudgets([]);
+        setCurrentPage(0);
     };
 
     /**
@@ -315,16 +303,16 @@ export default function Budgets() {
     const renderItem: ListRenderItem<any> = ({ item }) => (
         <BudgetsCard
             onPress={() => handlePress(item.id)}
-            number={item.code}
-            description={item.description}
-            status={item.status}
-            totalCost={item.cost}
-            totalSale={item.sale}
+            number={item.number}
+            title={item.title}
+            state={item.state}
+            totalCost={item.totalCost}
+            totalSale={item.totalSale}
         />
     );
 
     /**
-     * Function to get data with filters .5 seconds
+     * Function to get budgets with filters .5 seconds
      * after the last change in them
      */
     useEffect(() => {
@@ -337,38 +325,93 @@ export default function Budgets() {
                 handleRefresh();
             }, 500)
         );
-    }, [endDate, startDate, text, clients, activity, states, responsibles]);
+    }, [filter, text]);
 
     /**
-     * function to get the availables activities
+     * function to get the availables clients
      */
-    function getActivities() {
-        setShowModal(true);
-        setTypeModal(2);
+    async function getClients() {
+        getItemsForFilter({
+            type: "client",
+            apiFunction: getClientsApi,
+            itemFormatter: (v) => ({
+                id: v.id,
+                name: v.name.toUpperCase(),
+            }),
+        });
     }
 
     /**
      * function to get the availables states
      */
     function getStates() {
-        setShowModal(true);
-        setTypeModal(3);
+        getItemsForFilter({
+            type: "state",
+            apiFunction: getStatesApi,
+            itemFormatter: (v) => ({ id: v.id, name: v.name.toUpperCase() }),
+        });
     }
 
     /**
      * function to get the availables responsibles
      */
     function getResponsibles() {
-        setShowModal(true);
-        setTypeModal(4);
+        getItemsForFilter({
+            type: "responsibles",
+            apiFunction: getResponsiblesApi,
+            itemFormatter: (v) => ({
+                id: v.id,
+                name: `${v.name?.toUpperCase()} ${v.lastName?.toUpperCase()}`,
+                profileImage: v.profileImage,
+            }),
+        });
     }
 
     /**
-     * function to get the availables clients
+     * function to get the availables activities
      */
-    function getClients() {
+    function getActivities() {
+        getItemsForFilter({
+            type: "activities",
+            apiFunction: getActivitiesApi,
+            itemFormatter: (v) => ({
+                id: v.id,
+                name: `${v.name.toUpperCase()} (${v.activityType?.name.substring(
+                    0,
+                    3
+                )}.)`,
+            }),
+        });
+    }
+
+    /**
+     *
+     * @param param0
+     */
+    async function getItemsForFilter({
+        type,
+        apiFunction,
+        itemFormatter,
+    }: {
+        type: string;
+        apiFunction: () => Promise<any>;
+        itemFormatter: (item: any) => FilterListItems;
+    }) {
+        let items: FilterListItems[] = await apiFunction();
+
+        items = items.map(itemFormatter);
+        setFilterListItems(items);
+        setFilterSelected(type);
+        setTitleFilter(t(`placeholder-select-${type}-multiple`));
         setShowModal(true);
-        setTypeModal(5);
+        setTypeModal(2);
+    }
+
+    function handleFilters(value: FilterListItems[] | FilterListItems) {
+        setFilter((prev: Filter) => ({
+            ...prev,
+            [filterSelected]: value,
+        }));
     }
 
     /**
@@ -383,36 +426,12 @@ export default function Budgets() {
 
             case 2:
                 return (
-                    <View>
-                        <SelectActivitiesForm
-                            selectedValues={activity}
-                            setSelectedValues={setActivity}
-                            onClose={() => setShowModal(false)}
-                        />
-                    </View>
-                );
-
-            case 3:
-                return (
-                    <SelectStatesModal
-                        selectedValues={states}
-                        setSelectedValues={setStates}
-                        onClose={() => setShowModal(false)}
-                    />
-                );
-            case 4:
-                return (
-                    <SelectResponsiblesModal
-                        selectedValues={responsibles}
-                        setSelectedValues={setResponsibles}
-                        onClose={() => setShowModal(false)}
-                    />
-                );
-            case 5:
-                return (
-                    <SelectClientsModal
-                        selectedValues={clients}
-                        setSelectedValues={setClients}
+                    <SelectModal
+                        title={titleFilter}
+                        data={itemsFilterItems}
+                        singleSelection={filterSelected === "client" && true}
+                        selectedValues={(filter as any)[filterSelected]}
+                        setSelectedValues={handleFilters}
                         onClose={() => setShowModal(false)}
                     />
                 );
@@ -426,9 +445,10 @@ export default function Budgets() {
      * @param id
      */
     function removeActivity(id: number) {
-        setActivity((prevSelected) => {
-            return prevSelected.filter((v) => v.id !== id);
-        });
+        setFilter((prev) => ({
+            ...prev,
+            activities: prev.activities?.filter((v) => v.id !== id),
+        }));
     }
 
     /**
@@ -436,9 +456,10 @@ export default function Budgets() {
      * @param id
      */
     function removeStates(id: number) {
-        setStates((prevSelected) => {
-            return prevSelected.filter((v) => v.id !== id);
-        });
+        setFilter((prev) => ({
+            ...prev,
+            state: prev.state?.filter((v) => v.id !== id),
+        }));
     }
 
     /**
@@ -446,31 +467,34 @@ export default function Budgets() {
      * @param id
      */
     function removeResponsible(id: number) {
-        setResponsibles((prevSelected) => {
-            return prevSelected.filter((v) => v.id !== id);
-        });
+        setFilter((prev) => ({
+            ...prev,
+            responsibles: prev.responsibles?.filter((v) => v.id !== id),
+        }));
     }
 
     /**
      * function to remove a selected client
-     * @param id
      */
     function removeClients() {
-        setClients(null);
+        setFilter((prev) => ({
+            ...prev,
+            client: undefined,
+        }));
     }
 
     async function exportListToExcel() {
         const filters = {
-            ...(clients && { client: clients }),
+            ...(filter.client && { client: filter.client }),
             textFilter: text,
-            ...(activity.length > 0 && {
-                activities: activity,
+            ...(filter.activities?.length && {
+                activities: filter.activities,
             }),
-            createdTo: endDate,
-            createdFrom: startDate,
-            ...(states.length > 0 && { states: states }),
-            ...(responsibles.length > 0 && {
-                responsibles: responsibles,
+            createdTo: filter.createdTo,
+            createdFrom: filter.createdFrom,
+            ...(filter.state?.length && { states: filter.state }),
+            ...(filter.responsibles?.length && {
+                responsibles: filter.responsibles,
             }),
             translation: t,
             language,
@@ -537,15 +561,15 @@ export default function Budgets() {
                         margin: 10,
                     }}
                 >
-                    {clients && (
+                    {filter.client && (
                         <BadgeBase onPress={removeClients}>
                             {`${t("client-label").toLowerCase()}: ${
-                                clients.name
+                                filter.client.name
                             } `}
                         </BadgeBase>
                     )}
-                    {states &&
-                        states.map((v) => (
+                    {filter.state &&
+                        filter.state?.map((v) => (
                             <BadgeBase
                                 key={v.id}
                                 onPress={() => removeStates(v.id)}
@@ -553,8 +577,8 @@ export default function Budgets() {
                                 {`${t("state-label").toLowerCase()}: ${v.name}`}
                             </BadgeBase>
                         ))}
-                    {responsibles &&
-                        responsibles.map((v) => (
+                    {filter.responsibles &&
+                        filter.responsibles.map((v) => (
                             <BadgeBase
                                 key={v.id}
                                 onPress={() => removeResponsible(v.id)}
@@ -564,8 +588,8 @@ export default function Budgets() {
                                 }${v.lastName ? " " + v.lastName : ""}`}
                             </BadgeBase>
                         ))}
-                    {activity &&
-                        activity.map((v) => (
+                    {filter.activities &&
+                        filter.activities.map((v) => (
                             <BadgeBase
                                 key={v.id}
                                 onPress={() => removeActivity(v.id)}
@@ -575,18 +599,32 @@ export default function Budgets() {
                                 }`}
                             </BadgeBase>
                         ))}
-                    {startDate && (
-                        <BadgeBase onPress={() => setStartDate(undefined)}>
+                    {filter.createdFrom && (
+                        <BadgeBase
+                            onPress={() =>
+                                setFilter((prev) => ({
+                                    ...prev,
+                                    createdFrom: undefined,
+                                }))
+                            }
+                        >
                             {`${t("date-from").toLowerCase()}: ${setDateFormat({
-                                value: startDate,
+                                value: filter.createdFrom,
                                 language,
                             })}`}
                         </BadgeBase>
                     )}
-                    {endDate && (
-                        <BadgeBase onPress={() => setEndDate(undefined)}>
-                            {`${t("date-from").toLowerCase()}: ${setDateFormat({
-                                value: endDate,
+                    {filter.createdTo && (
+                        <BadgeBase
+                            onPress={() =>
+                                setFilter((prev) => ({
+                                    ...prev,
+                                    createdTo: undefined,
+                                }))
+                            }
+                        >
+                            {`${t("date-to").toLowerCase()}: ${setDateFormat({
+                                value: filter.createdTo,
                                 language,
                             })}`}
                         </BadgeBase>
@@ -596,7 +634,7 @@ export default function Budgets() {
 
             <View style={{ marginVertical: 10, flex: 1 }}>
                 <FlatList
-                    data={data}
+                    data={budgets}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={renderItem}
                     onEndReached={handleLoadMore}

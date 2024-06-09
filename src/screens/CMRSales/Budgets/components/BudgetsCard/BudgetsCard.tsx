@@ -14,8 +14,8 @@ import { UserContext } from "../../../../../contexts/UserContext";
 
 interface BudgetsCardInterface extends TouchableOpacityProps {
     number?: string;
-    description: string;
-    status: { id: number; name: string };
+    title: string;
+    state: { id: number; name: string };
     totalCost: number;
     totalSale: number;
     onPress?: () => void;
@@ -23,8 +23,8 @@ interface BudgetsCardInterface extends TouchableOpacityProps {
 
 const BudgetsCard = ({
     number,
-    description,
-    status,
+    title,
+    state,
     totalCost,
     totalSale,
     onPress,
@@ -38,7 +38,7 @@ const BudgetsCard = ({
         container: {
             backgroundColor: theme.colors.primaryContrast,
         },
-        description: {
+        title: {
             color: theme.colors.dark,
         },
         code: {
@@ -81,19 +81,19 @@ const BudgetsCard = ({
                             {number}
                         </Text>
                     </View>
-                    <Text style={[styles.bold, themedStyles.description]}>
-                        {description}
+                    <Text style={[styles.bold, themedStyles.title]}>
+                        {title}
                     </Text>
                     <CustomBadge
                         customStyles={{
                             backgroundColor: getColorState({
-                                statusId: status.id,
+                                statusId: state.id,
                                 theme,
                             }),
                             color: theme.colors.dark,
                         }}
                     >
-                        {status.name}
+                        {state.name}
                     </CustomBadge>
                     <Text style={[styles.number]}>
                         {formattedCost === "" ? (
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
     },
-    description: {
+    title: {
         fontSize: 18,
         marginBottom: 8,
     },
