@@ -6,13 +6,13 @@ import React, {
     useState,
 } from "react";
 
-interface BudgetContextType {
+interface ParamsContext {
     contextParams: any;
     setContextParams: Dispatch<SetStateAction<any>>;
 }
 
 // Create context
-export const ParamsContext = createContext<BudgetContextType | undefined>(
+export const ParamsContext = createContext<ParamsContext | undefined>(
     undefined
 );
 
