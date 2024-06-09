@@ -28,6 +28,15 @@ interface ItemInterface {
 
 type selectedValues = ItemInterface[] | ItemInterface;
 
+interface SelectModal {
+    data: ItemInterface[];
+    onClose: () => void;
+    selectedValues?: selectedValues;
+    setSelectedValues: (values: selectedValues) => void;
+    title: string;
+    singleSelection: boolean;
+}
+
 export default function SelectModal({
     data,
     onClose,
@@ -35,29 +44,22 @@ export default function SelectModal({
     setSelectedValues,
     title,
     singleSelection,
-}: {
-    data: ItemInterface[];
-    onClose: () => void;
-    selectedValues?: selectedValues;
-    setSelectedValues: (values: selectedValues) => void;
-    title: string;
-    singleSelection: boolean;
-}) {
+}: SelectModal) {
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
 
-    const [listItems, setListItems] = useState<any[]>([]);
+    const [items, setItems] = useState<ItemInterface[]>([]);
     const [selected, setSelected] = useState<selectedValues>(selectedValues);
 
     useEffect(() => {
-        setListItems(data);
+        setItems(data);
     }, [data]);
 
     /**
      * Function to select multiple activities
      * @param {ItemInterface} item
      */
-    function handleSelectedActivity(item: ItemInterface) {
+    function handleSelectItem(item: ItemInterface) {
         setSelected((prevSelected) => {
             if (!singleSelection) {
                 const objectIndex = (prevSelected as ItemInterface[]).findIndex(
@@ -81,7 +83,11 @@ export default function SelectModal({
      * @param {ListRenderItem} param0
      * @returns
      */
-    const SelectListItems: ListRenderItem<any> = ({ item }) => {
+    const SelectListItems: ListRenderItem<ItemInterface> = ({ item }) => {
+        const isSelected = Array.isArray(selected)
+            ? selected.find((v) => v.id === item.id) !== undefined
+            : selected.id === item.id;
+
         return (
             <GestureHandlerRootView>
                 <TouchableOpacity
@@ -92,9 +98,7 @@ export default function SelectModal({
                         alignItems: "center",
                         justifyContent: "space-between",
                     }}
-                    onPress={() =>
-                        handleSelectedActivity({ id: item.id, name: item.name })
-                    }
+                    onPress={() => handleSelectItem(item)}
                 >
                     <View
                         style={{
@@ -125,17 +129,7 @@ export default function SelectModal({
                         )}
                         <Text>{item.profileImage ? " " : "" + item.name}</Text>
                     </View>
-                    <Checkbox
-                        status={
-                            Array.isArray(selected)
-                                ? selected.find((v) => v.id === item.id)
-                                    ? "checked"
-                                    : "unchecked"
-                                : selected.id === item.id
-                                ? "checked"
-                                : "unchecked"
-                        }
-                    />
+                    <Checkbox status={isSelected ? "checked" : "unchecked"} />
                 </TouchableOpacity>
             </GestureHandlerRootView>
         );
@@ -148,20 +142,17 @@ export default function SelectModal({
 
     function checkUncheckAll() {
         if (singleSelection) {
-            if (
-                Array.isArray(selected) &&
-                selected.length >= listItems.length
-            ) {
+            if (Array.isArray(selected) && selected.length >= items.length) {
                 setSelected([]);
             } else {
-                setSelected(listItems);
+                setSelected(items);
             }
         }
     }
 
     return (
         <View style={styles.formStyle}>
-            {listItems?.length > 0 ? (
+            {items.length > 0 ? (
                 <View>
                     <View style={styles.titleContainer}>
                         <Text
@@ -192,7 +183,7 @@ export default function SelectModal({
                                 type="secondary"
                                 text={
                                     Array.isArray(selected) &&
-                                    selected.length >= listItems.length
+                                    selected.length >= items.length
                                         ? t("uncheck-all")
                                         : t("check-all")
                                 }
@@ -201,16 +192,13 @@ export default function SelectModal({
                         </View>
                     )}
                     <View style={{ maxHeight: "75%" }}>
-                        <FlatList
-                            data={listItems}
-                            renderItem={SelectListItems}
-                        />
+                        <FlatList data={items} renderItem={SelectListItems} />
                     </View>
                     <View style={styles.button}>
                         <Button
                             onPress={finishSelection}
                             text={t("finish-selection")}
-                        ></Button>
+                        />
                     </View>
                 </View>
             ) : (
