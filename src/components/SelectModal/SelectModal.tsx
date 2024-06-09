@@ -141,7 +141,7 @@ export default function SelectModal({
     }
 
     function checkUncheckAll() {
-        if (singleSelection) {
+        if (!singleSelection) {
             if (Array.isArray(selected) && selected.length >= items.length) {
                 setSelected([]);
             } else {

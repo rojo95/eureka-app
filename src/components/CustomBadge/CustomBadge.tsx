@@ -50,7 +50,7 @@ const CustomBadge: React.FC<Badge> = ({
                         customStyles,
                     ]}
                 >
-                    <Text style={colorStyle}>{children}</Text>
+                    <Text style={colorStyle}>{children} </Text>
                     {icon}
                 </Pressable>
             ) : (

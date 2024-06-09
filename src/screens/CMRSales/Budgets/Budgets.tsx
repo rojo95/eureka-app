@@ -30,12 +30,12 @@ import { setDateFormat } from "../../../utils/numbers";
 import { exportBudgets } from "../../../services/export-documents/exportDocuments";
 import { ParamsContext } from "../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../services/notifications/notifications";
-import CustomBadge from "../../../components/CustomBadge/CustomBadge";
 import { UserContext } from "../../../contexts/UserContext";
 import { getStatesApi } from "../../../services/states/states";
 import { getClientsApi } from "../../../services/clients/clients";
 import { getActivitiesApi } from "../../../services/activities/activities";
 import { getResponsiblesApi } from "../../../services/users/users";
+import BadgeBase from "./components/BadgeBase/BadgeBase";
 
 type FilterListItems = {
     id: number;
@@ -76,7 +76,7 @@ export default function Budgets() {
         []
     );
     const [titleFilter, setTitleFilter] = useState<string>("");
-    const [filterSelected, setFilterSelected] = useState("");
+    const [filterKey, setFilterKey] = useState("");
     const [filter, setFilter] = useState<Filter>({});
 
     const themedStyles = StyleSheet.create({
@@ -401,7 +401,7 @@ export default function Budgets() {
 
         items = items.map(itemFormatter);
         setFilterListItems(items);
-        setFilterSelected(type);
+        setFilterKey(type);
         setTitleFilter(t(`placeholder-select-${type}-multiple`));
         setShowModal(true);
         setTypeModal(2);
@@ -410,7 +410,7 @@ export default function Budgets() {
     function handleFilters(value: FilterListItems[] | FilterListItems) {
         setFilter((prev: Filter) => ({
             ...prev,
-            [filterSelected]: value,
+            [filterKey]: value,
         }));
     }
 
@@ -421,16 +421,13 @@ export default function Budgets() {
      */
     function rendererListType(param: number) {
         switch (param) {
-            case 1:
-                return <CreateBudget onClose={() => setShowModal(false)} />;
-
             case 2:
                 return (
                     <SelectModal
                         title={titleFilter}
                         data={itemsFilterItems}
-                        singleSelection={filterSelected === "client" && true}
-                        selectedValues={(filter as any)[filterSelected]}
+                        singleSelection={filterKey === "client" && true}
+                        selectedValues={(filter as any)[filterKey]}
                         setSelectedValues={handleFilters}
                         onClose={() => setShowModal(false)}
                     />
@@ -516,20 +513,6 @@ export default function Budgets() {
             });
         }
     }
-
-    const BadgeBase: FC<{ children: string; onPress: () => void }> = ({
-        children,
-        onPress,
-    }) => (
-        <CustomBadge
-            customStyles={styles.badge}
-            onPress={onPress}
-            colorStyle={{ color: theme.colors.primaryContrast }}
-            icon={<FontAwesome name="close" size={15} color="white" />}
-        >
-            {children}
-        </CustomBadge>
-    );
 
     return (
         <View style={[themedStyles.container, styles.container]}>
