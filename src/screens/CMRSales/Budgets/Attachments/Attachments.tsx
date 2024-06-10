@@ -109,7 +109,7 @@ export default function Attachments() {
             url,
         }).catch((e) => {
             notificationToast({
-                text: t("fail-downloading-document"),
+                text: t("fail-downloading-file"),
                 type: "danger",
             });
             setLoading(false);
@@ -118,7 +118,7 @@ export default function Attachments() {
 
         if (downloaded) {
             notificationToast({
-                text: t("success-downloading-document"),
+                text: t("success-downloading-file"),
                 type: "success",
             });
         }

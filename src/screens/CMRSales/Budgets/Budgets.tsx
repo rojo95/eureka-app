@@ -227,7 +227,6 @@ export default function Budgets() {
 
         const p = currentPage + 1;
 
-        setLoading(true);
         try {
             const filters = {
                 page: p,
@@ -252,17 +251,19 @@ export default function Budgets() {
             setBudgets((prevData) => [...prevData, ...budgets]);
         } catch (error) {
             console.error(error);
-            setLoading(false);
         }
         setCurrentPage(p);
-        setLoading(false);
     }
 
     /**
      * Fetch budgets when the component mounts or the page changes
      */
     useEffect(() => {
-        searchBudgets();
+        setLoading(true);
+        (async () => {
+            await searchBudgets();
+            setLoading(false);
+        })();
     }, [currentPage]);
 
     /**
@@ -500,17 +501,15 @@ export default function Budgets() {
         };
 
         const downloaded = await exportBudgets(filters).catch((e) => {
-            notificationToast({
-                text: `${t("fail-downloading-document")}.`,
+            return notificationToast({
+                text: `${t("fail-downloading-file")}.`,
                 type: "danger",
             });
-            setLoading(false);
-            return;
         });
 
-        if (downloaded === true) {
+        if (downloaded) {
             notificationToast({
-                text: `${t("success-downloading-document")}.`,
+                text: `${t("success-downloading-file")}.`,
                 type: "success",
             });
         }
