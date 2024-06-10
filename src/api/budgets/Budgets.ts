@@ -7,31 +7,18 @@ const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
 const { userKey, wcId: idWc } = sessionNames;
 
-type hoursTypes = {
-    normal: {
-        value: number;
-        enabled: boolean;
-        hidden: boolean;
-        label: string;
-    };
-    extra: {
-        value: number;
-        enabled: boolean;
-        hidden: boolean;
-        label: string;
-    };
-    night: {
-        value: number;
-        enabled: boolean;
-        label: string;
-        hidden: boolean;
-    };
-    fitosanitary: {
-        value: number;
-        enabled: boolean;
-        label: string;
-        hidden: boolean;
-    };
+type HourType = {
+    value: number;
+    enabled: boolean;
+    hidden: boolean;
+    label: string;
+};
+
+type HoursTypes = {
+    normal: HourType;
+    extra: HourType;
+    night: HourType;
+    fitosanitary: HourType;
 };
 
 type Activity = {
@@ -50,10 +37,10 @@ export type Tracking = {
     date: Date;
     deletedAt?: Date | null;
     done: boolean;
-    doneDate: Date | null;
+    doneDate?: Date | null;
     id: number;
     model: string;
-    modelId: 12119;
+    modelId: number;
     notes: string;
     personnel: {
         active: boolean;
@@ -70,7 +57,7 @@ export type Tracking = {
         email: string;
         id: number;
         inactiveDate?: Date | null;
-        insuranceNumber?: number | null;
+        insuranceNumber?: string | null;
         lastAccessed: Date;
         lastName: string;
         locality?: string | null;
@@ -84,7 +71,6 @@ export type Tracking = {
         signatureImage?: string | null;
         telephone?: string | null;
         type: string;
-        username?: string | null;
         wcId: number;
         workCenters: number[];
         zip?: string | null;
@@ -101,8 +87,6 @@ type Client = {
     clientContacts: any[];
     clientId?: number | null;
     code?: string | null;
-    colorClient?: string | null;
-    contasimpleId?: string | null;
     country?: string | null;
     createdAt: Date;
     customFields?: any | null;
@@ -164,7 +148,7 @@ export type Budget = {
         email: string;
         id: number;
         inactiveDate: Date;
-        insuranceNumber?: number | null;
+        insuranceNumber?: string | null;
         lastAccessed: Date;
         lastName: string;
         fullName: string;
@@ -179,7 +163,6 @@ export type Budget = {
         signatureImage?: string | null;
         telephone?: string | null;
         type: string;
-        username: string | null;
         wcId: number;
         workCenters: number[];
         zip?: string | null;
@@ -223,7 +206,7 @@ export type Budget = {
         externalId?: number | null;
         extraHourPrice: number;
         hourPrice: number;
-        hoursTypes: hoursTypes;
+        hoursTypes: HoursTypes;
         id: number;
         incomeGoal?: string | null;
         invoiceTemplateModel: string;
