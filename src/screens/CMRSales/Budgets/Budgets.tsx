@@ -594,7 +594,7 @@ export default function Budgets() {
                             }
                         >
                             {`${t("date-from").toLowerCase()}: ${setDateFormat({
-                                date: filter.createdFrom,
+                                date: new Date(filter.createdFrom),
                                 language,
                             })}`}
                         </BadgeBase>
@@ -609,7 +609,7 @@ export default function Budgets() {
                             }
                         >
                             {`${t("date-to").toLowerCase()}: ${setDateFormat({
-                                date: filter.createdTo,
+                                date: new Date(filter.createdTo),
                                 language,
                             })}`}
                         </BadgeBase>
