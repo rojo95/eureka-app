@@ -598,41 +598,6 @@ export async function getBudget({
 }
 
 /**
- *
- * @param param0
- * @param {number} param.budgetId
- * @returns
- */
-export async function getBudgetChapters({ budgetId }: { budgetId: number }) {
-    const Authorization = await getSecureData(userKey);
-    const url = `${API_URL}Budgets/getCompleteById?id=${budgetId}`;
-
-    const query: Chapter[] = await axios
-        .get(url, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization,
-            },
-        })
-        .then(async ({ request: { response } }) => {
-            const BudgetComplete = JSON.parse(response);
-
-            const chapters: Chapter[] = BudgetComplete.chapters;
-
-            return chapters;
-        })
-        .catch((err) => {
-            console.error(
-                "Error getting the budget information: ",
-                err.response || err.request || err
-            );
-            throw err;
-        });
-
-    return query;
-}
-
-/**
  * Function to get te budget tracking by budget id
  * @param param0
  * @param {number} param.budgetId
