@@ -206,8 +206,11 @@ export default function Budgets() {
             </View>
         </View>
     );
-    // set the drawer Content
-    setRightDrawerContent(rightDrawerContent);
+    useEffect(() => {
+        // set the drawer Content
+        setRightDrawerContent(rightDrawerContent);
+    }, []);
+
     // end of the right drawer context configuration
 
     /**
