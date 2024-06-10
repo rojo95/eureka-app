@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import FAB from "../../../components/FAB/FAB";
 import Modal from "../../../components/Modal/Modal";
 import CreateBudget from "./CreateBudget/CreateBudget";
-import { Budget, getBudgets } from "../../../api/budgets/Budgets";
+import { Budget, getBudgets } from "../../../api/budgets/budgets";
 import AppbarHeader from "../../../components/AppHeader/AppHeader";
 import { useNavigation } from "@react-navigation/native";
 import { RightDrawerContext } from "../../../contexts/Navigation/RightDrawerScreen";

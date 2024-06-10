@@ -18,7 +18,7 @@ import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import {
     Attachment,
     getBudgetAttachments,
-} from "../../../../api/budgets/Budgets";
+} from "../../../../api/budgets/budgets";
 import CleanCard from "../../../../components/Card/Card";
 import { downLoadRemoteFile } from "../../../../services/files/files";
 import Alert from "../../../../components/Alert/Alert";

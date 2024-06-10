@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import FAB from "../../../../components/FAB/FAB";
 import { Checkbox, DefaultTheme, useTheme } from "react-native-paper";
-import { Chapter, getBudgetChapters } from "../../../../api/budgets/Budgets";
+import { Chapter } from "../../../../api/budgets/budgets";
 import ItemCard from "./components/ItemCard/ItemCard";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../../services/notifications/notifications";
@@ -19,18 +19,15 @@ export default function Chapters() {
     const { t } = useTranslation();
 
     const {
-        contextParams: { budgetId },
+        contextParams: { budgetId, chapters: baseChapters },
     } = useContext(ParamsContext)!;
     const navigation: any = useNavigation();
     const [loading, setLoading] = useState<boolean>(true);
     const [selection, setSelection] = useState<boolean>(false);
     const [chapters, setChapter] = useState<Chapter[]>([]);
-    const [originalChapters, setOriginalChapter] = useState<Chapter[]>([]);
 
     async function getChapters() {
-        const chapters: Chapter[] = await getBudgetChapters({ budgetId });
-        setChapter(chapters);
-        setOriginalChapter(chapters);
+        setChapter(baseChapters);
         setLoading(false);
     }
 
@@ -40,7 +37,7 @@ export default function Chapters() {
             await getChapters();
             setLoading(false);
         })();
-    }, [budgetId]);
+    }, [budgetId, baseChapters]);
 
     const themedStyles = StyleSheet.create({
         container: {
@@ -49,7 +46,7 @@ export default function Chapters() {
     });
 
     function handleListUpdate(Chapters: Chapter[]) {
-        const settedList: Chapter[] = Chapters.map((v, k) => {
+        const settedList: Chapter[] = Chapters?.map((v, k) => {
             return { ...v, rank: `${k + 1}` };
         });
         setChapter(settedList);
@@ -104,7 +101,7 @@ export default function Chapters() {
             />
             {loading ? (
                 <></>
-            ) : (
+            ) : chapters?.length > 0 ? (
                 <View style={{ marginBottom: 150 }}>
                     <DraggableFlatList
                         data={chapters}
@@ -115,6 +112,8 @@ export default function Chapters() {
                         renderItem={renderItem}
                     />
                 </View>
+            ) : (
+                <></>
             )}
             <View style={{ flex: 1, marginTop: "-150%" }}>
                 <FAB

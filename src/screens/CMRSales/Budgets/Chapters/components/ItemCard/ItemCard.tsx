@@ -10,7 +10,7 @@ import { DefaultTheme, useTheme } from "react-native-paper";
 import CleanCard from "../../../../../../components/Card/Card";
 import { formatPrices } from "../../../../../../utils/numbers";
 import { UserContext } from "../../../../../../contexts/UserContext";
-import { Chapter } from "../../../../../../api/budgets/Budgets";
+import { Chapter } from "../../../../../../api/budgets/budgets";
 
 interface ItemCard extends PressableProps {
     data: Chapter;

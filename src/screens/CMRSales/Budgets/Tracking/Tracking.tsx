@@ -11,7 +11,7 @@ import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import {
     Tracking as TrackingType,
     getBudgetTracking,
-} from "../../../../api/budgets/Budgets";
+} from "../../../../api/budgets/budgets";
 import FAB from "../../../../components/FAB/FAB";
 import CleanCard from "../../../../components/Card/Card";
 import Button from "../../../../components/Button/Button";

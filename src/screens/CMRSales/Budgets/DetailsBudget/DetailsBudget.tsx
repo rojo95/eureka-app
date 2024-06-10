@@ -7,7 +7,7 @@ import { Image } from "expo-image";
 import { Feather } from "@expo/vector-icons";
 
 import AppHeader from "../../../../components/AppHeader/AppHeader";
-import { Budget, getBudget } from "../../../../api/budgets/Budgets";
+import { Budget, getBudget } from "../../../../api/budgets/budgets";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import Text from "../../../../components/Text/Text";
 import Button from "../../../../components/Button/Button";
@@ -26,12 +26,13 @@ import { UserContext } from "../../../../contexts/UserContext";
 export default function DetailsBudget() {
     const {
         contextParams: { budgetId },
+        setContextParams,
     } = useContext(ParamsContext)!;
     const { language } = useContext(UserContext);
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
 
-    const [data, setData] = useState<Budget | null>(null);
+    const [budgetDetails, setBudgetDetails] = useState<Budget | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [totalCost, setTotalCost] = useState<string>("");
     const [totalSale, setTotalSale] = useState<string>("");
@@ -40,7 +41,11 @@ export default function DetailsBudget() {
 
     async function getDetails() {
         const info = await getBudget({ budgetId });
-        setData(info);
+        setContextParams((prev: any) => ({
+            ...prev,
+            chapters: info?.chapters,
+        }));
+        setBudgetDetails(info);
     }
 
     /**
@@ -49,26 +54,26 @@ export default function DetailsBudget() {
     useEffect(() => {
         (() => {
             const totalCost = formatPrices({
-                number: data?.totalCost! || 0,
+                number: budgetDetails?.totalCost! || 0,
                 language,
             });
             const totalSale = formatPrices({
-                number: data?.totalSale! || 0,
+                number: budgetDetails?.totalSale! || 0,
                 language,
             });
             const kTotal = formatPrices({
                 number:
                     calculateKTotal({
-                        totalCost: data?.totalCost!,
-                        totalSale: data?.totalSale!,
+                        totalCost: budgetDetails?.totalCost!,
+                        totalSale: budgetDetails?.totalSale!,
                     }) || 0,
                 language,
             });
             const totalMarginProfit = formatPrices({
                 number:
                     calculateMarginProfit({
-                        totalCost: data?.totalCost!,
-                        totalSale: data?.totalSale!,
+                        totalCost: budgetDetails?.totalCost!,
+                        totalSale: budgetDetails?.totalSale!,
                     }) || 0,
                 language,
             });
@@ -77,7 +82,7 @@ export default function DetailsBudget() {
             setTotalKTotal(kTotal);
             setTotalMarginProfit(totalMarginProfit);
         })();
-    }, [data]);
+    }, [budgetDetails]);
 
     useEffect(() => {
         setLoading(true);
@@ -109,13 +114,13 @@ export default function DetailsBudget() {
                 actions={[{ icon: "dots-vertical" }]}
                 subtitle={t("information-label")}
             />
-            {!data || loading ? (
+            {!budgetDetails || loading ? (
                 <ActivityIndicator size="large" />
             ) : (
                 <View>
                     <ScrollView style={[styles.content]}>
                         <View style={styles.containerCode}>
-                            <Text>{data?.number}</Text>
+                            <Text>{budgetDetails?.number}</Text>
                             <View>
                                 <Button
                                     type="link"
@@ -135,7 +140,7 @@ export default function DetailsBudget() {
                             </View>
                         </View>
                         <Text style={[styles.title, stylesThemed.text]}>
-                            {data.title}
+                            {budgetDetails.title}
                         </Text>
                         <CustomBadge
                             customStyles={{
@@ -143,16 +148,16 @@ export default function DetailsBudget() {
                                 paddingHorizontal: 10,
                                 color: theme.colors.dark,
                                 backgroundColor: getColorState({
-                                    statusId: data.state.id,
+                                    statusId: budgetDetails.state.id,
                                     theme,
                                 }),
                             }}
                         >
-                            {data?.state?.name}
+                            {budgetDetails?.state?.name}
                         </CustomBadge>
                         <Text>
                             {setDateFormat({
-                                date: new Date(data.createdAt),
+                                date: new Date(budgetDetails.createdAt),
                                 language,
                             })}
                         </Text>
@@ -168,11 +173,11 @@ export default function DetailsBudget() {
                                     size={50}
                                     color="black"
                                 />
-                                <Text>{data.totalHours}</Text>
+                                <Text>{budgetDetails.totalHours}</Text>
                             </View>
                             <Image
                                 source={
-                                    data.client.profileImage ||
+                                    budgetDetails.client.profileImage ||
                                     require("../../../../../assets/avatar-pending.jpg")
                                 }
                                 style={{
@@ -200,14 +205,16 @@ export default function DetailsBudget() {
                         </View>
                         <View style={styles.mapContainer}>
                             <View style={styles.mapAddress}>
-                                {data?.place ? (
+                                {budgetDetails?.place ? (
                                     <View>
                                         <MaterialCommunityIcons
                                             name="map-marker-outline"
                                             size={24}
                                             color="black"
                                         />
-                                        <Text>{data?.place?.name}</Text>
+                                        <Text>
+                                            {budgetDetails?.place?.name}
+                                        </Text>
                                     </View>
                                 ) : (
                                     <Text>{t("no-address-provided")}</Text>
@@ -217,19 +224,23 @@ export default function DetailsBudget() {
                             <Map
                                 mapStyle={{ height: 200 }}
                                 markerPreset={
-                                    data?.place
+                                    budgetDetails?.place
                                         ? {
-                                              latitude: data?.place?.lat,
-                                              longitude: data?.place?.lng,
+                                              latitude:
+                                                  budgetDetails?.place?.lat,
+                                              longitude:
+                                                  budgetDetails?.place?.lng,
                                           }
                                         : null
                                 }
                                 address={
-                                    data?.place
+                                    budgetDetails?.place
                                         ? {
-                                              latitude: data?.place?.lat,
+                                              latitude:
+                                                  budgetDetails?.place?.lat,
                                               latitudeDelta: 17.679489473469285,
-                                              longitude: data?.place?.lng,
+                                              longitude:
+                                                  budgetDetails?.place?.lng,
                                               longitudeDelta: 12.98109669238329,
                                           }
                                         : null
