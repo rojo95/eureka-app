@@ -2,7 +2,6 @@ import {
     FlatList,
     ListRenderItem,
     Pressable,
-    ScrollView,
     StyleSheet,
     View,
     useWindowDimensions,
@@ -16,29 +15,32 @@ import { DefaultTheme, useTheme } from "react-native-paper";
 import Text from "../../../../components/Text/Text";
 import Button from "../../../../components/Button/Button";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
-import { getBudgetAttachment } from "../../../../services/budgets/Budgets";
-import CleanCard from "../../../../components/Card/Card";
 import {
-    deleteRemoteBudgetDocument,
-    downLoadRemoteDocument,
-    sendAttachmentBudget,
-} from "../../../../services/files/files";
+    Attachment,
+    getBudgetAttachments,
+} from "../../../../api/budgets/Budgets";
+import CleanCard from "../../../../components/Card/Card";
+import { downLoadRemoteFile } from "../../../../services/files/files";
 import Alert from "../../../../components/Alert/Alert";
 import FAB from "../../../../components/FAB/FAB";
 import { notificationToast } from "../../../../services/notifications/notifications";
+import {
+    deleteBudgetAttachment,
+    uploadBudgetAttachment,
+} from "../../../../api/attachments/attchments";
 
 export default function Attachments() {
     const constants = Constants.expoConfig?.extra;
     const API_URL = constants?.API_URL;
     const API_URL_FRAGMENT = constants?.API_URL_FRAGMENT;
     const {
-        contextParams: { itemId },
+        contextParams: { budgetId },
     } = useContext(ParamsContext)!;
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
     const { width, height } = useWindowDimensions();
 
-    const [data, setData] = useState<any[]>([]);
+    const [data, setAttachments] = useState<Attachment[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [alert, setAlert] = useState<boolean>(false);
     const [alertConfig, setAlertConfig] = useState<{
@@ -56,8 +58,8 @@ export default function Attachments() {
      * function to get the budget attachments by ID
      */
     async function getAttachments() {
-        const info = await getBudgetAttachment({ id: itemId });
-        setData(info);
+        const attachments = await getBudgetAttachments({ budgetId });
+        setAttachments(attachments);
     }
 
     useEffect(() => {
@@ -66,14 +68,14 @@ export default function Attachments() {
             await getAttachments();
             setLoading(false);
         })();
-    }, [itemId]);
+    }, [budgetId]);
 
     /**
-     * function to ask if the user want to download a document
-     * @param param0
+     * Asks the user to confirm an action before performing it.
+     * @param {{ text: string, accept: () => void }} options
      * @returns
      */
-    async function askFunction({
+    async function confirmAction({
         text,
         accept,
     }: {
@@ -88,22 +90,22 @@ export default function Attachments() {
     }
 
     /**
-     * funciton to download documents
+     * funciton to download attachments
      * @param param0
-     * @param {string} param.documentName
+     * @param {string} param.fileName
      * @param {URL} param.url
      */
-    async function downLoadDocument({
-        documentName,
+    async function downloadAttachment({
+        fileName,
         url,
     }: {
-        documentName: string;
+        fileName: string;
         url: URL;
     }) {
         if (loading) return;
         setLoading(true);
-        const downloaded = await downLoadRemoteDocument({
-            documentName,
+        const downloaded = await downLoadRemoteFile({
+            fileName,
             url,
         }).catch((e) => {
             notificationToast({
@@ -114,7 +116,7 @@ export default function Attachments() {
             return;
         });
 
-        if (downloaded === true) {
+        if (downloaded) {
             notificationToast({
                 text: t("success-downloading-document"),
                 type: "success",
@@ -129,10 +131,10 @@ export default function Attachments() {
      * @param {number} param.id
      * @returns
      */
-    async function deleteDocument({ id }: { id: number }) {
+    async function deleteAttachment({ id }: { id: number }) {
         if (loading) return;
         setLoading(true);
-        const deleted = await deleteRemoteBudgetDocument({ id }).catch((e) => {
+        const deleted = await deleteBudgetAttachment({ id }).catch((e) => {
             notificationToast({
                 text: t("fail-deleting-file"),
                 type: "danger",
@@ -147,7 +149,7 @@ export default function Attachments() {
                 type: "success",
             });
 
-            setData((prevData) => {
+            setAttachments((prevData) => {
                 const objectIndex = prevData.findIndex((v) => v.id === id);
                 return objectIndex !== -1
                     ? prevData.filter((v) => v.id !== id)
@@ -157,9 +159,9 @@ export default function Attachments() {
         setLoading(false);
     }
 
-    async function uploadBudgetDocument() {
+    async function uploadAttachment() {
         setLoading(true);
-        const file = await sendAttachmentBudget({ idBudget: itemId }).catch(
+        const file = await uploadBudgetAttachment({ idBudget: budgetId }).catch(
             (err) =>
                 notificationToast({
                     text: t("error-uploading-file"),
@@ -168,21 +170,11 @@ export default function Attachments() {
         );
 
         if (file) {
-            if (file.error) {
-                notificationToast({
-                    text: t("error-uploading-file"),
-                    type: "danger",
-                });
-            } else {
-                notificationToast({
-                    text: t("file-successfully-uploaded"),
-                    type: "success",
-                });
-                setData((prevData) => [
-                    ...prevData,
-                    { name: file.name, id: file.id },
-                ]);
-            }
+            notificationToast({
+                text: t("file-successfully-uploaded"),
+                type: "success",
+            });
+            setAttachments((prevData) => [...prevData, file]);
         }
         setLoading(false);
     }
@@ -196,21 +188,21 @@ export default function Attachments() {
     }
 
     /**
-     * function component to render the item list document
+     * function component to render the attachment list item
      * @returns
      */
-    const renderItem: ListRenderItem<any> = ({ item }) => {
+    const renderItem: ListRenderItem<Attachment> = ({ item }) => {
         return (
             <CleanCard>
                 <Pressable
                     onPress={() =>
-                        askFunction({
+                        confirmAction({
                             text: `${t("wish-download-document")}: ${
                                 item.name
                             }`,
                             accept: () =>
-                                downLoadDocument({
-                                    documentName: item.name,
+                                downloadAttachment({
+                                    fileName: item.name,
                                     url: new URL(
                                         `${API_URL}containers/${API_URL_FRAGMENT}/download/${item.name}`
                                     ),
@@ -247,12 +239,12 @@ export default function Attachments() {
                         >
                             <Button
                                 onPress={() =>
-                                    askFunction({
+                                    confirmAction({
                                         text: `${t("wish-delete-file")}: ${
                                             item.name
                                         }`,
                                         accept: () =>
-                                            deleteDocument({ id: item.id }),
+                                            deleteAttachment({ id: item.id }),
                                     })
                                 }
                                 type="link"
@@ -312,7 +304,7 @@ export default function Attachments() {
                 >
                     <Button
                         text={t("add-new-document")}
-                        onPress={uploadBudgetDocument}
+                        onPress={uploadAttachment}
                     />
                 </View>
                 {loading && data.length <= 0 ? (

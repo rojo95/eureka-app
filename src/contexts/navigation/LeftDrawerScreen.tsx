@@ -11,15 +11,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Budgets from "../../screens/CMRSales/Budgets/Budgets";
 import HomeScreen from "../../screens/Home/Home";
-import CustomDrawer from "./CustomDrawer";
 import Configs from "../../screens/Configs/Configs";
 import LoginScreen from "../../screens/Login/Login";
 import { UserContext } from "../UserContext";
 import Chapters from "../../screens/CMRSales/Budgets/Chapters/Chapters";
-import RightDrawerScreen from "./RightDrawerScreen";
 import DetailsBudget from "../../screens/CMRSales/Budgets/DetailsBudget/DetailsBudget";
 import Tracking from "../../screens/CMRSales/Budgets/Tracking/Tracking";
 import Attachments from "../../screens/CMRSales/Budgets/Attachments/Attachments";
+import RightDrawerScreen from "./RightDrawerScreen";
+import CustomDrawer from "./CustomDrawer";
 
 const LeftDrawer = createDrawerNavigator();
 
@@ -154,7 +154,6 @@ export default function LeftDrawerScreen() {
                                 />
                             ),
                         }}
-                        initialParams={{ itemId: null }}
                     />
                     <LeftDrawer.Screen
                         name="configs"

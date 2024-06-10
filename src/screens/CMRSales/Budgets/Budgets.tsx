@@ -13,13 +13,10 @@ import { useTranslation } from "react-i18next";
 import FAB from "../../../components/FAB/FAB";
 import Modal from "../../../components/Modal/Modal";
 import CreateBudget from "./CreateBudget/CreateBudget";
-import {
-    Budgets as BudgetsInterface,
-    getBudgets,
-} from "../../../services/budgets/Budgets";
+import { Budget, getBudgets } from "../../../api/budgets/Budgets";
 import AppbarHeader from "../../../components/AppHeader/AppHeader";
 import { useNavigation } from "@react-navigation/native";
-import { RightDrawerContext } from "../../../contexts/navigation/RightDrawerScreen";
+import { RightDrawerContext } from "../../../contexts/Navigation/RightDrawerScreen";
 import Button from "../../../components/Button/Button";
 import { DatePickerInput } from "react-native-paper-dates";
 import { FontAwesome } from "@expo/vector-icons";
@@ -27,14 +24,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import SelectModal from "../../../components/SelectModal/SelectModal";
 import Alert from "../../../components/Alert/Alert";
 import { setDateFormat } from "../../../utils/numbers";
-import { exportBudgets } from "../../../services/export-documents/exportDocuments";
+import { exportBudgets } from "../../../api/export-documents/export-documents";
 import { ParamsContext } from "../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../services/notifications/notifications";
 import { UserContext } from "../../../contexts/UserContext";
-import { getStatesApi } from "../../../services/states/states";
-import { getClientsApi } from "../../../services/clients/clients";
-import { getActivitiesApi } from "../../../services/activities/activities";
-import { getResponsiblesApi } from "../../../services/users/users";
+import { getStatesApi } from "../../../api/states/states";
+import { getClientsApi } from "../../../api/clients/clients";
+import { getActivitiesApi } from "../../../api/activities/activities";
+import { getResponsiblesApi } from "../../../api/personnels/personnels";
 import BadgeBase from "./components/BadgeBase/BadgeBase";
 
 type FilterListItems = {
@@ -65,7 +62,7 @@ export default function Budgets() {
     const [text, setText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
-    const [budgets, setBudgets] = useState<BudgetsInterface[]>([]);
+    const [budgets, setBudgets] = useState<Budget[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [totalBudgets, setTotalBudgets] = useState<number>(0);
     const [limit, setLimit] = useState<number>(10);
@@ -281,8 +278,13 @@ export default function Budgets() {
      * Handle refreshing the list
      */
     const handleRefresh = () => {
-        setBudgets([]);
-        setCurrentPage(0);
+        async function restartBudgets() {
+            setBudgets([]);
+        }
+        (async () => {
+            await restartBudgets();
+            setCurrentPage(0);
+        })();
     };
 
     /**
@@ -290,7 +292,7 @@ export default function Budgets() {
      * @param {number} item
      */
     const handlePress = (item: number) => {
-        setContextParams({ itemId: item });
+        setContextParams({ budgetId: item });
         navigation.navigate(`budget`);
     };
 
@@ -300,7 +302,7 @@ export default function Budgets() {
      * @param param0
      * @returns
      */
-    const renderItem: ListRenderItem<any> = ({ item }) => (
+    const renderItem: ListRenderItem<Budget> = ({ item }) => (
         <BudgetsCard
             onPress={() => handlePress(item.id)}
             number={item.number}

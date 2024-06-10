@@ -53,20 +53,19 @@ const BudgetsCard = ({
     });
 
     useEffect(() => {
-        const formatCostAndSale = async () => {
-            const formattedCost = await formatPrices({
-                number: totalCost,
+        (() => {
+            const formattedCost = formatPrices({
+                number: totalCost || 0,
                 language,
             });
-            const formattedSale = await formatPrices({
-                number: totalSale,
+            const formattedSale = formatPrices({
+                number: totalSale || 0,
                 language,
             });
+
             setFormattedCost(formattedCost);
             setFormattedSale(formattedSale);
-        };
-
-        formatCostAndSale();
+        })();
     }, [totalCost, totalSale]);
 
     return (

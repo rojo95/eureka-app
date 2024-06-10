@@ -10,10 +10,10 @@ import { DefaultTheme, useTheme } from "react-native-paper";
 import CleanCard from "../../../../../../components/Card/Card";
 import { formatPrices } from "../../../../../../utils/numbers";
 import { UserContext } from "../../../../../../contexts/UserContext";
-import { ItemChapter } from "../../Chapters";
+import { Chapter } from "../../../../../../api/budgets/Budgets";
 
 interface ItemCard extends PressableProps {
-    data: ItemChapter;
+    data: Chapter;
 }
 
 export default function ItemCard({
@@ -27,22 +27,18 @@ export default function ItemCard({
     const [formattedTotalSale, setTotalSale] = useState<string>("");
 
     useEffect(() => {
-        const formatCostAndSale = async () => {
-            const formattedTotalCost = await formatPrices({
-                number: totalCost,
+        (() => {
+            const formattedTotalCost = formatPrices({
+                number: totalCost || 0,
                 language,
             });
-            const formattedTotalSale = await formatPrices({
-                number: totalSale,
+            const formattedTotalSale = formatPrices({
+                number: totalSale || 0,
                 language,
             });
             setFormattedTotalCost(formattedTotalCost);
             setTotalSale(formattedTotalSale);
-        };
-
-        formatCostAndSale();
-
-        return () => {};
+        })();
     }, [totalCost, totalSale]);
 
     const stylesThemed = StyleSheet.create({

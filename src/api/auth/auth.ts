@@ -1,15 +1,15 @@
 import axios from "axios";
 import Constants from "expo-constants";
-import sessionNames from "./sessionInfo";
-import { getUserData } from "../services/users/users";
+import sessionNames from "../../utils/sessionInfo";
+import { getUserData } from "../personnels/personnels";
 import {
     deleteSecureData,
     saveSecureData,
-} from "../services/storeData/storeData";
+} from "../../services/store-data/store-data";
 
 const constants = Constants.expoConfig?.extra;
 
-const { role, userKey, idUser, wcId: idWc } = sessionNames;
+const { role, userKey, userId: idUser, wcId: idWc } = sessionNames;
 
 export interface LoginProps {
     email: string;

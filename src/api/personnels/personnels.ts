@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getSecureData } from "../storeData/storeData";
+import { getSecureData } from "../../services/store-data/store-data";
 import Constants from "expo-constants";
 import sessionNames from "../../utils/sessionInfo";
 

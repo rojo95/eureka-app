@@ -55,7 +55,7 @@ export async function getSecureData(
 }
 
 /**
- * functio to delete the secure storage data
+ * function to delete the secure storage data
  *
  * @param {string} key
  */

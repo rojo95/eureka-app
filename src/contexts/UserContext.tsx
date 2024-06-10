@@ -1,12 +1,12 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import { getData, getSecureData } from "../services/storeData/storeData";
-import { login as loginFn, logout as logoutFn } from "../utils/login";
-import { getUserData } from "../services/users/users";
+import { getData, getSecureData } from "../services/store-data/store-data";
+import { login as loginFn, logout as logoutFn } from "../api/auth/auth";
+import { getUserData } from "../api/personnels/personnels";
 import sessionNames from "../utils/sessionInfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18next from "../services/languages/i18next";
 
-const { userKey, idUser, lang } = sessionNames;
+const { userKey, userId, lang } = sessionNames;
 
 type User = {
     id: number;
@@ -46,7 +46,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     const fetchUser = async () => {
         const userKeyData = await getSecureData(userKey);
-        const id = await getSecureData(idUser);
+        const id = await getSecureData(userId);
 
         if (userKeyData && id) {
             const {

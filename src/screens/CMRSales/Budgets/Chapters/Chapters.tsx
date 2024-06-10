@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet } from "react-native";
 import DraggableFlatList, {
     RenderItemParams,
     ScaleDecorator,
@@ -9,50 +9,38 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import FAB from "../../../../components/FAB/FAB";
 import { Checkbox, DefaultTheme, useTheme } from "react-native-paper";
-import { getBudget } from "../../../../services/budgets/Budgets";
+import { Chapter, getBudgetChapters } from "../../../../api/budgets/Budgets";
 import ItemCard from "./components/ItemCard/ItemCard";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../../services/notifications/notifications";
-
-export type ItemChapter = {
-    key: string;
-    id: number;
-    rank: string;
-    description: string;
-    totalCost: number;
-    totalSale: number;
-};
 
 export default function Chapters() {
     const theme: DefaultTheme = useTheme();
     const { t } = useTranslation();
 
     const {
-        contextParams: { itemId },
+        contextParams: { budgetId },
     } = useContext(ParamsContext)!;
     const navigation: any = useNavigation();
     const [loading, setLoading] = useState<boolean>(true);
     const [selection, setSelection] = useState<boolean>(false);
-    const [data, setData] = useState<ItemChapter[]>([]);
+    const [chapters, setChapter] = useState<Chapter[]>([]);
+    const [originalChapters, setOriginalChapter] = useState<Chapter[]>([]);
 
     async function getChapters() {
-        const info = await getBudget({ id: itemId });
-        const chapters: ItemChapter[] = info?.chapters?.map(
-            (v: ItemChapter, i: number) => ({
-                ...v,
-                key: `${i}`,
-            })
-        );
-        setData(chapters);
+        const chapters: Chapter[] = await getBudgetChapters({ budgetId });
+        setChapter(chapters);
+        setOriginalChapter(chapters);
         setLoading(false);
     }
 
     useEffect(() => {
-        getChapters();
-        return () => {
-            setLoading(true);
-        };
-    }, [itemId]);
+        setLoading(true);
+        (async () => {
+            await getChapters();
+            setLoading(false);
+        })();
+    }, [budgetId]);
 
     const themedStyles = StyleSheet.create({
         container: {
@@ -60,11 +48,11 @@ export default function Chapters() {
         },
     });
 
-    function handleListUpdate(listItems: ItemChapter[]) {
-        const settedList: ItemChapter[] = listItems.map((v, k) => {
+    function handleListUpdate(Chapters: Chapter[]) {
+        const settedList: Chapter[] = Chapters.map((v, k) => {
             return { ...v, rank: `${k + 1}` };
         });
-        setData(settedList);
+        setChapter(settedList);
     }
 
     async function saveChanges() {
@@ -79,7 +67,7 @@ export default function Chapters() {
         item,
         drag,
         isActive,
-    }: RenderItemParams<ItemChapter>) => {
+    }: RenderItemParams<Chapter>) => {
         return (
             <ScaleDecorator>
                 {selection && <Checkbox status="checked" />}
@@ -119,11 +107,11 @@ export default function Chapters() {
             ) : (
                 <View style={{ marginBottom: 150 }}>
                     <DraggableFlatList
-                        data={data}
+                        data={chapters}
                         onDragEnd={({ data }) => {
                             handleListUpdate(data);
                         }}
-                        keyExtractor={(item) => item.key}
+                        keyExtractor={(item, k) => k.toString()}
                         renderItem={renderItem}
                     />
                 </View>

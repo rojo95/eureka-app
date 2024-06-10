@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
-import { getBudgetTracking } from "../../../../services/budgets/Budgets";
+import { getBudgetTracking } from "../../../../api/budgets/Budgets";
 import FAB from "../../../../components/FAB/FAB";
 import CleanCard from "../../../../components/Card/Card";
 import Button from "../../../../components/Button/Button";
@@ -18,11 +18,11 @@ import { notificationToast } from "../../../../services/notifications/notificati
 
 export default function Tracking() {
     const {
-        contextParams: { itemId },
+        contextParams: { budgetId },
     } = useContext(ParamsContext)!;
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
-    const [data, setData] = useState<any[]>([]);
+    const [tracking, setTracking] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     const themedStyles = StyleSheet.create({
@@ -35,19 +35,20 @@ export default function Tracking() {
      * function to get the tracking
      */
     async function getTracking() {
-        const info = await getBudgetTracking({ id: itemId });
-        setData(info);
-        setLoading(false);
+        const info = await getBudgetTracking({ budgetId });
+        setTracking(info);
     }
 
     /**
-     * apply when the itemId change
+     * apply when the budgetId change
      */
     useEffect(() => {
         setLoading(true);
-        getTracking();
-        return () => {};
-    }, [itemId]);
+        (async () => {
+            await getTracking();
+            setLoading(false);
+        })();
+    }, [budgetId]);
 
     /**
      * content to render the information
@@ -142,12 +143,12 @@ export default function Tracking() {
             >
                 {loading ? (
                     <ActivityIndicator size="large" />
-                ) : data.length > 0 ? (
+                ) : tracking.length > 0 ? (
                     <FlatList
                         style={{
                             width: "100%",
                         }}
-                        data={data}
+                        data={tracking}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={renderItem}
                     />

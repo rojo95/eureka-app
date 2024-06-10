@@ -7,7 +7,7 @@ import { Image } from "expo-image";
 import { Feather } from "@expo/vector-icons";
 
 import AppHeader from "../../../../components/AppHeader/AppHeader";
-import { getBudget } from "../../../../services/budgets/Budgets";
+import { Budget, getBudget } from "../../../../api/budgets/Budgets";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
 import Text from "../../../../components/Text/Text";
 import Button from "../../../../components/Button/Button";
@@ -25,13 +25,13 @@ import { UserContext } from "../../../../contexts/UserContext";
 
 export default function DetailsBudget() {
     const {
-        contextParams: { itemId },
+        contextParams: { budgetId },
     } = useContext(ParamsContext)!;
     const { language } = useContext(UserContext);
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
 
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<Budget | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [totalCost, setTotalCost] = useState<string>("");
     const [totalSale, setTotalSale] = useState<string>("");
@@ -39,7 +39,7 @@ export default function DetailsBudget() {
     const [totalMarginProfit, setTotalMarginProfit] = useState<string>("");
 
     async function getDetails() {
-        const info = await getBudget({ id: itemId });
+        const info = await getBudget({ budgetId });
         setData(info);
         setLoading(false);
     }
@@ -48,46 +48,45 @@ export default function DetailsBudget() {
      * function to format the supplied costs and sales
      */
     useEffect(() => {
-        const formatCostAndSale = async () => {
-            const totalCost = await formatPrices({
-                number: data?.totalCost,
+        (() => {
+            const totalCost = formatPrices({
+                number: data?.totalCost! || 0,
                 language,
             });
-            const totalSale = await formatPrices({
-                number: data?.totalSale,
+            const totalSale = formatPrices({
+                number: data?.totalSale! || 0,
                 language,
             });
-            const kTotal = await formatPrices({
-                number: calculateKTotal({
-                    totalCost: data.totalCost,
-                    totalSale: data.totalSale,
-                }),
+            const kTotal = formatPrices({
+                number:
+                    calculateKTotal({
+                        totalCost: data?.totalCost!,
+                        totalSale: data?.totalSale!,
+                    }) || 0,
                 language,
             });
-            const totalMarginProfit = await formatPrices({
-                number: calculateMarginProfit({
-                    totalCost: data.totalCost,
-                    totalSale: data.totalSale,
-                }),
+            const totalMarginProfit = formatPrices({
+                number:
+                    calculateMarginProfit({
+                        totalCost: data?.totalCost!,
+                        totalSale: data?.totalSale!,
+                    }) || 0,
                 language,
             });
             setTotalCost(totalCost);
             setTotalSale(totalSale);
             setTotalKTotal(kTotal);
             setTotalMarginProfit(totalMarginProfit);
-        };
-
-        formatCostAndSale();
-
-        return () => {};
+        })();
     }, [data]);
 
     useEffect(() => {
         setLoading(true);
-        getDetails();
-
-        return () => {};
-    }, [itemId]);
+        (async () => {
+            await getDetails();
+            setLoading(false);
+        })();
+    }, [budgetId]);
 
     const stylesThemed = StyleSheet.create({
         container: {

@@ -1,11 +1,11 @@
 import { createUrl } from "../../utils/functions";
-import { downLoadRemoteDocument } from "../files/files";
 import Constants from "expo-constants";
 import sessionNames from "../../utils/sessionInfo";
-import { getSecureData } from "../storeData/storeData";
+import { getSecureData } from "../../services/store-data/store-data";
 import { setDateFormat } from "../../utils/numbers";
 import axios from "axios";
 import { Language } from "../../contexts/UserContext";
+import { downLoadRemoteFile } from "../../services/files/files";
 
 const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
@@ -247,8 +247,8 @@ export async function exportBudgets({
         })
     );
 
-    return await downLoadRemoteDocument({
-        documentName: document,
+    return await downLoadRemoteFile({
+        fileName: document,
         url: finalUrl,
     });
 }

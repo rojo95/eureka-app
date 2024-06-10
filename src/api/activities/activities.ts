@@ -1,17 +1,29 @@
 import Constants from "expo-constants";
 import sessionNames from "../../utils/sessionInfo";
-import { getSecureData } from "../storeData/storeData";
+import { getSecureData } from "../../services/store-data/store-data";
 import axios from "axios";
 
 const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
-const { userKey } = sessionNames;
+const { userKey, wcId: idWc } = sessionNames;
 
-export async function getStatesApi(): Promise<any[]> {
+/**
+ * Function to get the activities list
+ * @returns
+ */
+export async function getActivitiesApi(): Promise<any[]> {
     const Authorization = await getSecureData(userKey);
-    const url = `${API_URL}BudgetStates`;
+    const url = `${API_URL}Activities`;
+    const wcId = ((await getSecureData(idWc)) || "").split(",");
+    const params = {
+        where: { wcId: { inq: wcId }, activityTypeId: { neq: 3 } },
+        include: "activityType",
+        order: "name asc",
+    };
+
     const query = await axios
         .get(url, {
+            params: { filter: JSON.stringify(params) },
             headers: {
                 "Content-Type": "application/json",
                 Authorization,
@@ -23,7 +35,7 @@ export async function getStatesApi(): Promise<any[]> {
         })
         .catch((err) => {
             console.error(
-                "Error getting the state data: ",
+                "Error getting the activities data: ",
                 err.response || err.request || err
             );
             throw err;

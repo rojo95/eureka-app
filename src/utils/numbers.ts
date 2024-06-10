@@ -20,13 +20,13 @@ export function setDateFormat({
     return newDate;
 }
 
-export async function formatPrices({
+export function formatPrices({
     number,
     language,
 }: {
     number: number;
     language: Language;
-}): Promise<string> {
+}): string {
     const locale = getLocale({ locale: language });
-    return parseFloat(number.toFixed(2)).toLocaleString(locale);
+    return parseFloat(number?.toFixed(2)).toLocaleString(locale);
 }

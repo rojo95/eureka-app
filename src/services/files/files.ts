@@ -1,17 +1,9 @@
 import * as FileSystem from "expo-file-system";
 import { Platform } from "react-native";
 import { StorageAccessFramework } from "expo-file-system";
-import Constants from "expo-constants";
-import axios from "axios";
 import * as DocumentPicker from "expo-document-picker";
-import sessionNames from "../../utils/sessionInfo";
-import { getSecureData } from "../storeData/storeData";
 
 const AppDocsDir = FileSystem.cacheDirectory + "Eureka/";
-const constants = Constants.expoConfig?.extra;
-const API_URL = constants?.API_URL;
-const API_URL_FRAGMENT = constants?.API_URL_FRAGMENT;
-const { userKey } = sessionNames;
 
 /**
  * function to generate the local file uri
@@ -26,7 +18,7 @@ const generateFileUri = (fileName: string) => AppDocsDir + `${fileName}`;
  * @param fileName
  * @returns
  */
-const getMimeType = (fileName: string) => {
+export const getMimeType = (fileName: string) => {
     const extension = fileName.split(".").pop();
     switch (extension) {
         case "pdf":
@@ -49,7 +41,7 @@ const getMimeType = (fileName: string) => {
     }
 };
 
-function restrictFileTypes({ name }: { name: string }): boolean {
+export function restrictFileTypes({ name }: { name: string }): boolean {
     const type = getMimeType(name);
 
     return type !== "application/octet-stream";
@@ -68,17 +60,17 @@ async function ensureDirExists() {
 }
 
 /**
- * Function to download the remote documents
+ * Function to download the remote filess
  * @param param0
- * @param {string} param.documentName
+ * @param {string} param.fileName
  * @param {URL} param.url
  * @returns
  */
-export async function downLoadRemoteDocument({
-    documentName,
+export async function downLoadRemoteFile({
+    fileName,
     url,
 }: {
-    documentName: string;
+    fileName: string;
     url: URL;
 }): Promise<boolean> {
     const { OS } = Platform;
@@ -95,7 +87,7 @@ export async function downLoadRemoteDocument({
         try {
             await ensureDirExists();
 
-            const fileUri = generateFileUri(documentName);
+            const fileUri = generateFileUri(fileName);
 
             const permissions =
                 await StorageAccessFramework.requestDirectoryPermissionsAsync();
@@ -105,7 +97,7 @@ export async function downLoadRemoteDocument({
                 );
             }
 
-            // temporary document storage
+            // the file is stored temporarily
             const tempDownloadRes = await FileSystem.downloadAsync(
                 url.toString(),
                 fileUri,
@@ -123,7 +115,7 @@ export async function downLoadRemoteDocument({
 
             // copy file to an accessible directory
             const docsDirectory = permissions.directoryUri;
-            const fileName = documentName.split("/").pop();
+            fileName = fileName.split("/").pop()!;
 
             // Get file content
             const fileContent = await FileSystem.readAsStringAsync(fileUri, {
@@ -134,8 +126,8 @@ export async function downLoadRemoteDocument({
             const destinationFileUri =
                 await StorageAccessFramework.createFileAsync(
                     docsDirectory,
-                    fileName!,
-                    getMimeType(fileName!)
+                    fileName,
+                    getMimeType(fileName)
                 );
             await FileSystem.writeAsStringAsync(
                 destinationFileUri,
@@ -143,129 +135,30 @@ export async function downLoadRemoteDocument({
                 {
                     encoding: FileSystem.EncodingType.Base64,
                 }
-            );
+            ).catch((e) => {
+                throw e;
+            });
 
             // Delete temporary file
-            await FileSystem.deleteAsync(fileUri);
+            await FileSystem.deleteAsync(fileUri).catch((e) => {
+                throw e;
+            });
+
             return true;
         } catch (e) {
             console.error(e);
             throw e;
         }
     } else {
-        // TODO: should make the functionality to donwload the document at the pc
+        // TODO: should make the functionality to donwload the file at the pc
         return true;
     }
 }
 
 /**
- * Function to delete remote budget Document
- * @param param0
- * @param {number} param.id
- * @returns
- */
-export async function deleteRemoteBudgetDocument({
-    id,
-}: {
-    id: number;
-}): Promise<{ count: number }> {
-    const Authorization = await getSecureData(userKey);
-    const url = `${API_URL}AttachedFiles/${id}`;
-
-    const query = await axios
-        .delete(url, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization,
-            },
-        })
-        .then(async ({ request }) => {
-            const response = JSON.parse(request.response);
-            return response;
-        })
-        .catch((err) => {
-            console.error(
-                "Error deleting the document data: ",
-                err.response || err.request || err
-            );
-            throw err.response || err.request || err;
-        });
-
-    return query;
-}
-
-/**
- * Function to send files to the api and append to the budget
- * @param param0
- * @param {number} param.idBudget
- * @returns
- */
-export async function sendAttachmentBudget({
-    idBudget,
-}: {
-    idBudget: number;
-}): Promise<{ error?: boolean } | any> {
-    const Authorization = await getSecureData(userKey);
-    const url = `${API_URL}AttachedFiles`;
-
-    const document = await pickDocument();
-    if (document) {
-        const { uri, name, mimeType } = document!;
-
-        if (!restrictFileTypes({ name: name })) return { error: true };
-        const {
-            result: {
-                files: { file },
-            },
-        } = await uploadFileToApi({
-            uri,
-            name,
-            mimeType: mimeType || getMimeType(name),
-        });
-
-        const {
-            name: fileName,
-            type: fileType,
-            providerResponse: { location: urlFile },
-        } = file[0];
-
-        const query = await axios
-            .put(
-                url,
-                {
-                    name: fileName,
-                    type: fileType,
-                    budgetId: idBudget,
-                    url: urlFile,
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization,
-                    },
-                }
-            )
-            .then(async ({ request }) => {
-                const response = JSON.parse(request.response);
-                return response;
-            })
-            .catch((err) => {
-                console.error(
-                    "Error syncronizing the document data: ",
-                    err.response || err.request || err
-                );
-                console.error(err.response.data);
-                throw err.response || err.request || err;
-            });
-
-        return query;
-    } else return { error: true };
-}
-
-/**
  * function to pick the documents
  */
-async function pickDocument() {
+export async function pickDocument() {
     try {
         const result = await DocumentPicker.getDocumentAsync({
             type: "*/*", // Allow to select any kind of file
@@ -278,47 +171,4 @@ async function pickDocument() {
     } catch (err: any) {
         throw err.response || err.request || err;
     }
-}
-
-/**
- * function to upload files to the Api
- * @param param0
- * @param {string} param.name
- * @param {URL} param.uri
- */
-async function uploadFileToApi({
-    uri,
-    name,
-    mimeType,
-}: {
-    uri: string;
-    name: string;
-    mimeType: string;
-}) {
-    const url = `${API_URL}containers/${API_URL_FRAGMENT}/upload`;
-
-    const formData: any = new FormData();
-
-    formData.append("file", {
-        uri,
-        name,
-        type: mimeType,
-    });
-
-    const headers = {
-        "Content-Type": "multipart/form-data",
-    };
-
-    const resp = await fetch(url, {
-        method: "post",
-        body: formData,
-        headers,
-    })
-        .then((res) => res.json())
-        .then((res) => res)
-        .catch((err) => {
-            throw err;
-        });
-
-    return resp;
 }

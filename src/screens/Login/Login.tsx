@@ -4,7 +4,7 @@ import { DefaultTheme, TextInput, useTheme } from "react-native-paper";
 import Button from "../../components/Button/Button";
 import { useTranslation } from "react-i18next";
 import { Image } from "expo-image";
-import { LoginProps } from "../../utils/login";
+import { LoginProps } from "../../api/auth/auth";
 import { UserContext } from "../../contexts/UserContext";
 import { notificationToast } from "../../services/notifications/notifications";
 
