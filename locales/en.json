@@ -84,5 +84,6 @@
     "function-soon": "Functionality not yet implemented",
     "error-uploading-file": "Error when downloading the file or file type not allowed",
     "file-successfully-uploaded": "File successfully uploaded",
-    "fail-action": "Error when performing the action"
+    "fail-action": "Error when performing the action",
+    "budget-has-no-attachments": "The budget has no attachments"
 }

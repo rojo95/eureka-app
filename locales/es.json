@@ -84,5 +84,6 @@
     "function-soon": "Funcionalidad aún no implementada.",
     "error-uploading-file": "Error al surbir el achivo o tipo de archivo no permitido",
     "file-successfully-uploaded": "Archivo cargado correctamente",
-    "fail-action": "Error al realizar la acción"
+    "fail-action": "Error al realizar la acción",
+    "budget-has-no-attachments": "El presupuesto no posee archivos adjuntos"
 }

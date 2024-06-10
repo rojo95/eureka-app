@@ -311,7 +311,7 @@ export default function Attachments() {
                     <View style={{ justifyContent: "center", width: "100%" }}>
                         <ActivityIndicator size={"large"} />
                     </View>
-                ) : (
+                ) : data.length > 0 ? (
                     <FlatList
                         style={{
                             paddingHorizontal: 10,
@@ -326,6 +326,16 @@ export default function Attachments() {
                         refreshing={loading}
                         onRefresh={getAttachments}
                     />
+                ) : (
+                    <View
+                        style={{
+                            width: "100%",
+                            justifyContent: "center",
+                            flexDirection: "row",
+                        }}
+                    >
+                        <Text>{t("budget-has-no-attachments")}.</Text>
+                    </View>
                 )}
             </View>
             <FAB onOpen={() => saveBudget()} primaryIcon={"content-save"}></FAB>
