@@ -7,7 +7,9 @@ const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
 const { userKey } = sessionNames;
 
-export async function getBudgetStates(): Promise<any[]> {
+type BudgetState = { id: number; name: string; value: string };
+
+export async function getBudgetStates(): Promise<BudgetState[]> {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}BudgetStates`;
     const query = await axios
