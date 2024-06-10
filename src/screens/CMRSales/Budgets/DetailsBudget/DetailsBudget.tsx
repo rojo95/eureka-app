@@ -152,7 +152,10 @@ export default function DetailsBudget() {
                             {data?.state?.name}
                         </CustomBadge>
                         <Text>
-                            {setDateFormat({ value: data.createdAt, language })}
+                            {setDateFormat({
+                                date: new Date(data.createdAt),
+                                language,
+                            })}
                         </Text>
                         <View
                             style={{

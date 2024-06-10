@@ -8,21 +8,26 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import AppHeader from "../../../../components/AppHeader/AppHeader";
 import { ParamsContext } from "../../../../contexts/SharedParamsProvider";
-import { getBudgetTracking } from "../../../../api/budgets/Budgets";
+import {
+    Tracking as TrackingType,
+    getBudgetTracking,
+} from "../../../../api/budgets/Budgets";
 import FAB from "../../../../components/FAB/FAB";
 import CleanCard from "../../../../components/Card/Card";
 import Button from "../../../../components/Button/Button";
 import Text from "../../../../components/Text/Text";
 import { setDateFormat } from "../../../../utils/numbers";
 import { notificationToast } from "../../../../services/notifications/notifications";
+import { UserContext } from "../../../../contexts/UserContext";
 
 export default function Tracking() {
     const {
         contextParams: { budgetId },
     } = useContext(ParamsContext)!;
+    const { language } = useContext(UserContext);
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
-    const [tracking, setTracking] = useState<any[]>([]);
+    const [tracking, setTracking] = useState<TrackingType[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     const themedStyles = StyleSheet.create({
@@ -119,7 +124,9 @@ export default function Tracking() {
                             />
                         )}
                     </View>
-                    <Text>{setDateFormat(item.date)}</Text>
+                    <Text>
+                        {setDateFormat({ date: new Date(item.date), language })}
+                    </Text>
                 </View>
                 <Text numberOfLines={3} ellipsizeMode="tail">
                     {item.notes}

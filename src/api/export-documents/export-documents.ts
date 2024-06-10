@@ -83,14 +83,14 @@ export async function exportBudgets({
                 ...[
                     createdFrom && {
                         value: createdFrom,
-                        text: setDateFormat({ value: createdFrom, language }),
+                        text: setDateFormat({ date: createdFrom, language }),
                         filterName: translation("created-from"),
                     },
                 ],
                 ...[
                     createdTo && {
                         value: createdTo,
-                        text: setDateFormat({ value: createdTo, language }),
+                        text: setDateFormat({ date: createdTo, language }),
                         filterName: translation("created-to"),
                     },
                 ],

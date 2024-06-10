@@ -42,6 +42,59 @@ type Activity = {
     wcId: number;
 };
 
+export type Tracking = {
+    author: string;
+    createdAt: Date;
+    createdBy: string;
+    createdById: number;
+    date: Date;
+    deletedAt?: Date | null;
+    done: boolean;
+    doneDate: Date | null;
+    id: number;
+    model: string;
+    modelId: 12119;
+    notes: string;
+    personnel: {
+        active: boolean;
+        activeDate: Date;
+        address?: string | null;
+        appVersion?: string | null;
+        bankAccount?: string | null;
+        brigadeId?: number | null;
+        categoryId?: number | null;
+        clientCanAssign: boolean;
+        country?: string | null;
+        createdAt: Date;
+        deletedAt?: Date | null;
+        email: string;
+        id: number;
+        inactiveDate?: Date | null;
+        insuranceNumber?: number | null;
+        lastAccessed: Date;
+        lastName: string;
+        locality?: string | null;
+        modifiedAt: Date;
+        name?: string;
+        nif?: string | null;
+        partTimeEmployee: boolean;
+        personalEmail?: string | null;
+        personalPhone?: string | null;
+        profileImage?: string | null;
+        signatureImage?: string | null;
+        telephone?: string | null;
+        type: string;
+        username?: string | null;
+        wcId: number;
+        workCenters: number[];
+        zip?: string | null;
+    };
+    personnelId: number;
+    type: number;
+    updatedAt: Date;
+    wcId: number;
+};
+
 type Client = {
     businessName?: string | null;
     cifNif: string;
@@ -602,7 +655,11 @@ export async function getBudgetChapters({ budgetId }: { budgetId: number }) {
  * @param {number} param.budgetId
  * @returns
  */
-export async function getBudgetTracking({ budgetId }: { budgetId: number }) {
+export async function getBudgetTracking({
+    budgetId,
+}: {
+    budgetId: number;
+}): Promise<Tracking[]> {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Tracking/getTracking?model=Budget&modelId=${budgetId}`;
     const query = await axios

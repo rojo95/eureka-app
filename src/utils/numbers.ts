@@ -8,15 +8,14 @@ import { getLocale } from "./functions";
  * @returns
  */
 export function setDateFormat({
-    value,
+    date,
     language,
 }: {
-    value: Date;
+    date: Date;
     language: Language;
 }): string {
-    const date = new Date(value);
     const locale = getLocale({ locale: language });
-    const newDate = new Intl.DateTimeFormat(locale).format(date);
+    const newDate = new Intl.DateTimeFormat(locale)?.format(date);
     return newDate;
 }
 
