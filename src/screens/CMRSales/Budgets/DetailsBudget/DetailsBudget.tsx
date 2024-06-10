@@ -95,10 +95,10 @@ export default function DetailsBudget() {
         text: {
             color: theme.colors.dark,
         },
-        cost: {
+        totalCost: {
             color: theme.colors.danger,
         },
-        sale: {
+        totalSale: {
             color: theme.colors.success,
         },
     });
@@ -251,7 +251,7 @@ export default function DetailsBudget() {
                                     <Text
                                         style={[
                                             styles.price,
-                                            stylesThemed.cost,
+                                            stylesThemed.totalCost,
                                         ]}
                                     >
                                         {totalCost}€
@@ -259,7 +259,7 @@ export default function DetailsBudget() {
                                     <Text
                                         style={[
                                             styles.price,
-                                            stylesThemed.sale,
+                                            stylesThemed.totalSale,
                                         ]}
                                     >
                                         {totalSale}€

@@ -17,7 +17,7 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
         expect(tree.children.length).toBe(1);
     });
 
-    it("should render correctly the cost value", () => {
+    it("should render correctly the totalCost value", () => {
         const totalCost = 500;
 
         const tree: any = renderer
