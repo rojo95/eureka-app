@@ -20,22 +20,22 @@ import Button from "../Button/Button";
 import { useTranslation } from "react-i18next";
 import { Image } from "expo-image";
 
-interface ItemInterface {
+type Item = {
     id: number;
     name: string;
     profileImage?: string;
-}
+};
 
-type selectedValues = ItemInterface[] | ItemInterface;
+type SelectedValues = Item[] | Item;
 
-interface SelectModal {
-    data: ItemInterface[];
+type SelectModal = {
+    data: Item[];
     onClose: () => void;
-    selectedValues?: selectedValues;
-    setSelectedValues: (values: selectedValues) => void;
+    selectedValues?: SelectedValues;
+    setSelectedValues: (values: SelectedValues) => void;
     title: string;
     singleSelection: boolean;
-}
+};
 
 export default function SelectModal({
     data,
@@ -48,8 +48,8 @@ export default function SelectModal({
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
 
-    const [items, setItems] = useState<ItemInterface[]>([]);
-    const [selected, setSelected] = useState<selectedValues>(selectedValues);
+    const [items, setItems] = useState<Item[]>([]);
+    const [selected, setSelected] = useState<SelectedValues>(selectedValues);
 
     useEffect(() => {
         setItems(data);
@@ -57,18 +57,18 @@ export default function SelectModal({
 
     /**
      * Function to select multiple activities
-     * @param {ItemInterface} item
+     * @param {Item} item
      */
-    function handleSelectItem(item: ItemInterface) {
+    function handleSelectItem(item: Item) {
         setSelected((prevSelected) => {
             if (!singleSelection) {
-                const objectIndex = (prevSelected as ItemInterface[]).findIndex(
+                const objectIndex = (prevSelected as Item[]).findIndex(
                     (v) => v.id === item.id
                 );
                 if (objectIndex === -1) {
-                    return [...(prevSelected as ItemInterface[]), item];
+                    return [...(prevSelected as Item[]), item];
                 } else {
-                    return (prevSelected as ItemInterface[]).filter(
+                    return (prevSelected as Item[]).filter(
                         (v) => v.id !== item.id
                     );
                 }
@@ -83,7 +83,7 @@ export default function SelectModal({
      * @param {ListRenderItem} param0
      * @returns
      */
-    const SelectListItems: ListRenderItem<ItemInterface> = ({ item }) => {
+    const SelectListItems: ListRenderItem<Item> = ({ item }) => {
         const isSelected = Array.isArray(selected)
             ? selected.find((v) => v.id === item.id) !== undefined
             : selected.id === item.id;

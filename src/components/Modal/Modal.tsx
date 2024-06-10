@@ -3,19 +3,19 @@ import { View } from "react-native";
 import { Modal as ModalRNP, Portal } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
 
-interface ModalInterface {
+type Modal = {
     visible: boolean;
     children: React.ReactNode;
     onToggleShowModal: (value: boolean) => void;
     style: StyleProps;
-}
+};
 
-const Modal = ({
+export default function Modal({
     visible,
     children,
     onToggleShowModal,
     style,
-}: ModalInterface) => {
+}: Modal) {
     const hideModal = () => onToggleShowModal(false);
 
     return (
@@ -32,8 +32,8 @@ const Modal = ({
             </Portal>
         </View>
     );
-};
+}
 
 const containerStyle = { backgroundColor: "white", padding: 20 };
 
-export default Modal;
+Modal;

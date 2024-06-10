@@ -1,6 +1,6 @@
 import axios from "axios";
 import Constants from "expo-constants";
-import sessionNames from "../../utils/sessionInfo";
+import sessionNames from "../../utils/session-info";
 import { getUserData } from "../personnels/personnels";
 import {
     deleteSecureData,
@@ -11,10 +11,10 @@ const constants = Constants.expoConfig?.extra;
 
 const { role, userKey, userId: idUser, wcId: idWc } = sessionNames;
 
-export interface LoginProps {
+export type LoginProps = {
     email: string;
     password: string;
-}
+};
 
 const API_URL = constants?.API_URL;
 

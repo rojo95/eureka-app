@@ -5,14 +5,14 @@ import { StyleProps } from "react-native-reanimated";
 import Text from "../Text/Text";
 import { useTranslation } from "react-i18next";
 
-interface SelectionProps {
+type SelectionProps = {
     options: string[] | { id: string; description: string }[];
     onSelect: (value: string) => void;
     selectedValue: string;
     buttonStyle?: StyleProps;
     placeholder?: string;
     label?: string;
-}
+};
 
 const Select: React.FC<SelectionProps> = ({
     options,

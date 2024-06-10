@@ -2,13 +2,7 @@ import { Platform, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
-
-interface regionInterface {
-    latitude: number;
-    longitude: number;
-    latitudeDelta: number;
-    longitudeDelta: number;
-}
+import { Region } from "react-native-maps";
 
 function Map({
     markerPreset,
@@ -17,7 +11,7 @@ function Map({
     mapStyle,
 }: {
     markerPreset?: { latitude: number; longitude: number } | null;
-    address?: regionInterface | null;
+    address?: Region | null;
     readOnly?: boolean;
     mapStyle?: StyleProps;
 }) {

@@ -55,7 +55,7 @@ export default function Attachments() {
     });
 
     /**
-     * function to get the budget attachments by ID
+     * function to get the budget attachments by budget ID
      */
     async function getAttachments() {
         const attachments = await getBudgetAttachments({ budgetId });
@@ -75,7 +75,7 @@ export default function Attachments() {
      * @param {{ text: string, accept: () => void }} options
      * @returns
      */
-    async function confirmAction({
+    async function showConfirmDialog({
         text,
         accept,
     }: {
@@ -196,7 +196,7 @@ export default function Attachments() {
             <CleanCard>
                 <Pressable
                     onPress={() =>
-                        confirmAction({
+                        showConfirmDialog({
                             text: `${t("wish-download-document")}: ${
                                 item.name
                             }`,
@@ -239,7 +239,7 @@ export default function Attachments() {
                         >
                             <Button
                                 onPress={() =>
-                                    confirmAction({
+                                    showConfirmDialog({
                                         text: `${t("wish-delete-file")}: ${
                                             item.name
                                         }`,

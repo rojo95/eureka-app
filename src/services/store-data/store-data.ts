@@ -2,17 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
-interface SecureStoreInterface {
+type SecureStore = {
     key: string;
     value: string;
-}
+};
 
 const { OS } = Platform;
 
 /**
  * function to store data securely
  *
- * @param {SecureStoreInterface} param
+ * @param {SecureStore} param
  * @param {string} param.key
  * @param {string} param.value
  * @returns {Promise<boolean>}
@@ -20,7 +20,7 @@ const { OS } = Platform;
 export async function saveSecureData({
     key,
     value,
-}: SecureStoreInterface): Promise<boolean> {
+}: SecureStore): Promise<boolean> {
     try {
         if (OS === "web") {
             // TODO: save secure data on web site
@@ -82,15 +82,12 @@ export async function deleteSecureData(key: string): Promise<boolean> {
 /**
  * function to store non secured data
  *
- * @param {SecureStoreInterface} param
+ * @param {SecureStore} param
  * @param {string} param.key
  * @param {string} param.value
  * @returns {Promise<boolean>}
  */
-export async function saveData({
-    key,
-    value,
-}: SecureStoreInterface): Promise<boolean> {
+export async function saveData({ key, value }: SecureStore): Promise<boolean> {
     try {
         await AsyncStorage.setItem(key, value);
         return true;

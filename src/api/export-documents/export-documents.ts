@@ -1,6 +1,6 @@
 import { createUrl } from "../../utils/functions";
 import Constants from "expo-constants";
-import sessionNames from "../../utils/sessionInfo";
+import sessionNames from "../../utils/session-info";
 import { getSecureData } from "../../services/store-data/store-data";
 import { setDateFormat } from "../../utils/numbers";
 import axios from "axios";
@@ -11,19 +11,19 @@ const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
 const { userKey, wcId: idWc } = sessionNames;
 
-interface ItemInterface {
+type Item = {
     id: number;
     name: string;
-}
+};
 
 /**
  * function to download budgets
  * @param param0
  * @param { string } param.textFilter
- * @param { ItemInterface } param.client
- * @param { ItemInterface[] } param.states
- * @param { ItemInterface[] } param.responsibles
- * @param { ItemInterface[] } param.activities
+ * @param { Item } param.client
+ * @param { Item[] } param.states
+ * @param { Item[] } param.responsibles
+ * @param { Item[] } param.activities
  * @param { Date } param.createdFrom
  * @param { Date } param.createdTo
  * @param { any } param.translation
@@ -41,10 +41,10 @@ export async function exportBudgets({
     language,
 }: {
     textFilter?: string;
-    client?: ItemInterface;
-    states?: ItemInterface[];
-    responsibles?: ItemInterface[];
-    activities?: ItemInterface[];
+    client?: Item;
+    states?: Item[];
+    responsibles?: Item[];
+    activities?: Item[];
     createdFrom?: Date;
     createdTo?: Date;
     translation: any;

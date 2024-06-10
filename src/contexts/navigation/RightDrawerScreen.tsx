@@ -1,11 +1,11 @@
 import { createContext, useMemo, useState } from "react";
 import { Drawer } from "react-native-drawer-layout";
 
-interface RightDrawerContextType {
+type RightDrawerContextType = {
     isOpen: boolean;
     onToggleOpenRight: () => void;
     setRightDrawerContent: (content: JSX.Element) => void;
-}
+};
 
 export const RightDrawerContext = createContext<
     RightDrawerContextType | undefined

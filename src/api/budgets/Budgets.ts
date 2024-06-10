@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getSecureData } from "../../services/store-data/store-data";
 import Constants from "expo-constants";
-import sessionNames from "../../utils/sessionInfo";
+import sessionNames from "../../utils/session-info";
 
 const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
@@ -327,7 +327,7 @@ export type Budget = {
     workId: number;
 };
 
-export interface Chapter {
+export type Chapter = {
     description: string;
     rank: string;
     kMat: number;
@@ -405,7 +405,7 @@ export interface Chapter {
     matSale: number;
     outsourceSale: number;
     moSale: number;
-}
+};
 
 export type Attachment = {
     budgetId: number;

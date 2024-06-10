@@ -6,10 +6,10 @@ import React, {
     useState,
 } from "react";
 
-interface ParamsContext {
+type ParamsContext = {
     contextParams: any;
     setContextParams: Dispatch<SetStateAction<any>>;
-}
+};
 
 // Create context
 export const ParamsContext = createContext<ParamsContext | undefined>(

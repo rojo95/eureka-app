@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, ReactNode } from "react";
 import { getData, getSecureData } from "../services/store-data/store-data";
 import { login as loginFn, logout as logoutFn } from "../api/auth/auth";
 import { getUserData } from "../api/personnels/personnels";
-import sessionNames from "../utils/sessionInfo";
+import sessionNames from "../utils/session-info";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18next from "../services/languages/i18next";
 

@@ -20,7 +20,7 @@ interface CustomColors extends MD3Colors {
 }
 
 declare module "react-native-paper" {
-    export interface DefaultTheme {
+    export interface DefaultTheme extends DefaultTheme {
         colors: CustomColors;
     }
 }

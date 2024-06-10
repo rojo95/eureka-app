@@ -14,7 +14,7 @@ import Button from "../../../../components/Button/Button";
 import { Fontisto } from "@expo/vector-icons";
 import Map from "../../../../components/Map/Map";
 
-interface formData {
+type formData = {
     name: string;
     responsible: string;
     location: string;
@@ -25,7 +25,7 @@ interface formData {
     Kmo: string;
     activity: string;
     iva: string;
-}
+};
 
 export default function CreateBudget({
     data,

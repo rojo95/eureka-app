@@ -12,7 +12,7 @@ import { useContext, useEffect, useState } from "react";
 import { getColorState } from "../../utils/utils";
 import { UserContext } from "../../../../../contexts/UserContext";
 
-interface BudgetsCardInterface extends TouchableOpacityProps {
+interface BudgetsCard extends TouchableOpacityProps {
     number?: string;
     title: string;
     state: { id: number; name: string };
@@ -28,7 +28,7 @@ const BudgetsCard = ({
     totalCost,
     totalSale,
     onPress,
-}: BudgetsCardInterface) => {
+}: BudgetsCard) => {
     const { language } = useContext(UserContext);
     const theme: DefaultTheme = useTheme();
     const [formattedCost, setFormattedCost] = useState<string>("");

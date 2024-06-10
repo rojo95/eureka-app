@@ -14,41 +14,41 @@ import Animated, {
 import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import Text from "../Text/Text";
 
-export interface actionsInterface {
+export type ActionProps = {
     backgroundColor?: string;
     icon: IconSource;
     label: string;
     color?: string;
     onPress: () => void;
-}
+};
 
-interface FABInterfaceBase {
-    actions?: actionsInterface[];
+type FABBase = {
+    actions?: ActionProps[];
     onOpen?: () => void;
     onClose?: () => void;
     primaryIcon?: IconSource;
     secondaryIcon?: IconSource;
-}
+};
 
-interface FABInterfaceWithoutActions extends FABInterfaceBase {
-    actions?: actionsInterface[];
+interface FABWithoutActions extends FABBase {
+    actions?: ActionProps[];
     onOpen: () => void;
 }
 
-interface FABInterfaceWithActions extends FABInterfaceBase {
-    actions: actionsInterface[];
+interface FABWithActions extends FABBase {
+    actions: ActionProps[];
     onOpen?: () => void;
 }
 
-type FABInterface = FABInterfaceWithoutActions | FABInterfaceWithActions;
+type FAB = FABWithoutActions | FABWithActions;
 
-const FAB = ({
+export default function FAB({
     actions,
     onOpen,
     onClose,
     primaryIcon = "plus",
     secondaryIcon = "close",
-}: FABInterface) => {
+}: FAB) {
     const theme: DefaultTheme = useTheme();
     const [open, setOpen] = useState(false);
     const translations = actions?.reverse()?.map(() => useSharedValue(0)) || [];
@@ -170,7 +170,7 @@ const FAB = ({
             />
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -200,5 +200,3 @@ const styles = StyleSheet.create({
         marginVertical: 3,
     },
 });
-
-export default FAB;

@@ -7,8 +7,8 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
         const tree: any = renderer
             .create(
                 <BudgetsCard
-                    description={""}
-                    status={{ id: 0, name: "" }}
+                    title={""}
+                    state={{ id: 0, name: "" }}
                     totalSale={0}
                     totalCost={0}
                 />
@@ -23,8 +23,8 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
         const tree: any = renderer
             .create(
                 <BudgetsCard
-                    description={""}
-                    status={{ id: 0, name: "" }}
+                    title={""}
+                    state={{ id: 0, name: "" }}
                     totalSale={0}
                     totalCost={totalCost}
                 />
@@ -43,8 +43,8 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
         const tree: any = renderer
             .create(
                 <BudgetsCard
-                    description={""}
-                    status={{ id: 0, name: "" }}
+                    title={""}
+                    state={{ id: 0, name: "" }}
                     totalCost={10}
                     totalSale={totalSale}
                 />
@@ -57,16 +57,16 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
         expect(componentBase).toEqual([`${totalSale}`, "€"]);
     });
 
-    it("should render correctly the status text", () => {
+    it("should render correctly the state text", () => {
         const testStatusText = "progress";
 
         const tree: any = renderer
             .create(
                 <BudgetsCard
-                    description={""}
+                    title={""}
                     totalSale={0}
                     totalCost={0}
-                    status={{ id: 1, name: testStatusText }}
+                    state={{ id: 1, name: testStatusText }}
                 />
             )
             .toJSON();
@@ -84,10 +84,10 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
             .create(
                 <BudgetsCard
                     number={idTest}
-                    description={""}
+                    title={""}
                     totalSale={0}
                     totalCost={0}
-                    status={{ id: 0, name: "" }}
+                    state={{ id: 0, name: "" }}
                 />
             )
             .toJSON();
@@ -98,16 +98,16 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
         expect(componentBase).toContain(idTest);
     });
 
-    it("should render correctly the description", () => {
-        const testDesc = "test description";
+    it("should render correctly the title", () => {
+        const testDesc = "test title";
 
         const tree: any = renderer
             .create(
                 <BudgetsCard
-                    description={testDesc}
+                    title={testDesc}
                     totalSale={0}
                     totalCost={0}
-                    status={{ id: 1, name: "" }}
+                    state={{ id: 1, name: "" }}
                 />
             )
             .toJSON();
@@ -121,10 +121,10 @@ describe("Test to evaluate the <BudgetsCard/> component", () => {
         const tree = renderer
             .create(
                 <BudgetsCard
-                    description={""}
+                    title={""}
                     totalSale={0}
                     totalCost={0}
-                    status={{ id: 1, name: "" }}
+                    state={{ id: 1, name: "" }}
                 />
             )
             .toJSON();

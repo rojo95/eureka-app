@@ -6,7 +6,7 @@ import {
 } from "../../services/files/files";
 import { getSecureData } from "../../services/store-data/store-data";
 import Constants from "expo-constants";
-import sessionNames from "../../utils/sessionInfo";
+import sessionNames from "../../utils/session-info";
 import { Attachment } from "../budgets/Budgets";
 
 const constants = Constants.expoConfig?.extra;

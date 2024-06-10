@@ -1,20 +1,8 @@
-import { Alert, StyleSheet, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { StyleSheet, View } from "react-native";
+import MapView, { LatLng, Marker, Region } from "react-native-maps";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleProps } from "react-native-reanimated";
-
-interface regionInterface {
-    latitude: number;
-    longitude: number;
-    latitudeDelta: number;
-    longitudeDelta: number;
-}
-
-interface MarkerInterface {
-    latitude: number;
-    longitude: number;
-}
 
 export default function PhoneMap({
     description,
@@ -24,13 +12,13 @@ export default function PhoneMap({
     mapStyle,
 }: {
     description?: string;
-    address?: regionInterface;
-    markerPreset: MarkerInterface;
+    address?: Region;
+    markerPreset?: LatLng;
     readOnly: boolean;
     mapStyle?: StyleProps;
 }) {
     const { t } = useTranslation();
-    const [region, setRegion] = useState<regionInterface>(
+    const [region, setRegion] = useState<Region>(
         address || {
             latitude: 38.20486801970583,
             latitudeDelta: 17.679489473469285,
@@ -38,13 +26,15 @@ export default function PhoneMap({
             longitudeDelta: 12.98109669238329,
         }
     );
-    const [marker, setMarker] = useState<MarkerInterface | null>(markerPreset);
+    const [marker, setMarker] = useState<LatLng | null | undefined>(
+        markerPreset
+    );
 
-    function getRegion(region: regionInterface) {
+    function getRegion(region: Region) {
         return region;
     }
 
-    function addMarker(marker: MarkerInterface) {
+    function addMarker(marker: LatLng) {
         !readOnly && setMarker(marker);
     }
 
