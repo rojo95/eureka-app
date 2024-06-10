@@ -41,7 +41,6 @@ export default function DetailsBudget() {
     async function getDetails() {
         const info = await getBudget({ budgetId });
         setData(info);
-        setLoading(false);
     }
 
     /**
