@@ -90,7 +90,7 @@ export default function Attachments() {
     }
 
     /**
-     * funciton to download attachments
+     * function to download attachments
      * @param param0
      * @param {string} param.fileName
      * @param {URL} param.url
