@@ -547,7 +547,6 @@ export async function getBudget({
         })
         .then(async ({ request }) => {
             const response = JSON.parse(request.response);
-            console.log(response);
 
             return response;
         })

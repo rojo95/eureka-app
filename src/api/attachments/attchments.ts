@@ -114,8 +114,6 @@ export async function uploadBudgetAttachment({
                 throw err.response || err.request || err;
             });
 
-        console.log(query);
-
         return query;
     } else throw { error: true };
 }
