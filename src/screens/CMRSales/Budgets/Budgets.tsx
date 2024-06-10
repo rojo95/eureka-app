@@ -28,7 +28,7 @@ import { exportBudgets } from "../../../api/export-documents/export-documents";
 import { ParamsContext } from "../../../contexts/SharedParamsProvider";
 import { notificationToast } from "../../../services/notifications/notifications";
 import { UserContext } from "../../../contexts/UserContext";
-import { getStatesApi } from "../../../api/states/states";
+import { getBudgetStates } from "../../../api/budget-states/budget-states";
 import { getClientsApi } from "../../../api/clients/clients";
 import { getActivitiesApi } from "../../../api/activities/activities";
 import { getResponsiblesApi } from "../../../api/personnels/personnels";
@@ -350,7 +350,7 @@ export default function Budgets() {
     function getStates() {
         getItemsForFilter({
             type: "state",
-            apiFunction: getStatesApi,
+            apiFunction: getBudgetStates,
             itemFormatter: (v) => ({ id: v.id, name: v.name.toUpperCase() }),
         });
     }
