@@ -48,12 +48,7 @@ export default function SelectModal({
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
 
-    const [items, setItems] = useState<Item[]>([]);
     const [selected, setSelected] = useState<SelectedValues>(selectedValues);
-
-    useEffect(() => {
-        setItems(data);
-    }, [data]);
 
     /**
      * Function to select multiple activities
@@ -142,17 +137,17 @@ export default function SelectModal({
 
     function checkUncheckAll() {
         if (!singleSelection) {
-            if (Array.isArray(selected) && selected.length >= items.length) {
+            if (Array.isArray(selected) && selected.length >= data.length) {
                 setSelected([]);
             } else {
-                setSelected(items);
+                setSelected(data);
             }
         }
     }
 
     return (
         <View style={styles.formStyle}>
-            {items.length > 0 ? (
+            {data.length > 0 ? (
                 <View>
                     <View style={styles.titleContainer}>
                         <Text
@@ -183,7 +178,7 @@ export default function SelectModal({
                                 type="secondary"
                                 text={
                                     Array.isArray(selected) &&
-                                    selected.length >= items.length
+                                    selected.length >= data.length
                                         ? t("uncheck-all")
                                         : t("check-all")
                                 }
@@ -192,7 +187,7 @@ export default function SelectModal({
                         </View>
                     )}
                     <View style={{ maxHeight: "75%" }}>
-                        <FlatList data={items} renderItem={SelectListItems} />
+                        <FlatList data={data} renderItem={SelectListItems} />
                     </View>
                     <View style={styles.button}>
                         <Button
