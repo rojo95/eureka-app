@@ -8,7 +8,7 @@ import Text from "../../../../../components/Text/Text";
 import { ActivityIndicator, DefaultTheme, useTheme } from "react-native-paper";
 import CustomBadge from "../../../../../components/CustomBadge/CustomBadge";
 import { formatPrices } from "../../../../../utils/numbers";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useMemo } from "react";
 import { getColorState } from "../../utils/utils";
 import { UserContext } from "../../../../../contexts/UserContext";
 
@@ -31,8 +31,6 @@ const BudgetsCard = ({
 }: BudgetsCard) => {
     const { language } = useContext(UserContext);
     const theme: DefaultTheme = useTheme();
-    const [formattedCost, setFormattedCost] = useState<string>("");
-    const [formattedSale, setFormattedSale] = useState<string>("");
 
     const themedStyles = StyleSheet.create({
         container: {
@@ -52,21 +50,13 @@ const BudgetsCard = ({
         },
     });
 
-    useEffect(() => {
-        (() => {
-            const formattedCost = formatPrices({
-                number: totalCost || 0,
-                language,
-            });
-            const formattedSale = formatPrices({
-                number: totalSale || 0,
-                language,
-            });
+    const formattedTotalCost = useMemo(() => {
+        return formatPrices({ number: totalCost || 0, language });
+    }, [totalCost, language]);
 
-            setFormattedCost(formattedCost);
-            setFormattedSale(formattedSale);
-        })();
-    }, [totalCost, totalSale]);
+    const formattedTotalSale = useMemo(() => {
+        return formatPrices({ number: totalSale || 0, language });
+    }, [totalSale, language]);
 
     return (
         <TouchableOpacity
@@ -95,7 +85,7 @@ const BudgetsCard = ({
                         {state.name}
                     </CustomBadge>
                     <Text style={[styles.number]}>
-                        {formattedCost === "" ? (
+                        {formattedTotalCost === "" ? (
                             <ActivityIndicator size="small" />
                         ) : (
                             <Text>
@@ -105,7 +95,7 @@ const BudgetsCard = ({
                                         themedStyles.totalCost,
                                     ]}
                                 >
-                                    {formattedCost}€
+                                    {formattedTotalCost}€
                                 </Text>{" "}
                                 -{" "}
                                 <Text
@@ -114,7 +104,7 @@ const BudgetsCard = ({
                                         themedStyles.totalSale,
                                     ]}
                                 >
-                                    {formattedSale}€
+                                    {formattedTotalSale}€
                                 </Text>
                             </Text>
                         )}

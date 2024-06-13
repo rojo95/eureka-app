@@ -5,7 +5,7 @@ import {
     Text,
     View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { DefaultTheme, useTheme } from "react-native-paper";
 import CleanCard from "../../../../../../components/Card/Card";
 import { formatPrices } from "../../../../../../utils/numbers";
@@ -23,23 +23,14 @@ export default function ItemCard({
 }: ItemCard) {
     const theme: DefaultTheme = useTheme();
     const { language } = useContext(UserContext);
-    const [formattedTotalCost, setFormattedTotalCost] = useState<string>("");
-    const [formattedTotalSale, setTotalSale] = useState<string>("");
 
-    useEffect(() => {
-        (() => {
-            const formattedTotalCost = formatPrices({
-                number: totalCost || 0,
-                language,
-            });
-            const formattedTotalSale = formatPrices({
-                number: totalSale || 0,
-                language,
-            });
-            setFormattedTotalCost(formattedTotalCost);
-            setTotalSale(formattedTotalSale);
-        })();
-    }, [totalCost, totalSale]);
+    const formattedTotalCost = useMemo(() => {
+        return formatPrices({ number: totalCost || 0, language });
+    }, [totalCost, language]);
+
+    const formattedTotalSale = useMemo(() => {
+        return formatPrices({ number: totalSale || 0, language });
+    }, [totalSale, language]);
 
     const stylesThemed = StyleSheet.create({
         text: {

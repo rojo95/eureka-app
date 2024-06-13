@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, DefaultTheme, useTheme } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -34,10 +34,6 @@ export default function DetailsBudget() {
 
     const [budgetDetails, setBudgetDetails] = useState<Budget | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [totalCost, setTotalCost] = useState<string>("");
-    const [totalSale, setTotalSale] = useState<string>("");
-    const [kTotal, setTotalKTotal] = useState<string>("");
-    const [totalMarginProfit, setTotalMarginProfit] = useState<string>("");
 
     async function getDetails() {
         const info = await getBudget({ budgetId });
@@ -49,40 +45,37 @@ export default function DetailsBudget() {
     }
 
     /**
-     * function to format the supplied costs and sales
+     * functions to format the supplied costs and sales
      */
-    useEffect(() => {
-        (() => {
-            const totalCost = formatPrices({
-                number: budgetDetails?.totalCost! || 0,
-                language,
-            });
-            const totalSale = formatPrices({
-                number: budgetDetails?.totalSale! || 0,
-                language,
-            });
-            const kTotal = formatPrices({
-                number:
-                    calculateKTotal({
-                        totalCost: budgetDetails?.totalCost!,
-                        totalSale: budgetDetails?.totalSale!,
-                    }) || 0,
-                language,
-            });
-            const totalMarginProfit = formatPrices({
-                number:
-                    calculateMarginProfit({
-                        totalCost: budgetDetails?.totalCost!,
-                        totalSale: budgetDetails?.totalSale!,
-                    }) || 0,
-                language,
-            });
-            setTotalCost(totalCost);
-            setTotalSale(totalSale);
-            setTotalKTotal(kTotal);
-            setTotalMarginProfit(totalMarginProfit);
-        })();
-    }, [budgetDetails]);
+    const { totalCost, totalSale, kTotal, totalMarginProfit } = useMemo(() => {
+        const totalCost = formatPrices({
+            number: budgetDetails?.totalCost || 0,
+            language,
+        });
+
+        const totalSale = formatPrices({
+            number: budgetDetails?.totalSale || 0,
+            language,
+        });
+
+        const kTotal = formatPrices({
+            number:
+                calculateKTotal({
+                    totalCost: budgetDetails?.totalCost!,
+                    totalSale: budgetDetails?.totalSale!,
+                }) || 0,
+            language,
+        });
+        const totalMarginProfit = formatPrices({
+            number:
+                calculateMarginProfit({
+                    totalCost: budgetDetails?.totalCost!,
+                    totalSale: budgetDetails?.totalSale!,
+                }) || 0,
+            language,
+        });
+        return { totalCost, totalSale, kTotal, totalMarginProfit };
+    }, [budgetDetails, language]);
 
     useEffect(() => {
         setLoading(true);
