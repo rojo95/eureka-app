@@ -3,6 +3,7 @@ import { getSecureData } from "../../services/store-data/store-data";
 import Constants from "expo-constants";
 import sessionNames from "../../utils/session-info";
 import { Activity } from "../activities/activities";
+import { Client } from "../clients/clients";
 
 const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
@@ -72,47 +73,6 @@ export type Tracking = {
     type: number;
     updatedAt: Date;
     wcId: number;
-};
-
-type Client = {
-    businessName?: string | null;
-    cifNif: string;
-    clientContacts: any[];
-    clientId?: number | null;
-    code?: string | null;
-    country?: string | null;
-    createdAt: Date;
-    customFields?: any | null;
-    defaultAddressId?: number | null;
-    defaultContactId?: number | null;
-    defaultVatId?: number | null;
-    deletedAt?: Date | null;
-    domicile?: string | null;
-    dueDateDays?: any | null;
-    email?: string | null;
-    externalId?: number | null;
-    id: number;
-    kMat?: number | null;
-    kMo?: number | null;
-    kOut?: number | null;
-    ledgerAccountNumber?: number | null;
-    locality?: string | null;
-    name: string;
-    notes?: string | null;
-    number: string;
-    numberOfDeadlines: number;
-    paymentMethodId?: number | null;
-    personType: string;
-    profileImage?: string | null;
-    province?: string | null;
-    responsible?: any | null;
-    salesLedgerAccountNumber?: number | null;
-    tags?: any | null;
-    telephone?: string | null;
-    updatedAt: Date;
-    userCreated?: Date | null;
-    wcId: number;
-    zip?: string | null;
 };
 
 export type Budget = {

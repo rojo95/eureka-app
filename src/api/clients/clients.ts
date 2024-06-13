@@ -7,13 +7,24 @@ const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
 const { userKey, wcId: idWc } = sessionNames;
 
+export type Client = {
+    businessName?: string | null;
+    cifNif: string;
+    email?: string | null;
+    id: number;
+    name: string;
+    personType: string;
+    profileImage?: string | null;
+    telephone?: string | null;
+};
+
 /**
  * function to get the user data
  *
  * @param {number} param.userId
  * @returns
  */
-export async function getClientsApi(): Promise<any> {
+export async function getClientsApi(): Promise<Client[]> {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Clients`;
     const wcId = ((await getSecureData(idWc)) || "").split(",");
