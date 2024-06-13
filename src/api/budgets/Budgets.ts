@@ -2,6 +2,7 @@ import axios from "axios";
 import { getSecureData } from "../../services/store-data/store-data";
 import Constants from "expo-constants";
 import sessionNames from "../../utils/session-info";
+import { Activity } from "../activities/activities";
 
 const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
@@ -19,14 +20,6 @@ type HoursTypes = {
     extra: HourType;
     night: HourType;
     fitosanitary: HourType;
-};
-
-type Activity = {
-    activityTypeId: number;
-    deletedAt?: Date | null;
-    id: number;
-    name: string;
-    wcId: number;
 };
 
 export type Tracking = {
