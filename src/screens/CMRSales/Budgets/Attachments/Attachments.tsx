@@ -45,8 +45,8 @@ export default function Attachments() {
     const [alert, setAlert] = useState<boolean>(false);
     const [alertConfig, setAlertConfig] = useState<{
         title: string;
-        accept: () => Promise<void>;
-    }>({ title: "", accept: async () => {} });
+        onAccept: () => Promise<void>;
+    }>({ title: "", onAccept: async () => {} });
 
     const themedStyles = StyleSheet.create({
         container: {
@@ -72,20 +72,20 @@ export default function Attachments() {
 
     /**
      * Asks the user to confirm an action before performing it.
-     * @param {{ text: string, accept: () => void }} options
+     * @param {{ text: string, onAccept: () => void }} options
      * @returns
      */
-    async function showConfirmDialog({
+    function showConfirmDialog({
         text,
-        accept,
+        onAccept,
     }: {
         text: string;
-        accept: () => void;
+        onAccept: () => void;
     }) {
         setAlert(true);
         return setAlertConfig({
             title: text,
-            accept: async () => accept(),
+            onAccept: async () => onAccept(),
         });
     }
 
@@ -200,7 +200,7 @@ export default function Attachments() {
                             text: `${t("wish-download-document")}: ${
                                 item.name
                             }`,
-                            accept: () =>
+                            onAccept: () =>
                                 downloadAttachment({
                                     fileName: item.name,
                                     url: new URL(
@@ -243,7 +243,7 @@ export default function Attachments() {
                                         text: `${t("wish-delete-file")}: ${
                                             item.name
                                         }`,
-                                        accept: () =>
+                                        onAccept: () =>
                                             deleteAttachment({ id: item.id }),
                                     })
                                 }
@@ -345,7 +345,7 @@ export default function Attachments() {
                 showModal={alert}
                 type="confirm"
                 showClose={false}
-                onAccept={alertConfig.accept}
+                onAccept={alertConfig.onAccept}
             />
         </View>
     );
