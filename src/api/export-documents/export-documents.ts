@@ -37,9 +37,8 @@ type Item = {
  * @param { any } param.translation
  * - This function `exportBudgets` is an asynchronous function that exports budgets based on
  * the provided parameters.
- * @returns The `exportBudgets` function is returning a Promise that resolves to the result of
- * downloading a remote file. The file being downloaded is an Excel document containing budget data
- * based on the specified filters and parameters.
+ * @returns {Promise<boolean>} The `exportBudgets` function is returning a Promise that resolves to a boolean value. The
+ * boolean value indicates whether the remote file download was successful or not.
  */
 export async function exportBudgets({
     textFilter,
@@ -61,7 +60,7 @@ export async function exportBudgets({
     createdTo?: Date;
     translation: any;
     language: Language;
-}) {
+}): Promise<boolean> {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Personnels/exportViewAsExcel`;
     const wcId = ((await getSecureData(idWc)) || "")

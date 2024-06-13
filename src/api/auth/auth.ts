@@ -29,21 +29,24 @@ export type LoginProps = {
 const API_URL = constants?.API_URL;
 
 /**
- * function to login to the system api
- * @param param0
- * @returns
- */
-/**
  * The function `login` in TypeScript makes a POST request to a login endpoint, processes the response
  * data, and saves relevant user information securely.
- * @param {LoginProps}  - The `login` function you provided is an asynchronous function that handles
+ * @param {LoginProps} params
+ * @param {string} params.email
+ * @param {string} params.password
+ * - The `login` function you provided is an asynchronous function that handles
  * user login by sending a POST request to a specific API endpoint. It takes an object as a parameter
  * with `email` and `password` properties.
  * @returns {Promise<{ id: number; type: string; name: string; lastName: string }>} The `login` function is returning an object with the properties `id`, `type`, `name`, and
  * `lastName` if the login request is successful. If there is an error during the login process, it
  * will log the error and throw it.
  */
-export async function login({ email, password }: LoginProps) {
+export async function login({ email, password }: LoginProps): Promise<{
+    id: number;
+    type: string;
+    name: string;
+    lastName: string;
+}> {
     const usr = email.trim();
     const pass = password.trim();
     const request = await axios
@@ -94,7 +97,7 @@ export async function login({ email, password }: LoginProps) {
  * @returns {{ success: true }} The `logout` function is returning an object with a `success` property set to `true` if the
  * logout process is successful.
  */
-export async function logout() {
+export async function logout(): Promise<{ success: true }> {
     try {
         Object.entries(sessionNames).map(async (v) => {
             await deleteSecureData(v[1]);

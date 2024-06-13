@@ -124,15 +124,35 @@ export async function uploadBudgetAttachment({
 }
 
 /**
+ * The type `FileResponse` represents a response object containing file information with a specific
+ * provider response location.
+ */
+type FileResponse = {
+    result: {
+        files: {
+            file: [
+                {
+                    name: string;
+                    type: string;
+                    providerResponse: {
+                        location: "https://eurekacloud-pre.s3.eu-west-1.amazonaws.com/070624-151154PRESUPUESTOS.xlsx";
+                    };
+                }
+            ];
+        };
+    };
+};
+
+/**
  * The function `uploadFileToApi` asynchronously uploads a file to an API endpoint using FormData and
  * fetch in TypeScript.
- * @param  @param param
- * @param {string} param.name
- * @param {URL} param.uri
- * @param {string} param.mimeType
+ * @param params
+ * @param {string} params.name
+ * @param {URL} params.uri
+ * @param {string} params.mimeType
  * The `uploadFileToApi` function is an asynchronous function that uploads a file to a
  * specified API endpoint.
- * @returns The `uploadFileToApi` function returns the response from the API after uploading a file.
+ * @returns {Promise<FileResponse>} - The `uploadFileToApi` function returns a Promise that resolves to a `FileResponse` object.
  */
 async function uploadFileToApi({
     uri,
@@ -142,7 +162,7 @@ async function uploadFileToApi({
     uri: string;
     name: string;
     mimeType: string;
-}) {
+}): Promise<FileResponse> {
     const url = `${API_URL}containers/${API_URL_FRAGMENT}/upload`;
 
     const formData: any = new FormData();

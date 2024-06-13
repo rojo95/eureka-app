@@ -432,7 +432,7 @@ export async function getBudgets({
  * - The `getBudget` function is an asynchronous function that retrieves budget information
  * from an API endpoint. It takes an object as a parameter with a `budgetId` property of type number.
  * The function then uses the `budgetId` to construct a URL for the API request.
- * @returns The function `getBudget` is returning the budget information fetched from the API based on
+ * @returns {Promise<Budget>} The function `getBudget` is returning the budget information fetched from the API based on
  * the provided `budgetId`.
  */
 export async function getBudget({
