@@ -218,8 +218,7 @@ export async function exportBudgets({
     };
 
     const query = await axios
-        .get(url, {
-            params: params,
+        .post(url, params, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization,
