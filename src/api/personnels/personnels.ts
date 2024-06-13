@@ -7,6 +7,16 @@ const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
 const { userKey, wcId: idWc } = sessionNames;
 
+export type Personnel = {
+    email: string;
+    id: number;
+    lastName: string;
+    fullName: string;
+    name: string;
+    type: string;
+    wcId: number;
+};
+
 /**
  * function to get the user data
  *
@@ -17,7 +27,7 @@ export async function getUserData({
     userId,
 }: {
     userId: number;
-}): Promise<any> {
+}): Promise<Personnel> {
     const Authorization = await getSecureData(userKey);
     const url = `${API_URL}Personnels/${userId}/v2details`;
     return await axios({
