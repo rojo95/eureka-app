@@ -60,7 +60,7 @@ export default function Tracking() {
      * @param param0
      * @returns
      */
-    const renderItem: ListRenderItem<any> = ({ item }) => (
+    const renderItem: ListRenderItem<TrackingType> = ({ item }) => (
         <CleanCard>
             <View
                 style={{
