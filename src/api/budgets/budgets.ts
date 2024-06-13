@@ -28,20 +28,14 @@ export type Tracking = {
     author: string;
     createdAt: Date;
     createdBy: string;
-    createdById: number;
     date: Date;
-    deletedAt?: Date | null;
     done: boolean;
     doneDate?: Date | null;
     id: number;
-    model: string;
-    modelId: number;
     notes: string;
     personnel: Personnel;
-    personnelId: number;
     type: number;
     updatedAt: Date;
-    wcId: number;
 };
 
 export type Budget = {
