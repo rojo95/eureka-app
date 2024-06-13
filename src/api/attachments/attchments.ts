@@ -15,10 +15,12 @@ const API_URL_FRAGMENT = constants?.API_URL_FRAGMENT;
 const { userKey } = sessionNames;
 
 /**
- * Function to delete remote budget attachment
- * @param param0
- * @param {number} param.id
- * @returns
+ * This TypeScript function deletes a budget attachment by sending a DELETE request to a specified API
+ * endpoint with the attachment ID and user authorization.
+ * @param {number} param.id - The `deleteBudgetAttachment` function is an asynchronous function that deletes a budget
+ * attachment by sending a DELETE request to the specified API endpoint.
+ * @returns {Promise<{ count: number }>} The `deleteBudgetAttachment` function returns a Promise that resolves to an object with a
+ * `count` property indicating the number of attachments that were deleted.
  */
 export async function deleteBudgetAttachment({
     id,
@@ -51,10 +53,13 @@ export async function deleteBudgetAttachment({
 }
 
 /**
- * Function to send files to the api and append to the budget
- * @param param0
+ * The function `uploadBudgetAttachment` uploads a budget attachment to an API after picking a document
+ * and performing necessary validations.
  * @param {number} param.idBudget
- * @returns
+ * The `uploadBudgetAttachment` function is an asynchronous function that uploads a budget
+ * attachment to a specified budget ID.
+ * @returns {Promise<Attachment>} The function `uploadBudgetAttachment` returns a Promise that resolves to an `Attachment`
+ * object.
  */
 export async function uploadBudgetAttachment({
     idBudget,
@@ -119,10 +124,15 @@ export async function uploadBudgetAttachment({
 }
 
 /**
- * function to upload files to the Api
- * @param param0
+ * The function `uploadFileToApi` asynchronously uploads a file to an API endpoint using FormData and
+ * fetch in TypeScript.
+ * @param  @param param
  * @param {string} param.name
  * @param {URL} param.uri
+ * @param {string} param.mimeType
+ * The `uploadFileToApi` function is an asynchronous function that uploads a file to a
+ * specified API endpoint.
+ * @returns The `uploadFileToApi` function returns the response from the API after uploading a file.
  */
 async function uploadFileToApi({
     uri,

@@ -11,14 +11,22 @@ const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
 const { userKey, wcId: idWc } = sessionNames;
 
+/**
+ * The type "Item" consists of properties "id" of type number and "name" of type string.
+ * @property {number} id - The `id` property in the `Item` type represents a unique identifier for an
+ * item. It is of type `number`.
+ * @property {string} name - The `name` property in the `Item` type represents the name of the item. It
+ * is a string type.
+ */
 type Item = {
     id: number;
     name: string;
 };
 
 /**
- * function to download budgets
- * @param param0
+ * The function `exportBudgets` exports budget data based on specified filters and parameters to an
+ * Excel file.
+ * @param  @param param0
  * @param { string } param.textFilter
  * @param { Item } param.client
  * @param { Item[] } param.states
@@ -27,7 +35,11 @@ type Item = {
  * @param { Date } param.createdFrom
  * @param { Date } param.createdTo
  * @param { any } param.translation
- * @returns
+ * - This function `exportBudgets` is an asynchronous function that exports budgets based on
+ * the provided parameters.
+ * @returns The `exportBudgets` function is returning a Promise that resolves to the result of
+ * downloading a remote file. The file being downloaded is an Excel document containing budget data
+ * based on the specified filters and parameters.
  */
 export async function exportBudgets({
     textFilter,
