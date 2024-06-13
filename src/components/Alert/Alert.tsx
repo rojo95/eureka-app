@@ -44,20 +44,16 @@ export default function Alert({
 
         if (onAccept) {
             setDisableActions(true);
-            await onAccept()
-                .catch((e) => {
-                    notificationToast({
-                        type: "danger",
-                        text: t("fail-action"),
-                    });
-                    console.error(e);
-                })
-                .finally(() => {
-                    onCloseModal();
-                    setTimeout(() => {
-                        setDisableActions(false);
-                    }, 500);
+            await onAccept().catch((e) => {
+                notificationToast({
+                    type: "danger",
+                    text: t("fail-action"),
                 });
+                console.error(e);
+                setDisableActions(false);
+            });
+            onCloseModal();
+            setDisableActions(false);
         }
     }, [disableActions, onCloseModal, onAccept]);
 
