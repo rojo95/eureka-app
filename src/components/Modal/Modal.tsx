@@ -35,5 +35,3 @@ export default function Modal({
 }
 
 const containerStyle = { backgroundColor: "white", padding: 20 };
-
-Modal;
