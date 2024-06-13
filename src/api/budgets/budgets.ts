@@ -5,6 +5,7 @@ import sessionNames from "../../utils/session-info";
 import { Activity } from "../activities/activities";
 import { Client } from "../clients/clients";
 import { Personnel } from "../personnels/personnels";
+import { BudgetState } from "../budget-states/budget-states";
 
 const constants = Constants.expoConfig?.extra;
 const API_URL = constants?.API_URL;
@@ -54,7 +55,7 @@ export type Budget = {
     id: number;
     number: string;
     responsible: Responsible;
-    state: any;
+    state: BudgetState;
     title: string;
     totalCost: number;
     totalSale: number;
