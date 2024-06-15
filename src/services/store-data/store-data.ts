@@ -83,9 +83,6 @@ export async function saveData({ key, value }: SecureStore): Promise<boolean> {
 
 /**
  * function to obtain secure storage data
- *
- * @param {string} key {string}
- * @returns {Promise<string | null | undefined>}
  */
 export async function getData(key: string): Promise<string | null | undefined> {
     try {
