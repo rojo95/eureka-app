@@ -52,7 +52,6 @@ export default function SelectModal({
 
     /**
      * Function to select multiple activities
-     * @param {Item} item
      */
     function handleSelectItem(item: Item) {
         setSelected((prevSelected) => {
@@ -75,8 +74,6 @@ export default function SelectModal({
 
     /**
      * Component to render the list
-     * @param {ListRenderItem} param0
-     * @returns
      */
     const SelectListItems: ListRenderItem<Item> = ({ item }) => {
         const isSelected = Array.isArray(selected)
@@ -130,11 +127,17 @@ export default function SelectModal({
         );
     };
 
+    /**
+     * function to finish the selection and return the selected objects
+     */
     function finishSelection() {
         setSelectedValues(selected);
         onClose();
     }
 
+    /**
+     * check or uncheck all the items
+     */
     function checkUncheckAll() {
         if (!singleSelection) {
             if (Array.isArray(selected) && selected.length >= data.length) {

@@ -9,14 +9,6 @@ const { userKey, wcId: idWc } = sessionNames;
 
 /**
  * The type `Activity` defines a structure with properties for activity type ID, ID, name, and WC ID.
- * @property {number} activityTypeId - The `activityTypeId` property in the `Activity` type represents
- * the unique identifier for the type of activity. It is a number data type.
- * @property {number} id - The `id` property in the `Activity` type represents the unique identifier
- * for an activity.
- * @property {string} name - The `name` property in the `Activity` type represents the name of the
- * activity. It is a string type.
- * @property {number} wcId - The `wcId` property in the `Activity` type represents the ID of the work
- * center associated with the activity.
  */
 export type Activity = {
     activityTypeId: number;
@@ -26,10 +18,8 @@ export type Activity = {
 };
 
 /**
- * This TypeScript function fetches activities data from an API based on certain criteria and returns
+ * This function fetches activities data from an API based on certain criteria and returns
  * the result as a Promise.
- * @returns {Promise<Activity[]>} The `getActivitiesApi` function is returning a Promise that resolves to an array of
- * `Activity` objects.
  */
 export async function getActivitiesApi(): Promise<Activity[]> {
     const Authorization = await getSecureData(userKey);

@@ -29,12 +29,18 @@ export default function LeftDrawerScreen() {
     const theme: DefaultTheme = useTheme();
     const { user } = useContext(UserContext);
 
+    /**
+     * add the right drawer menu context to the Budget Component used as a screen
+     */
     const BudgetsScreen: FC = () => (
         <RightDrawerScreen>
             <Budgets />
         </RightDrawerScreen>
     );
 
+    /**
+     * create views grouping by a navigation tab
+     */
     const BudgetsDetailsTabs: FC<any> = () => {
         const Tab = createBottomTabNavigator();
         const tabs = [

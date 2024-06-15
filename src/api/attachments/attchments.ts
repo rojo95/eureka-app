@@ -15,12 +15,8 @@ const API_URL_FRAGMENT = constants?.API_URL_FRAGMENT;
 const { userKey } = sessionNames;
 
 /**
- * This TypeScript function deletes a budget attachment by sending a DELETE request to a specified API
+ * This function deletes a budget attachment by sending a DELETE request to a specified API
  * endpoint with the attachment ID and user authorization.
- * @param {number} param.id - The `deleteBudgetAttachment` function is an asynchronous function that deletes a budget
- * attachment by sending a DELETE request to the specified API endpoint.
- * @returns {Promise<{ count: number }>} The `deleteBudgetAttachment` function returns a Promise that resolves to an object with a
- * `count` property indicating the number of attachments that were deleted.
  */
 export async function deleteBudgetAttachment({
     id,
@@ -55,11 +51,6 @@ export async function deleteBudgetAttachment({
 /**
  * The function `uploadBudgetAttachment` uploads a budget attachment to an API after picking a document
  * and performing necessary validations.
- * @param {number} param.idBudget
- * The `uploadBudgetAttachment` function is an asynchronous function that uploads a budget
- * attachment to a specified budget ID.
- * @returns {Promise<Attachment>} The function `uploadBudgetAttachment` returns a Promise that resolves to an `Attachment`
- * object.
  */
 export async function uploadBudgetAttachment({
     idBudget,
@@ -144,15 +135,7 @@ type FileResponse = {
 };
 
 /**
- * The function `uploadFileToApi` asynchronously uploads a file to an API endpoint using FormData and
- * fetch in TypeScript.
- * @param params
- * @param {string} params.name
- * @param {URL} params.uri
- * @param {string} params.mimeType
- * The `uploadFileToApi` function is an asynchronous function that uploads a file to a
- * specified API endpoint.
- * @returns {Promise<FileResponse>} - The `uploadFileToApi` function returns a Promise that resolves to a `FileResponse` object.
+ * The function `uploadFileToApi` asynchronously uploads a file to an API endpoint using FormData.
  */
 async function uploadFileToApi({
     uri,

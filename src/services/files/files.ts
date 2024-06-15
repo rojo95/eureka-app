@@ -7,16 +7,11 @@ const AppDocsDir = FileSystem.cacheDirectory + "Eureka/";
 
 /**
  * function to generate the local file uri
- *
- * @param {string} fileName
- * @returns
  */
 const generateFileUri = (fileName: string) => AppDocsDir + `${fileName}`;
 
 /**
  * Function to generate the correct mime type by file
- * @param fileName
- * @returns
  */
 export const getMimeType = (fileName: string) => {
     const extension = fileName.split(".").pop();
@@ -41,6 +36,9 @@ export const getMimeType = (fileName: string) => {
     }
 };
 
+/**
+ * function to show the allowed file types
+ */
 export function restrictFileTypes({ name }: { name: string }): boolean {
     const type = getMimeType(name);
 
@@ -61,10 +59,6 @@ async function ensureDirExists() {
 
 /**
  * Function to download the remote filess
- * @param param0
- * @param {string} param.fileName
- * @param {URL} param.url
- * @returns
  */
 export async function downLoadRemoteFile({
     fileName,
@@ -79,7 +73,6 @@ export async function downLoadRemoteFile({
         headers: {
             "Cache-Control": "no-store",
         },
-
         resume: true,
     };
 

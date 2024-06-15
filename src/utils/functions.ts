@@ -2,11 +2,6 @@ import { Language } from "../contexts/UserContext";
 
 /**
  * Function to create an URL with params
- *
- * @param param0
- * @param {URL} param.urlBase
- * @param {object} param.param
- * @returns
  */
 export function createUrl({
     urlBase,

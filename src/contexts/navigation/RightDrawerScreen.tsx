@@ -15,6 +15,9 @@ export default function RightDrawerScreen({ children }: { children: any }) {
     const [rightDrawerContent, setRightDrawerContent] =
         useState<JSX.Element | null>(null);
 
+    /**
+     * values to be shared to the elements within the context
+     */
     const value = useMemo(
         (): RightDrawerContextType => ({
             isOpen: rightDrawerOpen,

@@ -210,7 +210,6 @@ export default function Budgets() {
         // set the drawer Content
         setRightDrawerContent(rightDrawerContent);
     }, []);
-
     // end of the right drawer context configuration
 
     /**
@@ -222,8 +221,7 @@ export default function Budgets() {
     }
 
     /**
-     * Function to fetch budgets
-     * @returns
+     * Function to fetch budgets using the setted filters
      */
     async function searchBudgets() {
         if (loading) return;
@@ -292,8 +290,7 @@ export default function Budgets() {
     };
 
     /**
-     * Function to change view to the budget detail
-     * @param {number} item
+     * Function to change view to the budget detail setting the data into the context params
      */
     const handlePress = (item: number) => {
         setContextParams({ budgetId: item });
@@ -302,9 +299,6 @@ export default function Budgets() {
 
     /**
      * Render an item in the list
-     *
-     * @param param0
-     * @returns
      */
     const renderItem: ListRenderItem<Budget> = ({ item }) => (
         <BudgetsCard
@@ -391,8 +385,7 @@ export default function Budgets() {
     }
 
     /**
-     *
-     * @param param0
+     * function to change the filter
      */
     async function getItemsForFilter({
         type,
@@ -404,7 +397,6 @@ export default function Budgets() {
         itemFormatter: (item: any) => FilterListItems;
     }) {
         let items: FilterListItems[] = await apiFunction();
-
         items = items.map(itemFormatter);
         setFilterListItems(items);
         setFilterKey(type);
@@ -422,8 +414,6 @@ export default function Budgets() {
 
     /**
      * function to change the renderized component in the modal
-     * @param param
-     * @returns
      */
     function rendererListType(param: number) {
         switch (param) {
@@ -445,7 +435,6 @@ export default function Budgets() {
 
     /**
      * function to remove a selected activity
-     * @param id
      */
     function removeActivity(id: number) {
         setFilter((prev) => ({
@@ -456,7 +445,6 @@ export default function Budgets() {
 
     /**
      * function to remove a selected state
-     * @param id
      */
     function removeStates(id: number) {
         setFilter((prev) => ({
@@ -467,7 +455,6 @@ export default function Budgets() {
 
     /**
      * function to remove a selected responsible
-     * @param id
      */
     function removeResponsible(id: number) {
         setFilter((prev) => ({

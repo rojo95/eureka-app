@@ -3,9 +3,6 @@ import { getLocale } from "./functions";
 
 /**
  * function to give format to date fields
- *
- * @param value
- * @returns
  */
 export function setDateFormat({
     date,
@@ -19,6 +16,9 @@ export function setDateFormat({
     return newDate;
 }
 
+/**
+ * function to give format to prices
+ */
 export function formatPrices({
     number,
     language,

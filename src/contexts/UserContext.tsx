@@ -44,6 +44,9 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [language, setLanguage] = useState<Language>("es");
 
+    /**
+     * function to get the user data if there is a user token and an user id
+     */
     const fetchUser = async () => {
         const userKeyData = await getSecureData(userKey);
         const id = await getSecureData(userId);
@@ -60,6 +63,9 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         }
     };
 
+    /**
+     * Fetches user and language data when the component mounts.
+     */
     useEffect(() => {
         fetchUser();
         fetchLanguage();
@@ -70,7 +76,7 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             const response = await loginFn(loginProps);
             if (response) {
                 const { id, type: rol, name, lastName } = response;
-                setUser({ id: parseInt(id), rol, name, lastName });
+                setUser({ id: id, rol, name, lastName });
                 return true;
             }
             return false;

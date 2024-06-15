@@ -54,14 +54,24 @@ export default function FAB({
     const translations = actions?.reverse()?.map(() => useSharedValue(0)) || [];
     const opacities = actions?.map(() => useSharedValue(0)) || [];
 
+    /**
+     * The `openFunction` arrow function calls the `onOpen` function if it is defined.
+     */
     const openFunction = () => {
         onOpen && onOpen();
     };
 
+    /**
+     * The `closeFunction` arrow function calls the `onClose` function if it is defined.
+     */
     const closeFunction = () => {
         onClose && onClose();
     };
 
+    /**
+     * The `handlePress` function toggles between opening and closing a set of actions with animations
+     * in a TypeScript React component.
+     */
     const handlePress = () => {
         if (!actions) {
             openFunction();

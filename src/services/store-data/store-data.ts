@@ -11,11 +11,6 @@ const { OS } = Platform;
 
 /**
  * function to store data securely
- *
- * @param {SecureStore} param
- * @param {string} param.key
- * @param {string} param.value
- * @returns {Promise<boolean>}
  */
 export async function saveSecureData({
     key,
@@ -34,10 +29,7 @@ export async function saveSecureData({
 }
 
 /**
- * function to obtain secure storage data
- *
- * @param {string} key {string}
- * @returns {Promise<string | null | undefined>}
+ * function to obtain secure stored data
  */
 export async function getSecureData(
     key: string
@@ -55,9 +47,7 @@ export async function getSecureData(
 }
 
 /**
- * function to delete the secure storage data
- *
- * @param {string} key
+ * function to delete the secure stored data
  */
 export async function deleteSecureData(key: string): Promise<boolean> {
     try {
@@ -81,11 +71,6 @@ export async function deleteSecureData(key: string): Promise<boolean> {
 
 /**
  * function to store non secured data
- *
- * @param {SecureStore} param
- * @param {string} param.key
- * @param {string} param.value
- * @returns {Promise<boolean>}
  */
 export async function saveData({ key, value }: SecureStore): Promise<boolean> {
     try {

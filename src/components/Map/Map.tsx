@@ -17,6 +17,11 @@ function Map({
 }) {
     const [Component, setComponent] = useState<any>(null);
 
+    /**
+     * The `useEffect` hook in the provided code snippet is responsible for dynamically loading the
+     * appropriate map component based on the platform (web or phone) when the `markerPreset` or
+     * `address` props change. Here's a breakdown of what it does:
+     */
     useEffect(() => {
         async function loadComponent() {
             if (Platform.OS === "web") {
@@ -35,6 +40,10 @@ function Map({
         loadComponent();
     }, [markerPreset, address]);
 
+    /**
+     *  A conditional check that ensures an `ActivityIndicator` component is displayed if the `Component`
+     * state is falsy or not yet loaded.
+     */
     if (!Component) {
         return <ActivityIndicator size="large" />;
     }

@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { DefaultTheme, useTheme } from "react-native-paper";
-import CleanCard from "../../../../../../components/Card/Card";
+import Card from "../../../../../../components/Card/Card";
 import { formatPrices } from "../../../../../../utils/numbers";
 import { UserContext } from "../../../../../../contexts/UserContext";
 import { Chapter } from "../../../../../../api/budgets/budgets";
@@ -48,9 +48,9 @@ export default function ItemCard({
         },
     });
     return (
-        <CleanCard>
+        <Card>
             <Pressable onLongPress={onLongPress} disabled={disabled}>
-                <CleanCard.Body style={{ paddingTop: 30 }}>
+                <Card.Body style={styles.cardBody}>
                     <Text style={[styles.rank, stylesThemed.rank]}>{rank}</Text>
                     <View style={[styles.container]}>
                         <View>
@@ -61,8 +61,8 @@ export default function ItemCard({
                             </Text>
                         </View>
                     </View>
-                </CleanCard.Body>
-                <CleanCard.Footer>
+                </Card.Body>
+                <Card.Footer>
                     <Text style={styles.number}>
                         <Text
                             style={[styles.totalCost, stylesThemed.totalCost]}
@@ -76,9 +76,9 @@ export default function ItemCard({
                             {formattedTotalSale}€
                         </Text>
                     </Text>
-                </CleanCard.Footer>
+                </Card.Footer>
             </Pressable>
-        </CleanCard>
+        </Card>
     );
 }
 
@@ -110,5 +110,8 @@ const styles = StyleSheet.create({
     },
     totalSale: {
         fontWeight: "bold",
+    },
+    cardBody: {
+        paddingTop: 30,
     },
 });

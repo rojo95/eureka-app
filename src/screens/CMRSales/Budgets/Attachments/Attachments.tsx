@@ -19,7 +19,7 @@ import {
     Attachment,
     getBudgetAttachments,
 } from "../../../../api/budgets/budgets";
-import CleanCard from "../../../../components/Card/Card";
+import Card from "../../../../components/Card/Card";
 import { downLoadRemoteFile } from "../../../../services/files/files";
 import Alert from "../../../../components/Alert/Alert";
 import FAB from "../../../../components/FAB/FAB";
@@ -72,8 +72,6 @@ export default function Attachments() {
 
     /**
      * Asks the user to confirm an action before performing it.
-     * @param {{ text: string, onAccept: () => void }} options
-     * @returns
      */
     function showConfirmDialog({
         text,
@@ -90,10 +88,7 @@ export default function Attachments() {
     }
 
     /**
-     * function to download attachments
-     * @param param0
-     * @param {string} param.fileName
-     * @param {URL} param.url
+     * function to download one attachments to the device
      */
     async function downloadAttachment({
         fileName,
@@ -127,9 +122,6 @@ export default function Attachments() {
 
     /**
      * function to delete one file
-     * @param param0
-     * @param {number} param.id
-     * @returns
      */
     async function deleteAttachment({ id }: { id: number }) {
         if (loading) return;
@@ -159,6 +151,9 @@ export default function Attachments() {
         setLoading(false);
     }
 
+    /**
+     * function to upload a new attachment to the api
+     */
     async function uploadAttachment() {
         setLoading(true);
         const file = await uploadBudgetAttachment({ idBudget: budgetId }).catch(
@@ -189,11 +184,10 @@ export default function Attachments() {
 
     /**
      * function component to render the attachment list item
-     * @returns
      */
     const renderItem: ListRenderItem<Attachment> = ({ item }) => {
         return (
-            <CleanCard>
+            <Card>
                 <Pressable
                     onPress={() =>
                         showConfirmDialog({
@@ -210,12 +204,7 @@ export default function Attachments() {
                         })
                     }
                 >
-                    <CleanCard.Body
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                        }}
-                    >
+                    <Card.Body style={styles.cardBody}>
                         <Icon
                             source="file-document-outline"
                             size={50}
@@ -234,9 +223,7 @@ export default function Attachments() {
                         >
                             {item.name}
                         </Text>
-                        <View
-                            style={{ position: "absolute", top: 0, right: 0 }}
-                        >
+                        <View style={styles.actionButtonContainer}>
                             <Button
                                 onPress={() =>
                                     showConfirmDialog({
@@ -248,17 +235,14 @@ export default function Attachments() {
                                     })
                                 }
                                 type="link"
-                                buttonStyle={{
-                                    borderTopStartRadius: 0,
-                                    borderBottomEndRadius: 0,
-                                    backgroundColor: loading
-                                        ? theme.colors.primaryLight
-                                        : theme.colors.primary,
-                                    width: 30,
-                                    height: 30,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
+                                buttonStyle={[
+                                    styles.actionButton,
+                                    {
+                                        backgroundColor: loading
+                                            ? theme.colors.primaryLight
+                                            : theme.colors.primary,
+                                    },
+                                ]}
                                 icon={
                                     <Icon
                                         source="close"
@@ -268,14 +252,14 @@ export default function Attachments() {
                                 }
                             />
                         </View>
-                    </CleanCard.Body>
+                    </Card.Body>
                 </Pressable>
-            </CleanCard>
+            </Card>
         );
     };
 
     return (
-        <View style={[{ flex: 1 }, themedStyles.container]}>
+        <View style={[styles.container, themedStyles.container]}>
             <View>
                 <AppHeader
                     title={
@@ -288,19 +272,21 @@ export default function Attachments() {
                 />
             </View>
             <View
-                style={{
-                    flexDirection: width > height ? "row" : "column",
-                    ...(width > height && { flexWrap: "wrap" }),
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                }}
+                style={[
+                    styles.content,
+                    {
+                        flexDirection: width > height ? "row" : "column",
+                        ...(width > height && { flexWrap: "wrap" }),
+                    },
+                ]}
             >
                 <View
-                    style={{
-                        paddingVertical: 40,
-                        paddingHorizontal: 20,
-                        width: width > height ? "40%" : "100%",
-                    }}
+                    style={[
+                        styles.buttonsContainer,
+                        {
+                            width: width > height ? "40%" : "100%",
+                        },
+                    ]}
                 >
                     <Button
                         text={t("add-new-document")}
@@ -308,18 +294,20 @@ export default function Attachments() {
                     />
                 </View>
                 {loading && data.length <= 0 ? (
-                    <View style={{ justifyContent: "center", width: "100%" }}>
+                    <View style={styles.activityIndicator}>
                         <ActivityIndicator size={"large"} />
                     </View>
                 ) : data.length > 0 ? (
                     <FlatList
-                        style={{
-                            paddingHorizontal: 10,
-                            ...(width < height && {
-                                width: "100%",
-                            }),
-                            height: width < height ? 500 : 250,
-                        }}
+                        style={[
+                            styles.flatList,
+                            {
+                                ...(width < height && {
+                                    width: "100%",
+                                }),
+                                height: width < height ? 500 : 250,
+                            },
+                        ]}
                         data={data}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={renderItem}
@@ -327,13 +315,7 @@ export default function Attachments() {
                         onRefresh={getAttachments}
                     />
                 ) : (
-                    <View
-                        style={{
-                            width: "100%",
-                            justifyContent: "center",
-                            flexDirection: "row",
-                        }}
-                    >
+                    <View style={styles.noAttachments}>
                         <Text>{t("budget-has-no-attachments")}.</Text>
                     </View>
                 )}
@@ -355,9 +337,41 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    content: {
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+    },
     buttonsContainer: {
-        height: "100%",
-        marginVertical: 30,
-        marginHorizontal: 20,
+        paddingVertical: 40,
+        paddingHorizontal: 20,
+    },
+    cardBody: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    noAttachments: {
+        width: "100%",
+        justifyContent: "center",
+        flexDirection: "row",
+    },
+    activityIndicator: {
+        justifyContent: "center",
+        width: "100%",
+    },
+    flatList: {
+        paddingHorizontal: 10,
+    },
+    actionButtonContainer: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+    },
+    actionButton: {
+        borderTopStartRadius: 0,
+        borderBottomEndRadius: 0,
+        width: 30,
+        height: 30,
+        justifyContent: "center",
+        alignItems: "center",
     },
 });

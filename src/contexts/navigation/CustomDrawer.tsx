@@ -13,6 +13,9 @@ export default function CustomDrawer(props: any) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
 
+    /**
+     * show the current route
+     */
     const getCurrentRouteName = () => {
         const route =
             props.navigation.getState().routes[
@@ -21,6 +24,9 @@ export default function CustomDrawer(props: any) {
         return route.name;
     };
 
+    /**
+     * check if the passed name is the active route
+     */
     function isActiveRoute(name: string) {
         const active = name.split(",").includes(getCurrentRouteName());
         return active;

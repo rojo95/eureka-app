@@ -6,6 +6,9 @@ import { Entypo } from "@expo/vector-icons";
 import Select from "../Select/Select";
 import { MaterialIcons } from "@expo/vector-icons";
 
+/**
+ * Properties alloweds to use the paginator 
+ */
 type PaginatorProps = {
     totalPages: number;
     onPageChange: (page: number) => void;

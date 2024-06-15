@@ -39,6 +39,11 @@ export default function Alert({
     const { t } = useTranslation();
     const [disableActions, setDisableActions] = useState<boolean>(false);
 
+    /**
+     * The `handleAccept` function is a callback function defined using the `useCallback` hook in
+     * React. It is responsible for handling the logic when the user accepts the alert or confirmation
+     * dialog.
+     */
     const handleAccept = useCallback(async () => {
         if (disableActions) return;
 
@@ -57,6 +62,11 @@ export default function Alert({
         }
     }, [disableActions, onCloseModal, onAccept]);
 
+    /**
+     * The `handleClose` function defined using the `useCallback` hook in React is responsible for
+     * handling the logic when the user closes the alert or confirmation dialog. Here's a breakdown of
+     * what it does:
+     */
     const handleClose = useCallback(() => {
         if (disableActions) return;
         onCloseModal();

@@ -21,16 +21,20 @@ export default function Chapters() {
     const {
         contextParams: { budgetId, chapters: baseChapters },
     } = useContext(ParamsContext)!;
-    const navigation: any = useNavigation();
     const [loading, setLoading] = useState<boolean>(true);
     const [selection, setSelection] = useState<boolean>(false);
-    const [chapters, setChapter] = useState<Chapter[]>([]);
+    const [chapters, setChapter] = useState<Chapter[]>(baseChapters);
 
+    /**
+     * function to establish the chapters that were consulted the budget details
+     */
     async function getChapters() {
         setChapter(baseChapters);
-        setLoading(false);
     }
 
+    /**
+     * Fetches chapters data when the component mounts or when the budget ID or base chapters change.
+     */
     useEffect(() => {
         setLoading(true);
         (async () => {
@@ -60,6 +64,9 @@ export default function Chapters() {
         });
     }
 
+    /**
+     * function rendered into the flat list
+     */
     const renderItem = ({
         item,
         drag,

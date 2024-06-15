@@ -30,18 +30,33 @@ export default function PhoneMap({
         markerPreset
     );
 
+    /**
+     * The function `getRegion` returns the region passed as an argument.
+     */
     function getRegion(region: Region) {
         return region;
     }
 
+    /**
+     * The function `addMarker` add a marker into the map if the readOnly param is false
+     */
     function addMarker(marker: LatLng) {
         !readOnly && setMarker(marker);
     }
 
+    /**
+     * The useEffect hook update de region when the address changes
+     */
+    useEffect(() => {
+        setRegion(address!);
+    }, [address]);
+
+    /**
+     * The useEffect hook update de pre setted marker region when the address changes
+     */
     useEffect(() => {
         setMarker(markerPreset);
-        setRegion(address!);
-    }, [markerPreset, address]);
+    }, [markerPreset]);
 
     return (
         <View>

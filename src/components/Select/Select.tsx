@@ -5,6 +5,9 @@ import { StyleProps } from "react-native-reanimated";
 import Text from "../Text/Text";
 import { useTranslation } from "react-i18next";
 
+/**
+ * SelectionProps type is the properties to use the Select Component.
+ */
 type SelectionProps = {
     options: string[] | { id: string; description: string }[];
     onSelect: (value: string) => void;

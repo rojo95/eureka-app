@@ -56,9 +56,7 @@ export default function Tracking() {
     }, [budgetId]);
 
     /**
-     * content to render the information
-     * @param param0
-     * @returns
+     * content to render the item information
      */
     const renderItem: ListRenderItem<TrackingType> = ({ item }) => (
         <CleanCard>

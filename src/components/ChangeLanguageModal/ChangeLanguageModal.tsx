@@ -17,27 +17,15 @@ export default function ChangeLanguageModal({
     const theme: DefaultTheme = useTheme();
     const { t } = useTranslation();
 
-    const styles = StyleSheet.create({
-        modalStyle: {
-            flex: 1,
-            backgroundColor: "white",
-            justifyContent: "flex-start",
-            padding: 20,
-        },
+    const themedStyles = StyleSheet.create({
         modalTitle: {
             color: theme.colors.dark,
-            fontWeight: "bold",
-            alignItems: "center",
-        },
-        listButton: {
-            paddingVertical: 15,
-            borderBottomWidth: 1,
         },
     });
 
     /**
-     * function to change the app language
-     * @param lang {string}
+     * The function `changeLang` asynchronously changes the language and toggles a modal in a
+     * TypeScript React application, handling errors with a console log.
      */
     async function changeLang(lang: string) {
         try {
@@ -55,7 +43,7 @@ export default function ChangeLanguageModal({
                 onDismiss={onToggleModal}
                 contentContainerStyle={styles.modalStyle}
             >
-                <Text style={styles.modalTitle}>
+                <Text style={[styles.modalTitle, themedStyles.modalTitle]}>
                     {t("config-language-selection-label")}
                 </Text>
                 <FlatList
@@ -75,3 +63,20 @@ export default function ChangeLanguageModal({
         </Portal>
     );
 }
+
+const styles = StyleSheet.create({
+    modalStyle: {
+        flex: 1,
+        backgroundColor: "white",
+        justifyContent: "flex-start",
+        padding: 20,
+    },
+    modalTitle: {
+        fontWeight: "bold",
+        alignItems: "center",
+    },
+    listButton: {
+        paddingVertical: 15,
+        borderBottomWidth: 1,
+    },
+});

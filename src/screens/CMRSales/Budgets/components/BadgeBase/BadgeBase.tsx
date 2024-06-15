@@ -4,6 +4,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { DefaultTheme, useTheme } from "react-native-paper";
 
+/**
+ * badge used into the budgets
+ */
 const BadgeBase: FC<{ children: string; onPress: () => void }> = ({
     children,
     onPress,

@@ -35,6 +35,9 @@ export default function DetailsBudget() {
     const [budgetDetails, setBudgetDetails] = useState<Budget | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
+    /**
+     * function to get the budget details by ID
+     */
     async function getDetails() {
         const info = await getBudget({ budgetId });
         setContextParams((prev: any) => ({

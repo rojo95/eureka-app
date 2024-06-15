@@ -20,22 +20,14 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
     const [showPass, setShowPass] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const styles = StyleSheet.create({
+    const themedStyles = StyleSheet.create({
         container: {
-            flex: 1,
-            justifyContent: "center",
             backgroundColor: theme.colors.primaryContrast,
         },
-        input: { marginVertical: 3 },
-        formContent: {
-            margin: 15,
-        },
-        image: { flex: 1, width: "100%", backgroundColor: "#0553" },
     });
 
     /**
      * function to handle the formulary data
-     * @param param0
      */
     function handleData({ name, value }: { name: string; value: string }) {
         setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -43,7 +35,6 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
 
     /**
      * Function to log in to the app
-     * @returns
      */
     const handleLogin = async () => {
         if (loading) return;
@@ -81,7 +72,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, themedStyles.container]}>
             <View style={styles.formContent}>
                 <View
                     style={{
@@ -148,3 +139,15 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
 };
 
 export default LoginScreen;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+    },
+    input: { marginVertical: 3 },
+    formContent: {
+        margin: 15,
+    },
+    image: { flex: 1, width: "100%", backgroundColor: "#0553" },
+});

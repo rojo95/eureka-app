@@ -13,10 +13,6 @@ const { userKey, wcId: idWc } = sessionNames;
 
 /**
  * The type "Item" consists of properties "id" of type number and "name" of type string.
- * @property {number} id - The `id` property in the `Item` type represents a unique identifier for an
- * item. It is of type `number`.
- * @property {string} name - The `name` property in the `Item` type represents the name of the item. It
- * is a string type.
  */
 type Item = {
     id: number;
@@ -26,19 +22,6 @@ type Item = {
 /**
  * The function `exportBudgets` exports budget data based on specified filters and parameters to an
  * Excel file.
- * @param  @param param0
- * @param { string } param.textFilter
- * @param { Item } param.client
- * @param { Item[] } param.states
- * @param { Item[] } param.responsibles
- * @param { Item[] } param.activities
- * @param { Date } param.createdFrom
- * @param { Date } param.createdTo
- * @param { any } param.translation
- * - This function `exportBudgets` is an asynchronous function that exports budgets based on
- * the provided parameters.
- * @returns {Promise<boolean>} The `exportBudgets` function is returning a Promise that resolves to a boolean value. The
- * boolean value indicates whether the remote file download was successful or not.
  */
 export async function exportBudgets({
     textFilter,

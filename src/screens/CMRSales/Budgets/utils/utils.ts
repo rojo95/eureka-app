@@ -1,5 +1,8 @@
 import { DefaultTheme } from "react-native-paper";
 
+/**
+ * function to return the budget state color
+ */
 export function getColorState({
     statusId,
     theme,
@@ -21,10 +24,6 @@ export function getColorState({
 
 /**
  * Function to calculate K total
- * @param param0
- * @param { number } param.totalCost
- * @param { number } param.totalSale
- * @returns
  */
 export const calculateKTotal = ({
     totalCost,
@@ -38,10 +37,6 @@ export const calculateKTotal = ({
 
 /**
  * Function to calculate the Margin Profit
- * @param param0
- * @param { number } param.totalCost
- * @param { number } param.totalSale
- * @returns
  */
 export const calculateMarginProfit = ({
     totalCost,
