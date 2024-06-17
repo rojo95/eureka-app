@@ -1,6 +1,5 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-    Alert,
     Platform,
     PlatformOSType,
     ScrollView,
@@ -13,8 +12,9 @@ import { useTranslation } from "react-i18next";
 import Select from "../../../../components/Select/Select";
 import Button from "../../../../components/Button/Button";
 import { Fontisto } from "@expo/vector-icons";
+import Map from "../../../../components/Map/Map";
 
-interface formData {
+type formData = {
     name: string;
     responsible: string;
     location: string;
@@ -25,14 +25,14 @@ interface formData {
     Kmo: string;
     activity: string;
     iva: string;
-}
+};
 
 export default function CreateBudget({
     data,
-    setShowModal,
+    onClose,
 }: {
     data?: formData;
-    setShowModal: () => void;
+    onClose: () => void;
 }) {
     const { t } = useTranslation();
     const theme: DefaultTheme = useTheme();
@@ -57,25 +57,14 @@ export default function CreateBudget({
 
     /**
      * function to update the form data
-     * @param param0
      */
     function handleData({ name, value }: { name: string; value: any }) {
-        console.log(value);
         setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
     }
 
     function handleSelection({ value, name }: { value: string; name: string }) {
         handleData({ name, value });
     }
-
-    /**
-     * Dynamic Component; if the environment is mobile load a React Native Map
-     */
-    const DynamicMap = React.lazy(() =>
-        Platform.OS !== "web"
-            ? import("../../../../components/Map/Map")
-            : Promise.resolve({ default: () => <Text>Website Map</Text> })
-    );
 
     const styles = StyleSheet.create({
         container: {
@@ -97,6 +86,7 @@ export default function CreateBudget({
         percents: { width: "49%" },
         title: { fontWeight: "bold", color: theme.colors.dark, fontSize: 20 },
         titleContainer: {
+            flex: 1,
             flexDirection: "row",
             justifyContent: "space-between",
         },
@@ -109,20 +99,19 @@ export default function CreateBudget({
                     <Text style={styles.title}>
                         {t("menu-title-create-budget")}
                     </Text>
-                    <Button
-                        type="link"
-                        buttonStyle={{
-                            flexDirection: "row-reverse",
-                        }}
-                        onPress={setShowModal}
-                        icon={
-                            <Fontisto
-                                name="close"
-                                size={24}
-                                color={theme.colors.dark}
-                            />
-                        }
-                    ></Button>
+                    <View>
+                        <Button
+                            type="link"
+                            onPress={onClose}
+                            icon={
+                                <Fontisto
+                                    name="close"
+                                    size={24}
+                                    color={theme.colors.dark}
+                                />
+                            }
+                        />
+                    </View>
                 </View>
                 <View style={styles.formText}>
                     <TextInput
@@ -274,9 +263,7 @@ export default function CreateBudget({
                 </View>
                 {
                     <View style={[styles.input]}>
-                        <Suspense fallback={<Text>{t("loading")}...</Text>}>
-                            <DynamicMap />
-                        </Suspense>
+                        <Map />
                     </View>
                 }
                 <View style={styles.formText}>

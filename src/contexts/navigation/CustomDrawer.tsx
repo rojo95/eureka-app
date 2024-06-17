@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { View, Pressable, Text, StyleSheet } from "react-native";
-import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme, useTheme } from "react-native-paper";
-import { UserContext } from "../../contexts/UserContext";
+import { UserContext } from "../UserContext";
 
 export default function CustomDrawer(props: any) {
     const { logout } = useContext(UserContext);
@@ -13,6 +13,9 @@ export default function CustomDrawer(props: any) {
     const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
 
+    /**
+     * show the current route
+     */
     const getCurrentRouteName = () => {
         const route =
             props.navigation.getState().routes[
@@ -21,28 +24,45 @@ export default function CustomDrawer(props: any) {
         return route.name;
     };
 
+    /**
+     * check if the passed name is the active route
+     */
     function isActiveRoute(name: string) {
-        const active = name === getCurrentRouteName();
+        const active = name.split(",").includes(getCurrentRouteName());
         return active;
     }
 
     return (
         <DrawerContentScrollView {...props}>
-            <DrawerItem
-                label={t("menu-title-home")}
-                onPress={() => props.navigation.navigate("home")}
-                activeBackgroundColor={theme.colors.darkGrey}
-                activeTintColor={theme.colors.primaryContrast}
-                inactiveTintColor={theme.colors.primaryContrast}
-                focused={isActiveRoute("home")}
-                icon={() => <AntDesign name="home" size={24} color="white" />}
-            />
+            <View>
+                <Pressable
+                    onPress={() => props.navigation.navigate("home")}
+                    style={[
+                        styles.item,
+                        {
+                            backgroundColor: isActiveRoute("home")
+                                ? "#636772"
+                                : theme.colors.darkGrey,
+                        },
+                    ]}
+                >
+                    <AntDesign name="home" size={24} color="white" />
+                    <Text
+                        style={{
+                            color: theme.colors.primaryContrast,
+                            marginLeft: 5,
+                        }}
+                    >
+                        {t("menu-title-home")}
+                    </Text>
+                </Pressable>
+            </View>
             <Pressable
                 onPress={() => setIsExpanded(!isExpanded)}
                 style={[
                     styles.item,
                     {
-                        backgroundColor: isActiveRoute("budgets")
+                        backgroundColor: isActiveRoute("budgets,budget")
                             ? "#636772"
                             : theme.colors.darkGrey,
                     },
@@ -69,7 +89,7 @@ export default function CustomDrawer(props: any) {
                         style={[
                             styles.itemSon,
                             {
-                                backgroundColor: isActiveRoute("budgets")
+                                backgroundColor: isActiveRoute("budgets,budget")
                                     ? "#636772"
                                     : theme.colors.darkGrey,
                             },
@@ -90,21 +110,33 @@ export default function CustomDrawer(props: any) {
                     </Pressable>
                 </View>
             )}
-            <DrawerItem
-                label={t("menu-title-config")}
-                onPress={() => props.navigation.navigate("configs")}
-                activeBackgroundColor="#636772" 
-                activeTintColor={theme.colors.primaryContrast} 
-                inactiveTintColor={theme.colors.primaryContrast} 
-                focused={isActiveRoute("configs")}
-                icon={() => (
+            <View>
+                <Pressable
+                    onPress={() => props.navigation.navigate("configs")}
+                    style={[
+                        styles.item,
+                        {
+                            backgroundColor: isActiveRoute("configs")
+                                ? "#636772"
+                                : theme.colors.darkGrey,
+                        },
+                    ]}
+                >
                     <MaterialCommunityIcons
                         name="cog-outline"
                         size={24}
                         color="white"
                     />
-                )}
-            />
+                    <Text
+                        style={{
+                            color: theme.colors.primaryContrast,
+                            marginLeft: 5,
+                        }}
+                    >
+                        {t("menu-title-config")}
+                    </Text>
+                </Pressable>
+            </View>
             <View>
                 <Pressable
                     onPress={async () => {

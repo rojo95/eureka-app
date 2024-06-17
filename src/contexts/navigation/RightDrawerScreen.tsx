@@ -1,22 +1,29 @@
 import { createContext, useMemo, useState } from "react";
 import { Drawer } from "react-native-drawer-layout";
-import LeftDrawerScreen from "./LeftDrawerScreen";
 
-interface RightDrawerContextType {
+type RightDrawerContextType = {
     isOpen: boolean;
-    toggleOpenRight: () => void;
-}
+    onToggleOpenRight: () => void;
+    setRightDrawerContent: (content: JSX.Element) => void;
+};
 
 export const RightDrawerContext = createContext<
     RightDrawerContextType | undefined
 >(undefined);
-export default function RightDrawerScreen() {
+export default function RightDrawerScreen({ children }: { children: any }) {
     const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
+    const [rightDrawerContent, setRightDrawerContent] =
+        useState<JSX.Element | null>(null);
 
+    /**
+     * values to be shared to the elements within the context
+     */
     const value = useMemo(
-        () => ({
+        (): RightDrawerContextType => ({
             isOpen: rightDrawerOpen,
-            toggleOpenRight: () => setRightDrawerOpen(!rightDrawerOpen),
+            onToggleOpenRight: () => setRightDrawerOpen(!rightDrawerOpen),
+            setRightDrawerContent: (content: JSX.Element) =>
+                setRightDrawerContent(content),
         }),
         [rightDrawerOpen]
     );
@@ -27,16 +34,10 @@ export default function RightDrawerScreen() {
             onOpen={() => setRightDrawerOpen(true)}
             onClose={() => setRightDrawerOpen(false)}
             drawerPosition="right"
-            renderDrawerContent={() => (
-                <>
-                    {/* 
-                        // todo Right drawer content 
-                    */}
-                </>
-            )}
+            renderDrawerContent={() => <>{rightDrawerContent}</>}
         >
             <RightDrawerContext.Provider value={value}>
-                <LeftDrawerScreen />
+                {children}
             </RightDrawerContext.Provider>
         </Drawer>
     );

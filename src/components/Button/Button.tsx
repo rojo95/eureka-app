@@ -23,23 +23,23 @@ interface ButtonPropsBase extends TouchableOpacityProps {
 
 // Extends the base interface to require the field 'text'.
 interface WithText extends ButtonPropsBase {
-    icon?: never;
+    icon?: ReactNode;
     text: string;
-    children?: never;
+    children?: ReactNode;
 }
 
 // Extends the base interface to require the 'children' field
 interface WithChildren extends ButtonPropsBase {
-    icon?: never;
-    text?: never;
+    icon?: ReactNode;
+    text?: string;
     children: ReactNode;
 }
 
 // Extends the base interface to require the 'icon' field
 interface WithIcon extends ButtonPropsBase {
     icon: ReactNode;
-    text?: never;
-    children?: never;
+    text?: string;
+    children?: ReactNode;
 }
 
 type ButtonProps = WithText | WithChildren | WithIcon;
@@ -52,16 +52,24 @@ export default function Button({
     textStyle,
     buttonStyle,
     children,
+    disabled,
 }: ButtonProps) {
     const theme: DefaultTheme = useTheme();
 
     const styles = StyleSheet.create({
         button: {
-            borderColor: type === "link" ? "transparent" : theme.colors.primary,
+            borderColor:
+                type === "link"
+                    ? "transparent"
+                    : disabled
+                    ? theme.colors.primaryLight
+                    : theme.colors.primary,
             borderWidth: 1,
             backgroundColor:
                 type === "primary"
-                    ? theme.colors.primary
+                    ? disabled
+                        ? theme.colors.primaryLight
+                        : theme.colors.primary
                     : type === "link"
                     ? "transparent"
                     : theme.colors.primaryContrast,
@@ -72,6 +80,8 @@ export default function Button({
             color:
                 type === "primary"
                     ? theme.colors.primaryContrast
+                    : disabled
+                    ? theme.colors.primaryLight
                     : theme.colors.primary,
             width: "100%",
         },
@@ -79,18 +89,24 @@ export default function Button({
 
     if (type === "link") {
         return (
-            <Pressable onPress={onPress} style={[styles.button, buttonStyle]}>
+            <Pressable
+                disabled={disabled}
+                onPress={onPress}
+                style={[styles.button, buttonStyle]}
+            >
                 {icon && icon}
                 {text && <Text style={[styles.text, textStyle]}>{text}</Text>}
                 {children && children}
             </Pressable>
         );
     }
+
     return (
         <PaperButton
             style={[styles.button, buttonStyle]}
             icon={() => icon}
             onPress={onPress}
+            disabled={disabled}
         >
             {text && <Text style={[styles.text, textStyle]}>{text}</Text>}
             {children && children}

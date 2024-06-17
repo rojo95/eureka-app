@@ -1,31 +1,26 @@
+import { Language } from "../contexts/UserContext";
+
 /**
- * function to find component
- * @param param0
- * @returns
+ * Function to create an URL with params
  */
-export function findComponentByType({
-    object,
-    value,
+export function createUrl({
+    urlBase,
+    params,
 }: {
-    object: any;
-    value: string;
-}): any {
-    // Recursive function to search for the component
-    function recursiveFind(component: any): any {
-        if (component.type === value) {
-            return component;
-        }
+    urlBase: URL;
+    params: object;
+}) {
+    // create a new URLSearchParams object
+    const searchParams = new URLSearchParams();
 
-        // Recursively searches each child of the current component
-        for (const child of component.children || []) {
-            const found = recursiveFind(child);
-            if (found) {
-                return found;
-            }
-        }
-
-        return null;
+    // Add parameters to the URLSearchParams object
+    for (const [key, value] of Object.entries(params)) {
+        searchParams.append(key, value!);
     }
 
-    return recursiveFind(object);
+    // merge and return the URLSearchParams object to the URL
+    return `${urlBase}?${searchParams.toString()}`;
 }
+
+export const getLocale = ({ locale }: { locale: Language }) =>
+    locale === "es" ? "es-ES" : "en-US";

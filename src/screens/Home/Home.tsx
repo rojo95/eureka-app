@@ -1,32 +1,13 @@
-import { useContext, useEffect } from "react";
 import { View } from "react-native";
-import { RightDrawerContext } from "../../components/drawers/RightDrawerScreen";
-import Button from "../../components/Button/Button";
+import AppHeader from "../../components/AppHeader/AppHeader";
+import { useTranslation } from "react-i18next";
 
 export default function HomeScreen({ navigation }: { navigation: any }) {
-    const contextValue = useContext(RightDrawerContext);
-
-    // Check if the context has been successfully retrieved
-    if (!contextValue) {
-        console.error("RightDrawerContext is not available");
-        return null; // Or return a loading indicator, etc.
-    }
-
-    // Now TypeScript knows that contextValue is of type RightDrawerContextType
-    const { toggleOpenRight } = contextValue;
+    const { t } = useTranslation();
 
     return (
-        <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
-            <Button
-                onPress={() => navigation.openDrawer()}
-                text="Open left drawer"
-            />
-            <Button
-                onPress={() => toggleOpenRight()}
-                text="Open right drawer"
-            />
+        <View>
+            <AppHeader title={t("menu-title-home")} />
         </View>
     );
 }

@@ -6,12 +6,15 @@ import { Entypo } from "@expo/vector-icons";
 import Select from "../Select/Select";
 import { MaterialIcons } from "@expo/vector-icons";
 
-interface PaginatorProps {
+/**
+ * Properties alloweds to use the paginator 
+ */
+type PaginatorProps = {
     totalPages: number;
     onPageChange: (page: number) => void;
     onLimitChange: (limit: number) => void;
     labels?: boolean;
-}
+};
 
 const Paginator: React.FC<PaginatorProps> = ({
     totalPages,

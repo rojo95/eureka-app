@@ -1,91 +1,61 @@
-import { Alert, Platform, StyleSheet, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { Platform, Text } from "react-native";
 import React, { useEffect, useState } from "react";
-import * as Location from "expo-location";
-import { useTranslation } from "react-i18next";
+import { ActivityIndicator } from "react-native-paper";
+import { StyleProps } from "react-native-reanimated";
+import { Region } from "react-native-maps";
 
-interface regionInterface {
-    latitude: number;
-    longitude: number;
-    latitudeDelta: number;
-    longitudeDelta: number;
-}
-
-interface MarkerInterface {
-    latitude: number;
-    longitude: number;
-}
-
-export default function Map({ description }: { description?: string }) {
-    const { t } = useTranslation();
-    const [region, setRegion] = useState<regionInterface>({
-        latitude: 38.20486801970583,
-        latitudeDelta: 17.679489473469285,
-        longitude: -2.9028533957898617,
-        longitudeDelta: 12.98109669238329,
-    });
-    const [marker, setMarker] = useState<MarkerInterface | null>(null);
-
-    function onRegionChange(region: regionInterface) {
-        setRegion(region);
-    }
-
-    function addMarker(marker: MarkerInterface) {
-        setMarker(marker);
-    }
+function Map({
+    markerPreset,
+    address,
+    readOnly = false,
+    mapStyle,
+}: {
+    markerPreset?: { latitude: number; longitude: number } | null;
+    address?: Region | null;
+    readOnly?: boolean;
+    mapStyle?: StyleProps;
+}) {
+    const [Component, setComponent] = useState<any>(null);
 
     /**
-     * function to get the current user location
-     * @returns
+     * The `useEffect` hook in the provided code snippet is responsible for dynamically loading the
+     * appropriate map component based on the platform (web or phone) when the `markerPreset` or
+     * `address` props change. Here's a breakdown of what it does:
      */
-    async function getLocation() {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-            Alert.alert(t("location-denied"));
-            return;
+    useEffect(() => {
+        async function loadComponent() {
+            if (Platform.OS === "web") {
+                // Load web component
+                const WebMapComponent = {
+                    default: () => <Text>Website Map</Text>,
+                };
+                setComponent(() => WebMapComponent.default);
+            } else {
+                // Load phone component
+                const PhoneMapComponent = await import("./PhoneMap");
+                setComponent(() => PhoneMapComponent.default);
+            }
         }
 
-        const location = (await Location.getCurrentPositionAsync({})).coords;
+        loadComponent();
+    }, [markerPreset, address]);
 
-        const newState = {
-            ...region,
-            latitude: location?.latitude || 0,
-            longitude: location?.longitude || 0,
-        };
-        onRegionChange(newState);
+    /**
+     *  A conditional check that ensures an `ActivityIndicator` component is displayed if the `Component`
+     * state is falsy or not yet loaded.
+     */
+    if (!Component) {
+        return <ActivityIndicator size="large" />;
     }
 
-    useEffect(() => {
-        getLocation;
-    }, []);
-
     return (
-        <View>
-            <MapView
-                style={styles.map}
-                initialRegion={region}
-                onRegionChange={onRegionChange}
-                onPress={(e) => addMarker(e.nativeEvent.coordinate)}
-                mapType={"standard"}
-            >
-                {marker && (
-                    <Marker
-                        coordinate={marker}
-                        title={t("label-ubication")}
-                        description={
-                            description
-                        }
-                        draggable={true}
-                    />
-                )}
-            </MapView>
-        </View>
+        <Component
+            markerPreset={markerPreset}
+            readOnly={readOnly}
+            address={address}
+            mapStyle={mapStyle}
+        />
     );
 }
 
-const styles = StyleSheet.create({
-    map: {
-        width: "100%",
-        height: 300,
-    },
-});
+export default Map;
