@@ -6,7 +6,7 @@ import { PaperProvider } from "react-native-paper";
 import i18n from "./src/services/languages/i18next";
 import CustomTheme from "./src/theme/Theme";
 import { UserProvider } from "./src/contexts/UserContext";
-import LeftDrawerScreen from "./src/contexts/Navigation/LeftDrawerScreen";
+import LeftDrawerScreen from "./src/contexts/navigation/LeftDrawerScreen";
 import { SharedParamsProvider } from "./src/contexts/SharedParamsProvider";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { en, registerTranslation } from "react-native-paper-dates";
