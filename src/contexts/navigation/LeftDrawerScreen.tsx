@@ -18,8 +18,8 @@ import Chapters from "../../screens/CMRSales/Budgets/Chapters/Chapters";
 import DetailsBudget from "../../screens/CMRSales/Budgets/DetailsBudget/DetailsBudget";
 import Tracking from "../../screens/CMRSales/Budgets/Tracking/Tracking";
 import Attachments from "../../screens/CMRSales/Budgets/Attachments/Attachments";
-import RightDrawerScreen from "./RightDrawerScreen";
 import CustomDrawer from "./CustomDrawer";
+import RightDrawerScreen from "./RightDrawerScreen";
 
 const LeftDrawer = createDrawerNavigator();
 
