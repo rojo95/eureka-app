@@ -1,46 +1,40 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import {
-    Menu,
-    Button,
-    Divider,
-    DefaultTheme,
-    useTheme,
-} from "react-native-paper";
+import { Menu, Button, DefaultTheme, useTheme } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
 import Text from "../Text/Text";
+import { useTranslation } from "react-i18next";
 
-interface SelectionProps {
+/**
+ * SelectionProps type is the properties to use the Select Component.
+ */
+type SelectionProps = {
     options: string[] | { id: string; description: string }[];
     onSelect: (value: string) => void;
     selectedValue: string;
     buttonStyle?: StyleProps;
     placeholder?: string;
-}
+    label?: string;
+};
 
 const Select: React.FC<SelectionProps> = ({
     options,
     onSelect,
     selectedValue,
     buttonStyle,
-    placeholder = "Seleccione un Item de la Lista",
+    placeholder,
+    label,
 }) => {
+    const { t } = useTranslation();
+    const placeHolder = placeholder || t("select-list-item");
     const theme: DefaultTheme = useTheme();
     const [visible, setVisible] = useState(false);
 
-    const styles = StyleSheet.create({
-        container: {
-            // flex: 1,
-            width: "100%",
-            borderWidth: 1,
-            borderRadius: 5,
-        },
-        button: {
-            flexDirection: "row-reverse",
-            justifyContent: "space-between",
-            width: "100%",
-        },
+    const themedStyles = StyleSheet.create({
         text: { color: theme.colors.dark },
+        fieldLabel: {
+            backgroundColor: theme.colors.primaryContrast,
+        },
     });
 
     const openMenu = () => setVisible(true);
@@ -48,6 +42,9 @@ const Select: React.FC<SelectionProps> = ({
 
     return (
         <View style={[styles.container, buttonStyle]}>
+            <Text style={[styles.fieldLabel, themedStyles.fieldLabel]}>
+                {label}
+            </Text>
             <Menu
                 visible={visible}
                 onDismiss={closeMenu}
@@ -57,7 +54,7 @@ const Select: React.FC<SelectionProps> = ({
                         contentStyle={[styles.button, buttonStyle]}
                         icon={!visible ? "chevron-down" : "chevron-up"}
                     >
-                        <Text style={styles.text}>
+                        <Text style={[themedStyles.text]}>
                             {(typeof options[0] === "string"
                                 ? selectedValue
                                 : (
@@ -67,12 +64,12 @@ const Select: React.FC<SelectionProps> = ({
                                       }[]
                                   )?.find((v) => v.id === selectedValue)
                                       ?.description || selectedValue) ||
-                                placeholder}
+                                placeHolder}
                         </Text>
                     </Button>
                 }
             >
-                <Menu.Item title={placeholder} />
+                <Menu.Item title={placeHolder} />
                 {options.map((option, index) => (
                     <Menu.Item
                         key={index}
@@ -93,5 +90,25 @@ const Select: React.FC<SelectionProps> = ({
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        width: "100%",
+        borderWidth: 1,
+        borderRadius: 3,
+    },
+    button: {
+        flexDirection: "row-reverse",
+        justifyContent: "space-between",
+        width: "100%",
+    },
+    fieldLabel: {
+        position: "absolute",
+        top: -9,
+        left: 8,
+        paddingHorizontal: 5,
+        fontSize: 12,
+    },
+});
 
 export default Select;

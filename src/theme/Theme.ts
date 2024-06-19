@@ -11,7 +11,7 @@ const fontConfig: any = {
             ios: "System",
             default: "Manrope",
         }),
-        fontWeight: "400", // Change this line if needed based on the expected types
+        fontWeight: "400",
         letterSpacing: 0.5,
         lineHeight: 22,
         fontSize: 20,
@@ -33,6 +33,16 @@ const Theme = {
         background: "#FFF",
         backgroundCard: "#FFF",
         primaryContrast: "#FFF",
+        primaryLight: "#FFE0B2",
+        successLight: "#DCEDC8",
+        dangerLight: "#EF9A9A",
+        deepBlueLight: "#A8B6FF",
+        codeColor: "#4F7396",
+        danger: "#AC3500",
+        success: "#59ACA3",
+        lightGrey: "#D0D0D0",
+        successIntense: "#44cf73",
+        dangerIntense: "#ee5a3f",
     },
 };
 

@@ -1,26 +1,28 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import {
-    deleteSecureItem,
-    getSecureData,
-} from "../services/storeData/storeData";
-import { login as loginFn, logout as logoutFn } from "../utils/login";
-import { getUserData } from "../services/users/users";
-import sessionNames from "../utils/sessionInfo";
-import { useNavigation } from "@react-navigation/native";
+import { getData, getSecureData } from "../services/store-data/store-data";
+import { login as loginFn, logout as logoutFn } from "../api/auth/auth";
+import { getUserData } from "../api/personnels/personnels";
+import sessionNames from "../utils/session-info";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import i18next from "../services/languages/i18next";
 
-const { userKey } = sessionNames;
+const { userKey, userId, lang } = sessionNames;
 
 type User = {
     id: number;
-    type: string;
+    rol: string;
     name: string;
     lastName: string;
 };
 
+export type Language = "es" | "en" | null;
+
 type UserContextValue = {
     user: User | null;
+    language: Language;
     login: (loginProps: LoginProps) => Promise<boolean>;
     logout: () => void;
+    changeLanguage: (lang: string) => void;
 };
 
 type LoginProps = {
@@ -29,43 +31,58 @@ type LoginProps = {
 };
 
 const UserContext = createContext<UserContextValue>({
+    language: null,
     user: null,
     login: async (): Promise<boolean> => {
         return false;
     },
-
     logout: () => {},
+    changeLanguage: () => {},
 });
 
 const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [language, setLanguage] = useState<Language>("es");
 
+    /**
+     * function to get the user data if there is a user token and an user id
+     */
     const fetchUser = async () => {
-        const userData = await getSecureData(userKey);
-        if (userData) {
-            const { type, name, lastName } = await getUserData({
-                userId: parseInt(userData),
+        const userKeyData = await getSecureData(userKey);
+        const id = await getSecureData(userId);
+
+        if (userKeyData && id) {
+            const {
+                type: rol,
+                name,
+                lastName,
+            } = await getUserData({
+                userId: parseInt(id),
             });
-            setUser({ id: parseInt(userData), type, name, lastName });
+            setUser({ id: parseInt(id), rol, name, lastName });
         }
     };
 
+    /**
+     * Fetches user and language data when the component mounts.
+     */
     useEffect(() => {
         fetchUser();
+        fetchLanguage();
     }, []);
 
     const login = async (loginProps: LoginProps) => {
         try {
             const response = await loginFn(loginProps);
             if (response) {
-                const { id, type, name, lastName } = response;
-                setUser({ id: parseInt(id), type, name, lastName });
+                const { id, type: rol, name, lastName } = response;
+                setUser({ id: id, rol, name, lastName });
                 return true;
             }
             return false;
         } catch (error) {
-            console.error(error);
-            return false;
+            console.error("Error loging: ", error);
+            throw error;
         }
     };
 
@@ -74,8 +91,28 @@ const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         logoutFn();
     };
 
+    async function changeLanguage(language: string): Promise<void> {
+        try {
+            await AsyncStorage.setItem(lang, language);
+
+            i18next.changeLanguage(language);
+
+            setLanguage(language as Language);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    const fetchLanguage = async () => {
+        const language = ((await getData(lang)) as Language) || "es";
+        changeLanguage(language);
+        setLanguage(language);
+    };
+
     return (
-        <UserContext.Provider value={{ user, login, logout }}>
+        <UserContext.Provider
+            value={{ user, login, logout, language, changeLanguage }}
+        >
             {children}
         </UserContext.Provider>
     );

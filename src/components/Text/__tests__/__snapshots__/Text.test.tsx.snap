@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Testing about <Text/> component  render button without change 1`] = `
+exports[`Testing about <Text/> component  render text without change 1`] = `
 <Text
   style={
     [

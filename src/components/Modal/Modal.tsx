@@ -1,22 +1,25 @@
 import * as React from "react";
 import { View } from "react-native";
-import { Modal as ModalRNP, Portal, PaperProvider } from "react-native-paper";
+import { Modal as ModalRNP, Portal } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
 
-interface ModalInterface {
+type Modal = {
     visible: boolean;
     children: React.ReactNode;
-    setShowModal: any;
+    onToggleShowModal: (value: boolean) => void;
     style: StyleProps;
-}
+};
 
-const Modal = ({ visible, children, setShowModal, style }: ModalInterface) => {
-    const hideModal = () => setShowModal(false);
-    const containerStyle = { backgroundColor: "white", padding: 20 };
+export default function Modal({
+    visible,
+    children,
+    onToggleShowModal,
+    style,
+}: Modal) {
+    const hideModal = () => onToggleShowModal(false);
 
     return (
         <View>
-            {/* <PaperProvider> */}
             <Portal>
                 <ModalRNP
                     style={style}
@@ -27,9 +30,8 @@ const Modal = ({ visible, children, setShowModal, style }: ModalInterface) => {
                     {children}
                 </ModalRNP>
             </Portal>
-            {/* </PaperProvider> */}
         </View>
     );
-};
+}
 
-export default Modal;
+const containerStyle = { backgroundColor: "white", padding: 20 };

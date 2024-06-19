@@ -12,7 +12,7 @@ import {
 } from "react-native-paper";
 import { StyleProps } from "react-native-reanimated";
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonPropsBase extends TouchableOpacityProps {
     type?: "primary" | "secondary" | "link";
     icon?: ReactNode | undefined;
     text?: string;
@@ -21,17 +21,28 @@ interface ButtonProps extends TouchableOpacityProps {
     children?: ReactNode;
 }
 
-// Extiende la interfaz base para requerir el campo 'text'
-interface WithText extends ButtonProps {
+// Extends the base interface to require the field 'text'.
+interface WithText extends ButtonPropsBase {
+    icon?: ReactNode;
     text: string;
-    children?: never; // Indica que 'children' no debe estar presente cuando 'text' está presente
+    children?: ReactNode;
 }
 
-// Extiende la interfaz base para requerir el campo 'children'
-interface WithChildren extends ButtonProps {
-    text?: never; // Indica que 'text' no debe estar presente cuando 'children' está presente
+// Extends the base interface to require the 'children' field
+interface WithChildren extends ButtonPropsBase {
+    icon?: ReactNode;
+    text?: string;
     children: ReactNode;
 }
+
+// Extends the base interface to require the 'icon' field
+interface WithIcon extends ButtonPropsBase {
+    icon: ReactNode;
+    text?: string;
+    children?: ReactNode;
+}
+
+type ButtonProps = WithText | WithChildren | WithIcon;
 
 export default function Button({
     type = "primary",
@@ -41,16 +52,24 @@ export default function Button({
     textStyle,
     buttonStyle,
     children,
+    disabled,
 }: ButtonProps) {
     const theme: DefaultTheme = useTheme();
 
     const styles = StyleSheet.create({
         button: {
-            borderColor: type === "link" ? "transparent" : theme.colors.primary,
+            borderColor:
+                type === "link"
+                    ? "transparent"
+                    : disabled
+                    ? theme.colors.primaryLight
+                    : theme.colors.primary,
             borderWidth: 1,
             backgroundColor:
                 type === "primary"
-                    ? theme.colors.primary
+                    ? disabled
+                        ? theme.colors.primaryLight
+                        : theme.colors.primary
                     : type === "link"
                     ? "transparent"
                     : theme.colors.primaryContrast,
@@ -61,6 +80,8 @@ export default function Button({
             color:
                 type === "primary"
                     ? theme.colors.primaryContrast
+                    : disabled
+                    ? theme.colors.primaryLight
                     : theme.colors.primary,
             width: "100%",
         },
@@ -68,18 +89,24 @@ export default function Button({
 
     if (type === "link") {
         return (
-            <Pressable onPress={onPress} style={[styles.button, buttonStyle]}>
+            <Pressable
+                disabled={disabled}
+                onPress={onPress}
+                style={[styles.button, buttonStyle]}
+            >
                 {icon && icon}
                 {text && <Text style={[styles.text, textStyle]}>{text}</Text>}
                 {children && children}
             </Pressable>
         );
     }
+
     return (
         <PaperButton
             style={[styles.button, buttonStyle]}
             icon={() => icon}
             onPress={onPress}
+            disabled={disabled}
         >
             {text && <Text style={[styles.text, textStyle]}>{text}</Text>}
             {children && children}
